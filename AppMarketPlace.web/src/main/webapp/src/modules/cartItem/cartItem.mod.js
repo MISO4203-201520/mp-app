@@ -21,5 +21,23 @@
                 service: 'appService',
                 options: [],
                 required: true
+            }, {
+                name: 'price',
+                displayName: 'Price',
+                type: 'Computed',
+                fn: function (record) {
+                    return record.app.price;
+                },
+                required: true,
+                editable: false,
+                currency: true
+            }, {
+                name: 'SubTotal',
+                displayName: 'SubTotal',
+                type: 'Computed',
+                editable: false,
+                fn: function (record) {
+                    return record.app.price * record.quantity;
+                }
             }]});
 })(window.angular);

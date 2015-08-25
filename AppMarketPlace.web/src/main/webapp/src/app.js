@@ -17,12 +17,19 @@
                     templateUrl: tplUrl,
                     controller: 'clientCtrl',
                     controllerAs: alias
-                })
-                .when('/developer', {
+                }).when('/developer', {
                     templateUrl: tplUrl,
                     controller: 'developerCtrl',
                     controllerAs: alias
-                })
-                .otherwise('/');
+                }).when('/catalog', {
+                        templateUrl: tplUrl,
+                        controller: 'catalogCtrl',
+                        controllerAs: alias
+                }).when('/shoppingCart', {
+                        templateUrl: 'src/modules/cartItem/shoppingCart.tpl.html',
+                        controller: 'cartItemCtrl',
+                        controllerAs: alias
+                    })
+                .otherwise('/catalog');
         }]);
 })(window.angular);
