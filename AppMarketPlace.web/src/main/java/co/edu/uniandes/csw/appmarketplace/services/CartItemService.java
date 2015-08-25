@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.ICartItemLogic;
+import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.CartItemDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -17,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import org.apache.shiro.SecurityUtils;
 
 /**
  * @generated
@@ -27,9 +30,11 @@ import javax.ws.rs.core.MediaType;
 public class CartItemService {
 
     @Inject private ICartItemLogic cartItemLogic;
+    @Inject  private IClientLogic clientLogic;
     @Context private HttpServletResponse response;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
+    private final ClientDTO client = (ClientDTO)SecurityUtils.getSubject().getSession().getAttribute("Client");
 
     /**
      * @generated
@@ -37,7 +42,7 @@ public class CartItemService {
     @POST
     @StatusCreated
     public CartItemDTO createCartItem(CartItemDTO dto) {
-        return cartItemLogic.createCartItem(dto);
+        return cartItemLogic.createCartItemByClient(dto, client.getId());
     }
 
     /**
@@ -45,10 +50,7 @@ public class CartItemService {
      */
     @GET
     public List<CartItemDTO> getCartItems() {
-        if (page != null && maxRecords != null) {
-            this.response.setIntHeader("X-Total-Count", cartItemLogic.countCartItems());
-        }
-        return cartItemLogic.getCartItems(page, maxRecords);
+        return clientLogic.getClient(client.getId()).getCartItems();
     }
 
     /**
@@ -57,7 +59,7 @@ public class CartItemService {
     @GET
     @Path("{id: \\d+}")
     public CartItemDTO getCartItem(@PathParam("id") Long id) {
-        return cartItemLogic.getCartItem(id);
+        return cartItemLogic.getCartItemsByClientById(id, client.getId());
     }
 
     /**
@@ -67,7 +69,7 @@ public class CartItemService {
     @Path("{id: \\d+}")
     public CartItemDTO updateCartItem(@PathParam("id") Long id, CartItemDTO dto) {
         dto.setId(id);
-        return cartItemLogic.updateCartItem(dto);
+        return cartItemLogic.updateCartItemByClient(client.getId(), dto);
     }
 
     /**
@@ -76,6 +78,6 @@ public class CartItemService {
     @DELETE
     @Path("{id: \\d+}")
     public void deleteCartItem(@PathParam("id") Long id) {
-        cartItemLogic.deleteCartItem(id);
+         cartItemLogic.deleteCartItemByClient(client.getId(), id);
     }
 }
