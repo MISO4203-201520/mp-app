@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
+import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -17,6 +19,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import org.apache.shiro.SecurityUtils;
 
 /**
  * @generated
@@ -28,8 +31,12 @@ public class AppService {
 
     @Inject private IAppLogic appLogic;
     @Context private HttpServletResponse response;
+    @Inject  private IDeveloperLogic developerLogic;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
+    @QueryParam("q")
+    private String appName;
+    private DeveloperDTO developer = (DeveloperDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
 
     /**
      * @generated
@@ -45,10 +52,17 @@ public class AppService {
      */
     @GET
     public List<AppDTO> getApps() {
-        if (page != null && maxRecords != null) {
-            this.response.setIntHeader("X-Total-Count", appLogic.countApps());
+        if (developer != null) {
+            return developerLogic.getDeveloper(developer.getId()).getApps();
+        } else {
+            if (appName != null) {
+                return appLogic.findByName(appName);
+            }
+            if (page != null && maxRecords != null) {
+                this.response.setIntHeader("X-Total-Count", appLogic.countApps());
+            }
+            return appLogic.getApps(page, maxRecords);
         }
-        return appLogic.getApps(page, maxRecords);
     }
 
     /**

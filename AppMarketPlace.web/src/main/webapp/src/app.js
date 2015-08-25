@@ -8,7 +8,8 @@
         'clientModule',
         'developerModule',
         'ngRoute',
-        'ngCrud'
+        'ngCrud',
+        'xeditable'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -32,4 +33,23 @@
                     })
                 .otherwise('/catalog');
         }]);
+    
+    mainApp.config(['authServiceProvider', function (auth) {
+            auth.setValues({
+                apiUrl: 'users',
+                successPath: '/catalog',
+                loginPath: '/login',
+                registerPath: '/register',
+                logoutRedirect: '/login',
+                loginURL: 'login',
+                registerURL: 'register',
+                logoutURL: 'logout',
+                nameCookie: 'userCookie'
+            });
+            auth.setRoles({'user': 'Client', 'developer': 'Developer'});
+        }]);
+
+    mainApp.run(function (editableOptions) {
+        editableOptions.theme = 'bs3'; // bootstrap3 theme. For Xeditable plugin Angular
+    });
 })(window.angular);

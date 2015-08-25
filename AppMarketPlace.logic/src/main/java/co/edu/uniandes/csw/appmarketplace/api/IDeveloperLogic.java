@@ -11,4 +11,5 @@ public interface IDeveloperLogic {
     public DeveloperDTO updateDeveloper(DeveloperDTO dto);
     public void deleteDeveloper(Long id);
     public List<DeveloperDTO> findByName(String name);
+    public DeveloperDTO getDeveloperByUserId(String userId);
 }

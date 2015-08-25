@@ -68,4 +68,8 @@ public class DeveloperLogic implements IDeveloperLogic {
     public List<DeveloperDTO> findByName(String name) {
         return DeveloperConverter.listEntity2DTO(persistence.findByName(name));
     }
+    
+    public DeveloperDTO getDeveloperByUserId(String userId) {
+        return DeveloperConverter.refEntity2DTO(persistence.getDeveloperByUserId(userId));
+    }
 }
