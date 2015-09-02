@@ -30,7 +30,11 @@
                         templateUrl: 'src/modules/cartItem/shoppingCart.tpl.html',
                         controller: 'cartItemCtrl',
                         controllerAs: alias
-                    })
+                    }).when('/app', {
+                    templateUrl: tplUrl,
+                    controller: 'appCtrl',
+                    controllerAs: alias
+                })
                 .otherwise('/catalog');
         }]);
     

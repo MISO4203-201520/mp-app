@@ -27,6 +27,9 @@ public class AppEntity implements Serializable {
     private Integer price;
 
     private Integer size;
+    
+    private String platform;
+
 
     @ManyToOne
     private DeveloperEntity developer;
@@ -140,6 +143,14 @@ public class AppEntity implements Serializable {
      */
     public void setDeveloper(DeveloperEntity developer) {
         this.developer = developer;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
 }

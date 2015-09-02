@@ -29,10 +29,12 @@
                 displayName: 'Price',
                 type: 'Integer',
                 required: true
-            }, {
-                name: 'size',
-                displayName: 'Size',
-                type: 'Integer',
+            },
+             {
+                name: 'platform',
+                displayName: 'Platform',
+                type: 'String',
                 required: true
-            }]});
+            }
+        ]});
 })(window.angular);
