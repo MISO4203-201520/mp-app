@@ -30,6 +30,12 @@
                 type: 'Integer',
                 required: true
             },
+              {
+                name: 'size',
+                displayName: 'Size',
+                type: 'Integer',
+                required: true
+            },
              {
                 name: 'platform',
                 displayName: 'Platform',
