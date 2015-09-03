@@ -29,6 +29,8 @@ public class AppEntity implements Serializable {
     private Integer size;
     
     private String platform;
+    
+    private Integer discount;
 
 
     @ManyToOne
@@ -151,6 +153,14 @@ public class AppEntity implements Serializable {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 
 }

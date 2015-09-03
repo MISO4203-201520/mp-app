@@ -17,6 +17,7 @@ public class AppDTO {
     private Integer size;
     private DeveloperDTO developer;
     private String platform;
+    private Integer discount;
 
     /**
      * @generated
@@ -136,6 +137,14 @@ public class AppDTO {
 
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
     }
 
 }
