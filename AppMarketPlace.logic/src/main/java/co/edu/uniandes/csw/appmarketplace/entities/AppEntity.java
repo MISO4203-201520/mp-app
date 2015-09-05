@@ -1,10 +1,13 @@
 package co.edu.uniandes.csw.appmarketplace.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 /**
  * @generated
@@ -32,6 +35,8 @@ public class AppEntity implements Serializable {
     
     private Integer discount;
 
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
+    private List<Comment> comments;
 
     @ManyToOne
     private DeveloperEntity developer;
@@ -161,6 +166,14 @@ public class AppEntity implements Serializable {
 
     public void setDiscount(Integer discount) {
         this.discount = discount;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
 }
