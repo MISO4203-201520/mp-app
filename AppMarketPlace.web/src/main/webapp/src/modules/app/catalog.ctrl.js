@@ -14,8 +14,8 @@
                 $location.url('/catalog' + search);
             };
 
-            this.recordActions = [{
-                    name: 'addToCart',
+            this.recordActions = {
+                addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
                     class: 'primary',
@@ -28,7 +28,8 @@
                     show: function () {
                         return true;
                     }
-                },{
+                },
+                doQuestion:{
                     name: 'doQuestion',
                     displayName: 'Do Question',
                     icon: 'question-sign',
@@ -54,9 +55,10 @@
                     show: function () {
                         return true;
                     }
-                }];  
+                }};
             this.fetchRecords();
-        }]);
+    }]);
+    
     mod.controller('ModalQuestionCtrl', function ($scope, $modalInstance, app) {
         $scope.itemQuestion = {
             name : app.name,
