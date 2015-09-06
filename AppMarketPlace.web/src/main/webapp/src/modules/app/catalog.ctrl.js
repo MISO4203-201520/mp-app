@@ -14,8 +14,8 @@
                 $location.url('/catalog' + search);
             };
 
-            this.recordActions = [{
-                    name: 'addToCart',
+            this.recordActions = {
+                addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
                     class: 'primary',
@@ -28,7 +28,7 @@
                     show: function () {
                         return true;
                     }
-                }];
+                }};
 
             this.fetchRecords();
         }]);
