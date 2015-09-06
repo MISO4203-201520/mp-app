@@ -68,4 +68,8 @@ public class AppLogic implements IAppLogic {
     public List<AppDTO> findByName(String name) {
         return AppConverter.listEntity2DTO(persistence.findByName(name));
     }
+    
+    public List<AppDTO> getCheapest(){
+        return AppConverter.listEntity2DTO(persistence.getCheapestApp());
+    }
 }

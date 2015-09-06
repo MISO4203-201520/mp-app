@@ -5,11 +5,16 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * @generated
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v)")
+})
 public class AppEntity implements Serializable {
 
     @Id

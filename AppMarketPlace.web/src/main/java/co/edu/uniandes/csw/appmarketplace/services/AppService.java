@@ -92,4 +92,10 @@ public class AppService {
     public void deleteApp(@PathParam("id") Long id) {
         appLogic.deleteApp(id);
     }
+    
+    @GET
+    @Path("/cheapest")
+    public List<AppDTO> getCheapest(){
+        return appLogic.getCheapest();
+    }
 }
