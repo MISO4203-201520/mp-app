@@ -1,0 +1,24 @@
+<div ng-controller="commentCtrl">
+<div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
+    <div>
+        <div class="modal-dialog">
+            
+                <div class="modal-header">
+                    <h1>Post new comment!</h1>
+                </div>
+                <div class="modal-body">
+                    <form id="formComment" onsubmit="submitForm()">
+                        <div class="form-group">
+                                <label>Comentario: </label>
+                                <input class="form-control" type="text" name="comment" id="comment">
+                                <br />
+                                <input type="submit" class="btn btn-primary pull-right" popover="Thanks" popover-trigger="mouseenter" popover-placement="bottom" value="Post" data-dismiss="modal">
+                        </div>
+                        
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+</div>

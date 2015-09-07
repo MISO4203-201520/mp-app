@@ -9,7 +9,8 @@
         'developerModule',
         'ngRoute',
         'ngCrud',
-        'xeditable'
+        'xeditable',
+        'commentModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -32,6 +33,10 @@
             }).when('/app', {
                 templateUrl: tplUrl,
                 controller: 'appCtrl',
+                controllerAs: alias
+            }).when('/comment', {
+                templateUrl: tplUrl,
+                controller: 'commentCtrl',
                 controllerAs: alias
             }).otherwise('/catalog');
         }]);
