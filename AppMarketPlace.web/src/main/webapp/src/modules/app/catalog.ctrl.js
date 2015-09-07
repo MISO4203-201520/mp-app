@@ -51,8 +51,49 @@
                     show: function () {
                         return true;
                     }
+                },doQuestion:{
+                    name: 'doQuestion',
+                    displayName: 'Do Question',
+                    icon: 'question-sign',
+                    class: 'primary',
+                    fn: function (app) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'src/modules/app/modalQuestion.tpl.html',
+                            controller: 'ModalQuestionCtrl',
+                            resolve: {
+                                app:function(){
+                                    return app;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function (text) {
+                            /*TODO create logic to service*/
+                            console.log(text);
+                        }, function () {
+                            
+                        });
+                    },
+                    show: function () {
+                        return true;
+                    }
                 }
             };
             this.fetchRecords();
-        }]);
+    }]);
+    
+    mod.controller('ModalQuestionCtrl', function ($scope, $modalInstance, app) {
+        $scope.itemQuestion = {
+            name : app.name,
+            text : ""
+        };
+        
+        $scope.ok = function () {
+            $modalInstance.close($scope.itemQuestion.text);          
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+      });
 })(window.angular);
