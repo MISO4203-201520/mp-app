@@ -48,8 +48,7 @@
                             }
                         });
                         modalInstance.result.then(function (text) {
-                            /*TODO create logic to service*/
-                            console.log(text);
+                            svc.sendQuestion(text,app);
                         }, function () {
                             
                         });
