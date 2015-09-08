@@ -37,19 +37,6 @@
                     show: function () {
                         return true;
                     }
-                }];
-            this.globalActions.getCheapest = {
-                displayName: 'Find Cheapest',
-                icon: 'search',
-                class: 'warning',
-                fn: function () {
-                    return this.getCheapestItem();
-                },
-                show: function () {
-                    return true;
-                }
-            };
-
                 },
                 doQuestion:{
                     name: 'doQuestion',
@@ -103,6 +90,18 @@
                     show: function () {
                         return true;
                     }
+                }
+            };
+            
+            this.globalActions.getCheapest = {
+                displayName: 'Find Cheapest',
+                icon: 'search',
+                class: 'warning',
+                fn: function () {
+                    return this.getCheapestItem();
+                },
+                show: function () {
+                    return true;
                 }
             };
             this.fetchRecords();
