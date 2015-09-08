@@ -44,6 +44,8 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
+        if(developer==null)return null;
+        dto.setDeveloper(developer);
         return appLogic.createApp(dto);
     }
 

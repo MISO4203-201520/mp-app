@@ -9,35 +9,38 @@
         'developerModule',
         'ngRoute',
         'ngCrud',
-        'xeditable'
+        'xeditable',
+        'commentModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
-            $routeProvider
-                .when('/client', {
-                    templateUrl: tplUrl,
-                    controller: 'clientCtrl',
-                    controllerAs: alias
-                }).when('/developer', {
-                    templateUrl: tplUrl,
-                    controller: 'developerCtrl',
-                    controllerAs: alias
-                }).when('/catalog', {
-                        templateUrl: tplUrl,
-                        controller: 'catalogCtrl',
-                        controllerAs: alias
-                }).when('/shoppingCart', {
-                        templateUrl: 'src/modules/cartItem/shoppingCart.tpl.html',
-                        controller: 'cartItemCtrl',
-                        controllerAs: alias
-                    }).when('/app', {
-                    templateUrl: tplUrl,
-                    controller: 'appCtrl',
-                    controllerAs: alias
-                })
-                .otherwise('/catalog');
+            $routeProvider.when('/client', {
+                templateUrl: tplUrl,
+                controller: 'clientCtrl',
+                controllerAs: alias
+            }).when('/developer', {
+                templateUrl: tplUrl,
+                controller: 'developerCtrl',
+                controllerAs: alias
+            }).when('/catalog', {
+                templateUrl: tplUrl,
+                controller: 'catalogCtrl',
+                controllerAs: alias
+            }).when('/shoppingCart', {
+                templateUrl: 'src/modules/cartItem/shoppingCart.tpl.html',
+                controller: 'cartItemCtrl',
+                controllerAs: alias
+            }).when('/app', {
+                templateUrl: tplUrl,
+                controller: 'appCtrl',
+                controllerAs: alias
+            }).when('/comment', {
+                templateUrl: tplUrl,
+                controller: 'commentCtrl',
+                controllerAs: alias
+            }).otherwise('/catalog');
         }]);
-    
+
     mainApp.config(['authServiceProvider', function (auth) {
             auth.setValues({
                 apiUrl: 'users',
