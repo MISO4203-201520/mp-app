@@ -13,6 +13,13 @@
                 }
                 $location.url('/catalog' + search);
             };
+            
+            this.getCheapestItem = function () {
+                svc.findCheapest().then(function (app) {
+                    $scope.records = [];
+                    $scope.records.push(app);
+                });
+            };
 
             this.recordActions = [{
                     name: 'addToCart',
@@ -29,6 +36,17 @@
                         return true;
                     }
                 }];
+            this.globalActions.getCheapest = {
+                displayName: 'Find Cheapest',
+                icon: 'search',
+                class: 'warning',
+                fn: function () {
+                    return this.getCheapestItem();
+                },
+                show: function () {
+                    return true;
+                }
+            };
 
             this.fetchRecords();
         }]);
