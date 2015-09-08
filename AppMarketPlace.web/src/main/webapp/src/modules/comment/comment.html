@@ -5,13 +5,13 @@
         <div class="modal-dialog">
             
                 <div class="modal-header">
-                    <h1>Please write your comment about {{selectedApp.name}} (max 540 characters):</h1>
+                    <h1>Please write your comment about {{selectedApp.name}} (max 255 characters):</h1>
                 </div>
                 <div class="modal-body">
                     <form id="formComment" onsubmit="submitForm()">
                         <div class="form-group">
                                 <label>Comentario: </label>
-                                <input class="form-control" ng-model="model.comment" type="text" name="comment" id="comment">
+                                <input class="form-control" ng-model="model.comment" ng-maxlength=255 type="text" name="comment" id="comment">
                                 <br />
                                 <button type="submit" id="commentsubmit" data-loading-text="Saving..." class="btn btn-primary pull-right" >Post</button>
                         </div>
