@@ -7,10 +7,10 @@ package co.edu.uniandes.csw.appmarketplace.utils;
 
 import java.util.Date;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -22,50 +22,34 @@ import javax.mail.internet.MimeMessage;
  */
 public class Emailer {
     
-    private static final String PORT = "465";
-    private static final String USER = "appoteca";
+    static Properties mailServerProperties;
+    static Session getMailSession;
+    static MimeMessage generateMailMessage;
+    
+    private static final String PORT = "587";
     private static final String PASSWORD = "4pp0t3c42015";
     private static final String FROM = "appoteca@gmail.com";
     
+    
     private static void send(String to, String text, String subject) {
-    /*    Properties props = new Properties();
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.socketFactory.port", PORT);
-        props.put("mail.smtp.socketFactory.class",
-                        "javax.net.ssl.SSLSocketFactory");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", PORT);*/
-        Properties props = new Properties();
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.starttls.enable", "true");
-	props.put("mail.smtp.host", "smtp.gmail.com");
-	props.put("mail.smtp.port", "587");
-
-	Session session = Session.getInstance(props,
-            new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-			return new PasswordAuthentication(USER, PASSWORD);
-			}
-		  });
-        /*
-        Session session = Session.getDefaultInstance(props,new javax.mail.Authenticator() {                
-                protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(USER,PASSWORD);
-                }
-        });*/
-
-        try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(FROM));
-            message.setRecipients(Message.RecipientType.TO,
-                            InternetAddress.parse(to));
-            message.setSubject(subject);
-            message.setText(text);
-            Transport.send(message);
-            System.out.println("Mail sent correctly");
-
-        } catch (MessagingException e) {
-                throw new RuntimeException(e);
+        try {		
+            mailServerProperties = System.getProperties();
+            mailServerProperties.put("mail.smtp.port", PORT);
+            mailServerProperties.put("mail.smtp.auth", "true");
+            mailServerProperties.put("mail.smtp.starttls.enable", "true");
+            getMailSession = Session.getDefaultInstance(mailServerProperties, null);
+            generateMailMessage = new MimeMessage(getMailSession);       
+            generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            generateMailMessage.setSubject(subject);
+            String emailBody = text;
+            generateMailMessage.setContent(emailBody, "text/html"); 
+            Transport transport = getMailSession.getTransport("smtp");
+            transport.connect("smtp.gmail.com", FROM, PASSWORD);
+            transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
+            transport.close();
+            System.out.println("Mail has been sent succesfully");
+        } catch (Exception ex) {
+            Logger.getLogger(Emailer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     /**
