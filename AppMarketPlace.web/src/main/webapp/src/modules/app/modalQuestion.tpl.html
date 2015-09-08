@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h3 class="modal-title">Do Question!</h3>
+</div>
+<div class="modal-body">
+    <p>Please write your question about {{itemQuestion.name}} (max 540 characters): </p>
+    <textarea ng-maxlength = 540 class="form-control" ng-model="itemQuestion.text"></textarea>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Send</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+</div>

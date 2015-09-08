@@ -1,15 +1,26 @@
 package co.edu.uniandes.csw.appmarketplace.entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  * @generated
  */
 @Entity
+@XmlRootElement
+@NamedQueries({
+    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v)")
+})
 public class AppEntity implements Serializable {
 
     @Id
@@ -27,6 +38,16 @@ public class AppEntity implements Serializable {
     private Integer price;
 
     private Integer size;
+    
+    private String platform;
+    
+    private Integer discount;
+
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
+    private List<Comment> comments;
+    
+    @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
+    private List<QuestionEntity> questions;
 
     @ManyToOne
     private DeveloperEntity developer;
@@ -142,4 +163,38 @@ public class AppEntity implements Serializable {
         this.developer = developer;
     }
 
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    @XmlTransient
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    @XmlTransient
+    public List<QuestionEntity> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<QuestionEntity> questions) {
+        this.questions = questions;
+    }    
+    
 }

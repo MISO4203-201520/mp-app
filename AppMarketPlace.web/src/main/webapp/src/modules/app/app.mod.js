@@ -27,12 +27,26 @@
             }, {
                 name: 'price',
                 displayName: 'Price',
-                type: 'Integer',
+                type: 'Currency',
                 required: true
-            }, {
+            },
+              {
                 name: 'size',
                 displayName: 'Size',
                 type: 'Integer',
                 required: true
-            }]});
+            },
+             {
+                name: 'platform',
+                displayName: 'Platform',
+                type: 'String',
+                required: true
+            },
+             {
+                name: 'discount',
+                displayName: 'Discount',
+                type: 'Currency',
+                required: true
+            }
+        ]});
 })(window.angular);

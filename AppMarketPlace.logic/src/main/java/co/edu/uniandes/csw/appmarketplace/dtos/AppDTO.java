@@ -1,5 +1,6 @@
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -16,6 +17,10 @@ public class AppDTO {
     private Integer price;
     private Integer size;
     private DeveloperDTO developer;
+    private String platform;
+    private Integer discount;
+    private List<CommentDTO> comments;
+
     /**
      * @generated
      */
@@ -126,6 +131,30 @@ public class AppDTO {
      */
     public void setDeveloper(DeveloperDTO developer) {
         this.developer = developer;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public Integer getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(Integer discount) {
+        this.discount = discount;
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
     }
 
 }
