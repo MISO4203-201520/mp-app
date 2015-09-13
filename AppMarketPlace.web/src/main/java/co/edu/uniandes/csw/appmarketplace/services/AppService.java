@@ -96,8 +96,8 @@ public class AppService {
     }
     
     @GET
-    @Path("/cheapest")
-    public List<AppDTO> getCheapest(){
-        return appLogic.getCheapest();
+    @Path("/cheapest/{developerName}")
+    public List<AppDTO> getCheapest(@PathParam("developerName") String name){
+        return appLogic.getCheapest(name);
     }
 }

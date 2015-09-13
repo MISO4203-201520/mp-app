@@ -9,8 +9,8 @@
                 $http.post('http://localhost:8080/AppMarketPlace.web/webresources/question',{'description':text, 'app':{id:app.id}}).then(function(response){
                         },function(response){});
             }
-            this.findCheapest = function () {
-                return this.api.one('cheapest').get();
+            this.findCheapest = function (text) {
+                return this.api.one('cheapest/'+text).get();
             };
         }]);
 })(window.angular);

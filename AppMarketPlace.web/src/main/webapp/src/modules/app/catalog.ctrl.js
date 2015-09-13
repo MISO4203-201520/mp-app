@@ -3,7 +3,7 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope','$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'authService','CrudTemplateURL' , function (CrudCreator, $scope,$rootScope,$modal, svc, model, cartItemSvc, $location, authSvc,tplUrl) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'authService', 'CrudTemplateURL', function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location, authSvc, tplUrl) {
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
@@ -14,13 +14,6 @@
                     search = '?q=' + appName;
                 }
                 $location.url('/catalog' + search);
-            };
-            
-            this.getCheapestItem = function () {
-                svc.findCheapest().then(function (app) {
-                    $scope.records = [];
-                    $scope.records.push(app);
-                });
             };
 
             this.recordActions = {
@@ -38,7 +31,7 @@
                         return true;
                     }
                 },
-                doQuestion:{
+                doQuestion: {
                     name: 'doQuestion',
                     displayName: 'Do Question',
                     icon: 'question-sign',
@@ -49,21 +42,21 @@
                             templateUrl: 'src/modules/app/modalQuestion.tpl.html',
                             controller: 'ModalQuestionCtrl',
                             resolve: {
-                                app:function(){
+                                app: function () {
                                     return app;
                                 }
                             }
                         });
                         modalInstance.result.then(function (text) {
-                            svc.sendQuestion(text,app);
+                            svc.sendQuestion(text, app);
                         }, function () {
-                            
+
                         });
                     },
                     show: function () {
                         return true;
                     }
-                },comment:{
+                }, comment: {
                     name: 'add a comment',
                     displayName: 'Add a comment',
                     icon: 'pencil',
@@ -74,7 +67,7 @@
                             templateUrl: 'src/modules/comment/comment.html',
                             controller: 'commentCtrl',
                             resolve: {
-                                app:function(){
+                                app: function () {
                                     $rootScope.selectedApp = app;
                                     return app;
                                 }
@@ -84,7 +77,7 @@
                             /*TODO create logic to service*/
                             console.log("text");
                         }, function () {
-                            
+
                         });
                     },
                     show: function () {
@@ -92,34 +85,64 @@
                     }
                 }
             };
-            
+
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
                 icon: 'search',
                 class: 'warning',
                 fn: function () {
-                    return this.getCheapestItem();
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/modalFindCheapest.tpl.html',
+                        controller: 'FindCheapestCrtl'
+                    });
+                    modalInstance.result.then(function (text) {
+                        svc.findCheapest(text).then(function (data) {
+                            console.log(data);
+                            $scope.records = [];
+                            for(var i=0; i< data.length; i++){
+                                $scope.records.push(data[i]);
+                            }
+                        });
+                    }, function () {
+
+                    });
                 },
                 show: function () {
                     return true;
                 }
             };
             this.fetchRecords();
-    }]);
-    
+        }]);
+
     mod.controller('ModalQuestionCtrl', function ($scope, $modalInstance, app) {
         $scope.itemQuestion = {
-            name : app.name,
-            text : ""
+            name: app.name,
+            text: ""
         };
-        
+
         $scope.ok = function () {
-            $modalInstance.close($scope.itemQuestion.text);          
+            $modalInstance.close($scope.itemQuestion.text);
         };
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
-      });
-    
+    });
+
+    mod.controller('FindCheapestCrtl', function ($scope, $modalInstance) {
+        $scope.dev = {
+            text: ""
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.dev.text);
+        };
+
+        $scope.cancel = function () {
+            $scope.dev.text = "";
+            $modalInstance.dismiss('cancel');
+        };
+    });
+
 })(window.angular);
