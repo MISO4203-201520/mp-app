@@ -11,15 +11,13 @@ import co.edu.uniandes.csw.appmarketplace.entities.Comment;
  *
  * @author if.garcia11
  */
-public class CommentPersistence extends CrudPersistence <Comment> {
-    
-    public CommentPersistence(){
-    this.entityClass = Comment.class;
-    
-    
+public class CommentPersistence extends CrudPersistence<Comment> {
+
+    public CommentPersistence() {
+        this.entityClass = Comment.class;
     }
-    
-    public void InsertComment(Comment comment){
+
+    public void InsertComment(Comment comment) {
         this.create(comment);
     }
 }

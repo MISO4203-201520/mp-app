@@ -29,6 +29,9 @@ public class ClientEntity implements Serializable {
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemEntity> cartItems;
+    
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<PaymentCardEntity> cards;
     /**
      * @generated
      */
@@ -83,6 +86,20 @@ public class ClientEntity implements Serializable {
      */
     public void setCartItems(List<CartItemEntity> cartitems) {
         this.cartItems = cartitems;
+    }
+
+    /**
+     * @return the cards
+     */
+    public List<PaymentCardEntity> getCards() {
+        return cards;
+    }
+
+    /**
+     * @param cards the cards to set
+     */
+    public void setCards(List<PaymentCardEntity> cards) {
+        this.cards = cards;
     }
 
 }
