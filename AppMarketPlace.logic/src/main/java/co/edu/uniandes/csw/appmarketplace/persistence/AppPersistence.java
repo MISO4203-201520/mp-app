@@ -17,7 +17,7 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
         this.entityClass = AppEntity.class;
     }
     
-    public List<AppEntity> getCheapestApp(){
+    public List<AppEntity> getCheapestApp(String name){
         return executeListNamedQuery("AppEntity.getCheapest");
     }
 }
