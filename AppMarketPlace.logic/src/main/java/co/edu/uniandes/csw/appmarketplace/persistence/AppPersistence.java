@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
+import java.util.List;
 import javax.ejb.Stateless;
 
 /**
@@ -14,5 +15,9 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
      */
     public AppPersistence() {
         this.entityClass = AppEntity.class;
+    }
+    
+    public List<AppEntity> getCheapestApp(){
+        return executeListNamedQuery("AppEntity.getCheapest");
     }
 }

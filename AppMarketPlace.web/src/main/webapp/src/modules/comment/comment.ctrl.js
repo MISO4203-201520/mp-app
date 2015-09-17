@@ -1,28 +1,24 @@
 
 (function (ng) {
     var mod = ng.module('commentModule');
-    mod.controller('commentCtrl', ['CrudCreator', '$scope', 'commentService', 'commentModel','$http', function (CrudCreator, $scope, svc, model,$http) {
-            CrudCreator.extendController(this, svc, $scope, model, 'comment', 'Comment');
-            //this.fetchRecords();
-            $scope.commentProduct = function() {
-                $http.post('http://localhost:8080/AppMarketPlace.web/webresources/comments',{ 'comment':$scope.comment,'date':'1990-12-12' }
-                    
-                        ).then(function(response){
-                        },function(response){
-                        });
-            };
-            
+    mod.controller('commentCtrl', ['CrudCreator', '$scope', 'commentService', 'commentModel','$http','$modal', function (CrudCreator, $scope, svc, model,$http,$modal) {
+            $scope.model = {};
             submitForm = function(){
-                
-                var comment = document.getElementById("comment").value;
+                $("#commentsubmit").button('loading')
                 var date = new Date().toJSON().slice(0,10);
-                $http.post('http://localhost:8080/AppMarketPlace.web/webresources/comments',{ 'comment':comment,'date':date }
-                    
-                        ).then(function(response){
-                        },function(response){
-                        });
-                location.reload();
+                $http.post('http://localhost:8080/AppMarketPlace.web/webresources/comments',{ 
+                    comment: $scope.model.comment,
+                    date: date,
+                    app:{
+                        id : $scope.selectedApp.id
+                    } 
+                }).success(function(data){
+                    $("#commentsubmit").button('reset')
+                    $scope.modalInstance.dismiss('cancel');                    
+                }).error(function(data){
+                     $("#commentsubmit").button('reset')
+                    $scope.modalInstance.dismiss('cancel');                                        
+                });
             };
         }]);
-
 })(window.angular);

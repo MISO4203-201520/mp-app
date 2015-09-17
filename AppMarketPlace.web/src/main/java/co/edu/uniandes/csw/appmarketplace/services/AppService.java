@@ -44,6 +44,8 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
+        if(developer==null)return null;
+        dto.setDeveloper(developer);
         return appLogic.createApp(dto);
     }
 
@@ -91,5 +93,11 @@ public class AppService {
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
         appLogic.deleteApp(id);
+    }
+    
+    @GET
+    @Path("/cheapest/{developerName}")
+    public List<AppDTO> getCheapest(@PathParam("developerName") String name){
+        return appLogic.getCheapest(name);
     }
 }
