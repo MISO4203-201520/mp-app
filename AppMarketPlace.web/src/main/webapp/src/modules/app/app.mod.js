@@ -47,6 +47,12 @@
                 displayName: 'Discount',
                 type: 'Currency',
                 required: true
+            },
+             {
+                name: 'category',
+                displayName: 'Category',
+                type: 'String',
+                required: true
             }
         ]});
 })(window.angular);

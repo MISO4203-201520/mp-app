@@ -1,11 +1,11 @@
 (function (ng) {
     var mod = ng.module('paymentCardsModule');
 
-    mod.controller('paymentCtrl', ['CrudCreator', '$scope', 'paymentCard', 'transaction', 'paymentCardsModel','$location','$timeout', function (CrudCreator, $scope, svc, svcPay, model, $location, $timeout) {
+    mod.controller('paymentCtrl', ['CrudCreator', '$scope', 'paymentCard', 'transaction', 'paymentCardsModel','$location','$timeout', '$filter', function (CrudCreator, $scope, svc, svcPay, model, $location, $timeout, $filter) {
             CrudCreator.extendController(this, svc, $scope, model, 'payment', 'Payment');
             this.loadRefOptions();
 
-            var self = this;
+            var self = this;            
             this.readOnly = true;
 
             self.recordActions.pay = {

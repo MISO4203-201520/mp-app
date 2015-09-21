@@ -15,7 +15,8 @@ import javax.inject.Inject;
 @Stateless
 public class AppLogic implements IAppLogic {
 
-    @Inject private AppPersistence persistence;
+    @Inject
+    private AppPersistence persistence;
 
     /**
      * @generated
@@ -68,8 +69,12 @@ public class AppLogic implements IAppLogic {
     public List<AppDTO> findByName(String name) {
         return AppConverter.listEntity2DTO(persistence.findByName(name));
     }
-    
-    public List<AppDTO> getCheapest(String name){
+
+    public List<AppDTO> getCheapest(String name) {
         return AppConverter.listEntity2DTO(persistence.getCheapestApp(name));
+    }
+
+    public List<AppDTO> getAppsByCategory(String category) {
+        return AppConverter.listEntity2DTO(persistence.getAppsByCategory(category));
     }
 }

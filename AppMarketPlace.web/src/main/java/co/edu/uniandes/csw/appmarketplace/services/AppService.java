@@ -29,11 +29,16 @@ import org.apache.shiro.SecurityUtils;
 @Produces(MediaType.APPLICATION_JSON)
 public class AppService {
 
-    @Inject private IAppLogic appLogic;
-    @Context private HttpServletResponse response;
-    @Inject  private IDeveloperLogic developerLogic;
-    @QueryParam("page") private Integer page;
-    @QueryParam("maxRecords") private Integer maxRecords;
+    @Inject
+    private IAppLogic appLogic;
+    @Context
+    private HttpServletResponse response;
+    @Inject
+    private IDeveloperLogic developerLogic;
+    @QueryParam("page")
+    private Integer page;
+    @QueryParam("maxRecords")
+    private Integer maxRecords;
     @QueryParam("q")
     private String appName;
     private DeveloperDTO developer = (DeveloperDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
@@ -44,7 +49,9 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
-        if(developer==null)return null;
+        if (developer == null) {
+            return null;
+        }
         dto.setDeveloper(developer);
         return appLogic.createApp(dto);
     }
@@ -94,10 +101,19 @@ public class AppService {
     public void deleteApp(@PathParam("id") Long id) {
         appLogic.deleteApp(id);
     }
-    
+
     @GET
     @Path("/cheapest/{developerName}")
-    public List<AppDTO> getCheapest(@PathParam("developerName") String name){
+    public List<AppDTO> getCheapest(@PathParam("developerName") String name) {
         return appLogic.getCheapest(name);
+    }
+
+    /**
+     * @generated
+     */
+    @GET
+    @Path("/categories/{category}")
+    public List<AppDTO> getAppsByCategory(@PathParam("category") String category) {
+        return appLogic.getAppsByCategory(category);
     }
 }

@@ -100,7 +100,7 @@
                         svc.findCheapest(text).then(function (data) {
                             console.log(data);
                             $scope.records = [];
-                            for(var i=0; i< data.length; i++){
+                            for (var i = 0; i < data.length; i++) {
                                 $scope.records.push(data[i]);
                             }
                         });
@@ -112,6 +112,34 @@
                     return true;
                 }
             };
+
+            this.globalActions.getAppsByCategory = {
+                displayName: 'Filter by Category',
+                icon: 'filter',
+                class: 'primary',
+                fn: function () {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/modalFilterCategories.tpl.html',
+                        controller: 'ModalFilterCategoriesCtrl'
+                    });
+                    modalInstance.result.then(function (text) {
+                        svc.getAppsByCategory(text).then(function (data) {
+                            console.log(data);
+                            $scope.records = [];
+                            for (var i = 0; i < data.length; i++) {
+                                $scope.records.push(data[i]);
+                            }
+                        });
+                    }, function () {
+
+                    });
+                },
+                show: function () {
+                    return true;
+                }
+            };
+
             this.fetchRecords();
         }]);
 
@@ -126,6 +154,21 @@
         };
 
         $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
+
+    mod.controller('ModalFilterCategoriesCtrl', function ($scope, $modalInstance) {
+        $scope.in = {
+            text: ""
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.in.text);
+        };
+
+        $scope.cancel = function () {
+            $scope.in.text = "";
             $modalInstance.dismiss('cancel');
         };
     });
