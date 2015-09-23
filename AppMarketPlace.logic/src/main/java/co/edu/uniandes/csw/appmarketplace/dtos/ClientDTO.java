@@ -13,6 +13,7 @@ public class ClientDTO {
     private String name;
     private String userId;
     private List<CartItemDTO> cartItems;
+    private List<PaymentCardDTO> cards;
     /**
      * @generated
      */
@@ -67,6 +68,20 @@ public class ClientDTO {
      */
     public void setCartItems(List<CartItemDTO> cartitems) {
         this.cartItems = cartitems;
+    }
+
+    /**
+     * @return the cards
+     */
+    public List<PaymentCardDTO> getCards() {
+        return cards;
+    }
+
+    /**
+     * @param cards the cards to set
+     */
+    public void setCards(List<PaymentCardDTO> cards) {
+        this.cards = cards;
     }
 
 }

@@ -10,7 +10,8 @@
         'ngRoute',
         'ngCrud',
         'xeditable',
-        'commentModule'
+        'commentModule',
+        'paymentCardsModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -38,6 +39,10 @@
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',
                 controllerAs: alias
+            }).when('/paymentCard', {
+                templateUrl: tplUrl,
+                controller: 'paymentCtrl',
+                controllerAs: alias 
             }).otherwise('/catalog');
         }]);
 

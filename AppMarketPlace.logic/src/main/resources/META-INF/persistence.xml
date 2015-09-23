@@ -3,10 +3,13 @@
   <persistence-unit name="AppMarketPlacePU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>java:app/jdbc/AppMarketPlace</jta-data-source>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.PaymentMethodEntity</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-      <property name="eclipselink.cache.type.default" value="NONE" />
+      <property name="eclipselink.cache.type.default" value="NONE"/>
     </properties>
   </persistence-unit>
 </persistence>

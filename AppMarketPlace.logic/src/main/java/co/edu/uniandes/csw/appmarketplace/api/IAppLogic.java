@@ -12,4 +12,5 @@ public interface IAppLogic {
     public void deleteApp(Long id);
     public List<AppDTO> findByName(String name);
     public List<AppDTO> getCheapest(String developerName);
+    public List<AppDTO> getAppsByCategory(String category);
 }

@@ -34,6 +34,7 @@ public abstract class AppConverter {
             dto.setSize(entity.getSize());
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
+            dto.setCategory(entity.getCategory());
 
             return dto;
         } else {
@@ -73,6 +74,7 @@ public abstract class AppConverter {
             dto.setDeveloper(DeveloperConverter.refEntity2DTO(entity.getDeveloper()));
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
+            dto.setCategory(entity.getCategory());
 
             return dto;
         } else {
@@ -96,6 +98,7 @@ public abstract class AppConverter {
             entity.setDeveloper(DeveloperConverter.refDTO2Entity(dto.getDeveloper()));
             entity.setPlatform(dto.getPlatform());
             entity.setDiscount(dto.getDiscount());
+            entity.setCategory(dto.getCategory());
 
             return entity;
         } else {
