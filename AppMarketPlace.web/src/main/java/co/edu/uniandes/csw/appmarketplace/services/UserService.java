@@ -181,4 +181,23 @@ public class UserService {
                     .build();
         }
     }
+    
+    @Path("/verify")
+    @GET
+    public Response verifyToken(@QueryParam("sptoken") String token){
+        System.out.println(token);
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.verifyPasswordResetToken(token);
+            return Response.ok().type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+    }
 }
