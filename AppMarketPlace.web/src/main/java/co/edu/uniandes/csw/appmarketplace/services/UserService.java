@@ -9,6 +9,7 @@ import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
@@ -185,12 +186,29 @@ public class UserService {
     @Path("/verify")
     @GET
     public Response verifyToken(@QueryParam("sptoken") String token){
-        System.out.println(token);
         ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
         Client client = realm.getClient();
         Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
         try{
             Account account = application.verifyPasswordResetToken(token);
+            return Response.ok().type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.APPLICATION_JSON)
+                    .build();
+        }
+    }
+    
+    @Path("/change")
+    @POST
+    public Response changePassword(ForgotPasswordDTO forgot){
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.resetPassword(forgot.getToken(), forgot.getNewPassword());
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         }
         catch(ResourceException e){
