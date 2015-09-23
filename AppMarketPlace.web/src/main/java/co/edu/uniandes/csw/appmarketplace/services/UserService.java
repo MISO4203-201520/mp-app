@@ -24,7 +24,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.shiro.SecurityUtils;
@@ -159,5 +161,24 @@ public class UserService {
             }
         }
         return acct;
+    }
+    
+    @Path("/forgot")
+    @GET
+    public Response forgotPassword(UserDTO user){
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.sendPasswordResetEmail("af.decastro879@uniandes.edu.co");
+            //Account account = application.sendPasswordResetEmail(user.getEmail());
+            return Response.ok().build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 }
