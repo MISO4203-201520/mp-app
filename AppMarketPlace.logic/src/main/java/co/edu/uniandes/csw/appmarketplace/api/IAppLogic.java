@@ -11,5 +11,5 @@ public interface IAppLogic {
     public AppDTO updateApp(AppDTO dto);
     public void deleteApp(Long id);
     public List<AppDTO> findByName(String name);
-    public List<AppDTO> getCheapest();
+    public List<AppDTO> getCheapest(String developerName);
 }

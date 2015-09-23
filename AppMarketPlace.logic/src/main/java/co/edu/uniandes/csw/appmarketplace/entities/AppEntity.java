@@ -19,7 +19,7 @@ import javax.persistence.NamedQuery;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v)")
+    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName")
 })
 public class AppEntity implements Serializable {
 
