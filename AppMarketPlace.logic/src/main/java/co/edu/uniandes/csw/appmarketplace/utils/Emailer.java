@@ -50,6 +50,8 @@ public class Emailer {
             System.out.println("Mail has been sent succesfully");
         } catch (Exception ex) {
             Logger.getLogger(Emailer.class.getName()).log(Level.SEVERE, null, ex);
+                        System.out.println("error mail");
+
         }
     }
     /**
@@ -82,5 +84,24 @@ public class Emailer {
             }            
         }.start();              
     }
-            
+        
+     public static void sendPaymentEmail(final String user, final String userEmail, 
+                    final String cost, final Date date, 
+                     final String app){
+        final String message = 
+                "Hi <b>"+user+"</b>"
+                + "<br>"
+                + "</b>"+"</b> Your payment was successfull, you just bought <b>"+app+" applications"+"</b>."
+                + "<br>"
+                + "the cost of the transaction was <b>"+cost+"</b>"+ " The date was: "+"<br>"+(date)+"</b>"
+                + "<br>"+"We hope you enjoy your applications."
+                     ;
+        System.out.println("Send email to "+userEmail+" "+message);
+        new Thread(){
+            @Override
+            public void run() {
+               send(userEmail, message, "Thanks for your payment"); 
+            }            
+        }.start();              
+    }
 }
