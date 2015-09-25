@@ -2,9 +2,13 @@ package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
+import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +35,7 @@ public class AppService {
 
     @Inject
     private IAppLogic appLogic;
+    @Inject ITransactionLogic transactionLogic;
     @Context
     private HttpServletResponse response;
     @Inject
@@ -42,6 +47,7 @@ public class AppService {
     @QueryParam("q")
     private String appName;
     private DeveloperDTO developer = (DeveloperDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
+    private ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
 
     /**
      * @generated
@@ -115,5 +121,14 @@ public class AppService {
     @Path("/categories/{category}")
     public List<AppDTO> getAppsByCategory(@PathParam("category") String category) {
         return appLogic.getAppsByCategory(category);
+    }
+    
+    @GET
+    @Path("{id: \\d+}/purchases")
+    public List<TransactionDTO> isBought(@PathParam("id") Long id) {
+        if (client != null) {
+            return transactionLogic.findByClient(client.getId(), id);
+        }
+        return new ArrayList();
     }
 }
