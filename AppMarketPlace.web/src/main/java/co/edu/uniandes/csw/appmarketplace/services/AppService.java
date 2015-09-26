@@ -22,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
@@ -139,6 +140,8 @@ public class AppService {
     public void rateApp(@PathParam("id") Long id, RateDTO dto) {
         if (client != null && dto.getRate() != null) {
             appLogic.rateApp(id, client.getId(), dto.getRate());
+        }else{
+            throw new WebApplicationException(401);
         }
     }
 }
