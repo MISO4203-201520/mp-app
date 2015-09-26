@@ -24,7 +24,7 @@ import javax.persistence.UniqueConstraint;
 )
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "RateEntity.findByAppClient", query = "SELECT t FROM RateEntity t where t.app = :app_id and t.client = :client_id")
+    @NamedQuery(name = "RateEntity.findByAppClient", query = "SELECT t FROM RateEntity t where t.app.id = :app_id and t.client.id = :client_id")
 })
 public class RateEntity {
 

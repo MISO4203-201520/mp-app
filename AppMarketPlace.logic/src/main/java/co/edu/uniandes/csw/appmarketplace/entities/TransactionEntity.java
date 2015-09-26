@@ -29,7 +29,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "TransactionEntity.findAll", query = "SELECT t FROM TransactionEntity t"),
     @NamedQuery(name = "TransactionEntity.findById", query = "SELECT t FROM TransactionEntity t WHERE t.id = :id"),
     @NamedQuery(name = "TransactionEntity.findByTotal", query = "SELECT t FROM TransactionEntity t WHERE t.total = :total"),
-    @NamedQuery(name = "TransactionEntity.findByClient", query = "SELECT t FROM TransactionEntity t WHERE t.payer = :payer AND t.recipient = :app"),
+    @NamedQuery(name = "TransactionEntity.findByClient", query = "SELECT t FROM TransactionEntity t WHERE t.payer.id = :payer AND t.recipient.id = :app"),
     @NamedQuery(name = "TransactionEntity.findByStatus", query = "SELECT t FROM TransactionEntity t WHERE t.status = :status")})
 public class TransactionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
