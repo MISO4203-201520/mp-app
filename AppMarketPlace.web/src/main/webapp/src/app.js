@@ -11,7 +11,8 @@
         'ngCrud',
         'xeditable',
         'commentModule',
-        'paymentCardsModule'
+        'paymentCardsModule',        
+        'adminModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -42,6 +43,14 @@
             }).when('/paymentCard', {
                 templateUrl: tplUrl,
                 controller: 'paymentCtrl',
+                controllerAs: alias 
+             }).when('/admin/clients', {
+                templateUrl: 'src/modules/admin/users.tpl.html',
+                controller: 'adminClientCtrl',
+                controllerAs: alias 
+             }).when('/admin/developers', {
+                templateUrl: 'src/modules/admin/users.tpl.html',
+                controller: 'adminDevCtrl',
                 controllerAs: alias 
             }).otherwise('/catalog');
         }]);

@@ -5,39 +5,43 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
+import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
 
 /**
  *
- * @author ac.rojas13
+ * @author af.esguerra10
  */
-public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
+@Stateless
+public class RatePersistence extends CrudPersistence<RateEntity> {
 
-    public TransactionPersistence() {
-        this.entityClass = TransactionEntity.class;
+    public RatePersistence() {
+        this.entityClass = RateEntity.class;
     }
 
-    public Long countByAppClient(Long clientId, Long appId) {
+    public RateEntity findByAppClient(Long clientId, Long appId) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("payer_id", clientId);
+            params.put("client_id", clientId);
             params.put("app_id", appId);
-            return this.executeSingleNamedQuery("TransactionEntity.countByClientApp", params);
+            return this.executeSingleNamedQuery("RateEntity.findByAppClient", params);
         } catch (NoResultException e) {
-            return 0L;
+            return null;
         }
     }
-    public Long countByApp(Long appId) {
+    
+    public Double getAverageByApp(Long appId){
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("app_id", appId);
-            return this.executeSingleNamedQuery("TransactionEntity.countByApp", params);
+            return this.executeSingleNamedQuery("RateEntity.avgByApp", params);
         } catch (NoResultException e) {
-            return 0L;
+            return 0.0;
         }
     }
-
 }

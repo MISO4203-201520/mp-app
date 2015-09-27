@@ -16,6 +16,8 @@
                 $location.url('/catalog' + search);
             };
 
+            var self = this;
+
             this.recordActions = {
                 addToCart: {
                     displayName: 'Add to Cart',
@@ -111,6 +113,53 @@
                     }
                 }
             };
+
+            this.recordActions.rate = {
+                displayName: 'Rate App',
+                icon: 'star',
+                class: 'primary',
+                fn: function (app) {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/rateModal.tpl.html',
+                        controller: 'rateModalCtrl',
+                        resolve: {
+                            app: function () {
+                                return app;
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (rate) {
+                        svc.rateApp(app, rate).then(function () {
+                            self.showSuccess('Aplicación calificada');
+                        }, function () {
+                            self.showError('No es posible calificar la aplicación');
+                        });
+                    });
+                },
+                show: function () {
+                    return true;
+                }};
+
+            this.recordActions.details = {
+                displayName: 'Details',
+                icon: 'list-alt',
+                class: 'info',
+                fn: function (app) {
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/detailsModal.tpl.html',
+                        controller: 'detailsModalCtrl',
+                        resolve: {
+                            app: function () {
+                                return svc.fetchRecord(app);
+                            }
+                        }
+                    });
+                },
+                show: function () {
+                    return true;
+                }};
 
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
@@ -226,5 +275,24 @@
             $modalInstance.dismiss('cancel');
         };
     });
+
+    mod.controller('rateModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.name = app.name;
+            $scope.rate = 0;
+            $scope.ok = function () {
+                $modalInstance.close($scope.rate);
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }]);
+    
+    mod.controller('detailsModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.app = app;
+            $scope.ok = function () {
+                $modalInstance.dismiss();
+            };
+        }]);
 
 })(window.angular);

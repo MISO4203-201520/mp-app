@@ -6,7 +6,6 @@
 package co.edu.uniandes.csw.appmarketplace.converters;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
-import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.Comment;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,7 +17,7 @@ import java.util.List;
  *
  * @author if.garcia11
  */
-public class CommentConverter {
+public abstract class CommentConverter {
     
         private static DateFormat format =new SimpleDateFormat("yyyy-MM-dd");
     
@@ -75,7 +74,7 @@ public class CommentConverter {
    
     }
 
-    private CommentDTO basicEntity2DTO(Comment entity) {
+    private static CommentDTO basicEntity2DTO(Comment entity) {
        
      if (entity != null) {
             CommentDTO dto = new CommentDTO();
@@ -103,5 +102,15 @@ public class CommentConverter {
         } else {
             return null;
         }
+    }
+    
+    public static List<CommentDTO> listEntity2DTO(List<Comment> entities){
+        List<CommentDTO> dtos = new ArrayList<CommentDTO>();
+        if (entities != null) {
+            for (Comment entity : entities) {
+                dtos.add(basicEntity2DTO(entity));
+            }
+        }
+        return dtos;
     }
 }

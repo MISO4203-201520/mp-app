@@ -21,6 +21,8 @@ public class AppDTO {
     private Integer discount;
     private String category;
     private List<CommentDTO> comments;
+    private Double rate;
+    private Long downloads;
 
     /**
      * @generated
@@ -170,6 +172,22 @@ public class AppDTO {
      */
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
+    public Long getDownloads() {
+        return downloads;
+    }
+
+    public void setDownloads(Long downloads) {
+        this.downloads = downloads;
     }
 
 }
