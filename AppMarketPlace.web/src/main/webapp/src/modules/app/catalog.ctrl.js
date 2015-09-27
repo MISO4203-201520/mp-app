@@ -16,6 +16,8 @@
                 $location.url('/catalog' + search);
             };
 
+            var self = this;
+
             this.recordActions = {
                 addToCart: {
                     displayName: 'Add to Cart',
@@ -85,6 +87,33 @@
                     }
                 }
             };
+
+            this.recordActions.rate = {
+                displayName: 'Rate App',
+                icon: 'star',
+                class: 'primary',
+                fn: function (app) {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/rateModal.tpl.html',
+                        controller: 'rateModalCtrl',
+                        resolve: {
+                            app: function () {
+                                return app;
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function (rate) {
+                        svc.rateApp(app, rate).then(function () {
+                            self.showSuccess('Aplicación calificada');
+                        }, function () {
+                            self.showError('No es posible calificar la aplicación');
+                        });
+                    });
+                },
+                show: function () {
+                    return true;
+                }};
 
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
@@ -187,5 +216,17 @@
             $modalInstance.dismiss('cancel');
         };
     });
+
+    mod.controller('rateModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.name = app.name;
+            $scope.rate = 0;
+            $scope.ok = function () {
+                $modalInstance.close($scope.rate);
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }]);
 
 })(window.angular);

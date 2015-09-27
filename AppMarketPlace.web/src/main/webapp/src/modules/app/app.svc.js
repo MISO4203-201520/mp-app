@@ -16,5 +16,9 @@
             this.getAppsByCategory = function (text) {
                 return this.api.customGET("categories/" + text);
             };
+            
+            this.rateApp = function(app, rate){
+                return app.all('rate').post({rate: rate});
+            };
         }]);
 })(window.angular);

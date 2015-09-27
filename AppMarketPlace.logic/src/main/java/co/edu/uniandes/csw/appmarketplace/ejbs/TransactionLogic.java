@@ -70,4 +70,8 @@ public class TransactionLogic implements ITransactionLogic {
     public List<TransactionDTO> findByName(String name) {
         return TransactionConverter.listEntity2DTO(persistence.findByName(name));
     }
+    
+    public List<TransactionDTO> findByClient(Long cliendId, Long appId){
+        return TransactionConverter.listEntity2DTO(persistence.findByPayer(cliendId, appId));
+    }
 }
