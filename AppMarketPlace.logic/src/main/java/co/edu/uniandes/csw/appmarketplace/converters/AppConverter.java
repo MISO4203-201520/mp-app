@@ -112,6 +112,7 @@ public abstract class AppConverter {
     public static AppDTO fullEntity2DTO(AppEntity entity) {
         if (entity != null) {
             AppDTO dto = basicEntity2DTO(entity);
+            dto.setComments(CommentConverter.listEntity2DTO(entity.getComments()));
             return dto;
         } else {
             return null;
