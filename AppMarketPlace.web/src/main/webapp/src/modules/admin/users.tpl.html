@@ -11,15 +11,15 @@
                 <tr>
                     <th>Name</th>
                     <th>UserId</th>
+                    <th>UserId</th>
                 </tr>
             </thead>
             <tbody>
                  <tr ng-repeat="record in records">
                     <td><div>{{record.name}}</div></td>     
                     <td><div>{{record.userId}}</div></td>
-                    <!--<td><button ng-repeat="(key, action) in ctrl.actions" id="{{key}}-btn" class="btn btn-default btn-sm" ng-show="action.show()" ng-click="action.fn(record)"><span class="glyphicon glyphicon-{{action.icon}}"></span> {{action.displayName}}</button></td>-->
-               
-                 </tr> 
+                    <td><button ng-repeat="(key, action) in ctrl.actions" id="{{key}}-btn" class="btn btn-default btn-sm" ng-show="action.show()" ng-click="action.fn(record)"><span class="glyphicon glyphicon-{{action.icon}}"></span> {{action.displayName}}</button></td>
+             </tr> 
             </tbody>
         </table>
         <div class="text-center">

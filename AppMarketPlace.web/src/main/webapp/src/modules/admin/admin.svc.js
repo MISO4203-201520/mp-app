@@ -6,6 +6,10 @@
 
         this.fullUser = function () {
             return this.api.one('../users/currentUser').get();
-        };        
+        };  
+        
+        this.disableUser = function(text){
+           // return this.api
+        }
     }]);
 })(window.angular);

@@ -22,7 +22,7 @@
                 addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
-                    class: 'primary',
+                    class: 'remove-sign',
                     fn: function (app) {
                         return cartItemSvc.addItem({
                             app: app,
