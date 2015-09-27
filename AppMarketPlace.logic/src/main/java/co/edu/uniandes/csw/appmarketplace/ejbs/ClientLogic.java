@@ -72,7 +72,4 @@ public class ClientLogic implements IClientLogic {
         return ClientConverter.refEntity2DTO(persistence.getClientByUserId(userId));
     }
     
-    public void disableClient(Long id){
-        System.out.println("Disable ************************************************************* "+id);
-    }
 }

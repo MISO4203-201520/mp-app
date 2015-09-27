@@ -12,6 +12,9 @@ public class ClientDTO {
     private Long id;
     private String name;
     private String userId;
+    private String fullName;
+    private String email;
+    private String status;
     private List<CartItemDTO> cartItems;
     private List<PaymentCardDTO> cards;
     /**
@@ -84,4 +87,27 @@ public class ClientDTO {
         this.cards = cards;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

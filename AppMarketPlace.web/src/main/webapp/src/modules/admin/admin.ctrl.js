@@ -21,6 +21,7 @@
             disable: {
                 displayName: 'disable',
                 icon: 'remove-sign',
+                icon2: 'ok-sign',
                 class: 'primary',
                 fn: function (record) {
                    adminSvc.disableUser(record.id).then(function(){
