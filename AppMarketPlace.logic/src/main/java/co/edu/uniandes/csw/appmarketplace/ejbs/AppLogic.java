@@ -48,7 +48,10 @@ public class AppLogic implements IAppLogic {
      * @generated
      */
     public AppDTO getApp(Long id) {
-        return AppConverter.fullEntity2DTO(persistence.find(id));
+        AppDTO dto = AppConverter.fullEntity2DTO(persistence.find(id));
+        dto.setDownloads(transactionPersistence.countByApp(id));
+        dto.setRate(ratePersistence.getAverageByApp(id));
+        return dto;
     }
 
     /**
@@ -91,7 +94,7 @@ public class AppLogic implements IAppLogic {
     }
 
     public void rateApp(Long appId, Long clientId, Long rateValue) {
-        Long transactions = transactionPersistence.findByPayer(clientId, appId);
+        Long transactions = transactionPersistence.countByAppClient(clientId, appId);
         if (transactions > 0) {
             RateEntity rate = ratePersistence.findByAppClient(clientId, appId);
             if (rate == null) {

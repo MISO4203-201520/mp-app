@@ -22,7 +22,7 @@
                 addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
-                    class: 'remove-sign',
+                    class: 'primary',
                     fn: function (app) {
                         return cartItemSvc.addItem({
                             app: app,
@@ -120,7 +120,16 @@
                 icon: 'list-alt',
                 class: 'info',
                 fn: function (app) {
-                    
+                    $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/detailsModal.tpl.html',
+                        controller: 'detailsModalCtrl',
+                        resolve: {
+                            app: function () {
+                                return svc.fetchRecord(app);
+                            }
+                        }
+                    });
                 },
                 show: function () {
                     return true;
@@ -237,6 +246,13 @@
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
+            };
+        }]);
+    
+    mod.controller('detailsModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.app = app;
+            $scope.ok = function () {
+                $modalInstance.dismiss();
             };
         }]);
 

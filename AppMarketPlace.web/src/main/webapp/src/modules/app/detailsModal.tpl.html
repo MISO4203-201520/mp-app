@@ -1,0 +1,13 @@
+<h1>{{app.name}}</h1>
+<p><strong>Downloads: </strong>{{app.downloads}}</p>
+<p><strong>Rate: </strong>{{app.rate}}</p>
+<h2>Comments</h2>
+<ul class="list-group">
+    <li class="list-group-item" ng-repeat="comment in app.comments">
+        <p>{{comment.comment}}</p>
+        <p>{{comment.date | date}}</p>
+    </li>
+</ul>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok()">Ok</button>
+</div>
