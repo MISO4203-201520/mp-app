@@ -18,6 +18,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
@@ -59,13 +60,13 @@ public class AdminService {
     
     @POST
     @Path("/clients/{id: \\d+}/disable")
-    public void disableClient(DeveloperDTO dto) {
-        
+    public void disableClient(@PathParam("id") Long id) {
+        clientLogic.disableClient(id);
     }
     
     @POST
     @Path("/developers/{id: \\d+}/disable")
-    public void disableDeveloper(DeveloperDTO dto) {
-        
+    public void disableDeveloper(@PathParam("id") Long id) {
+        developerLogic.disableDeveloper(id);
     }
 }

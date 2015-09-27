@@ -4,14 +4,14 @@
     mod.service('adminClientService', ['CrudCreator', 'adminClientContext', function (CrudCreator, context) {
         CrudCreator.extendService(this, context);
         
-        this.disableUser = function(text){
+        this.disableUser = function(user){
             
         };
     }]);
     mod.service('adminDeveloperService', ['CrudCreator', 'adminDevContext', function (CrudCreator, context) {
         CrudCreator.extendService(this, context);
         
-        this.disableUser = function(text){
+        this.disableUser = function(user){
             
         };
     }]);

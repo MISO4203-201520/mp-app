@@ -72,4 +72,9 @@ public class DeveloperLogic implements IDeveloperLogic {
     public DeveloperDTO getDeveloperByUserId(String userId) {
         return DeveloperConverter.refEntity2DTO(persistence.getDeveloperByUserId(userId));
     }
+    
+    public void disableDeveloper(Long userId){
+        
+    }
+            
 }
