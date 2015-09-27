@@ -73,6 +73,6 @@ public class ClientLogic implements IClientLogic {
     }
     
     public void disableClient(Long id){
-        
+        System.out.println("Disable ************************************************************* "+id);
     }
 }

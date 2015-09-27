@@ -74,7 +74,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     }
     
     public void disableDeveloper(Long userId){
-        
+        System.out.println("Disable ************************************************************* "+userId);
     }
             
 }

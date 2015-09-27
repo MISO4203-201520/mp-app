@@ -23,8 +23,8 @@
                 icon: 'remove-sign',
                 class: 'primary',
                 fn: function (record) {
-                   adminSvc.disableUser().then(function(){
-                        self.fetchRecords(record.id); 
+                   adminSvc.disableUser(record.id).then(function(){
+                        self.fetchRecords(); 
                    });
                 },
                 show: function () {
