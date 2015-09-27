@@ -115,6 +115,17 @@
                     return true;
                 }};
 
+            this.recordActions.details = {
+                displayName: 'Details',
+                icon: 'list-alt',
+                class: 'info',
+                fn: function (app) {
+                    
+                },
+                show: function () {
+                    return true;
+                }};
+
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
                 icon: 'search',

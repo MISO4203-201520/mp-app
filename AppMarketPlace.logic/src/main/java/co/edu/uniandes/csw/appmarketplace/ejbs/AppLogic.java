@@ -91,8 +91,8 @@ public class AppLogic implements IAppLogic {
     }
 
     public void rateApp(Long appId, Long clientId, Long rateValue) {
-        List<TransactionEntity> transactions = transactionPersistence.findByPayer(clientId, appId);
-        if (transactions.size() > 0) {
+        Long transactions = transactionPersistence.findByPayer(clientId, appId);
+        if (transactions > 0) {
             RateEntity rate = ratePersistence.findByAppClient(clientId, appId);
             if (rate == null) {
                 rate = new RateEntity();

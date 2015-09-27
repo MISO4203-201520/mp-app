@@ -34,4 +34,14 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
             return null;
         }
     }
+    
+    public Double getAverageByApp(Long appId){
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("app_id", appId);
+            return this.executeSingleNamedQuery("RateEntity.avgByApp", params);
+        } catch (NoResultException e) {
+            return 0.0;
+        }
+    }
 }

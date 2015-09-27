@@ -126,15 +126,6 @@ public class AppService {
         return appLogic.getAppsByCategory(category);
     }
 
-    @GET
-    @Path("{id: \\d+}/purchases")
-    public List<TransactionDTO> isBought(@PathParam("id") Long id) {
-        if (client != null) {
-            return transactionLogic.findByClient(client.getId(), id);
-        }
-        return new ArrayList();
-    }
-
     @POST
     @Path("{id: \\d+}/rate")
     public void rateApp(@PathParam("id") Long id, RateDTO dto) {
