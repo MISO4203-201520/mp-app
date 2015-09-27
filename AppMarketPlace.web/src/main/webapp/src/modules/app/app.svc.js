@@ -5,7 +5,6 @@
             CrudCreator.extendService(this, context);
 
             this.sendQuestion = function (text, app) {
-                console.log(app.id);
                 $http.post('http://localhost:8080/AppMarketPlace.web/webresources/question', {'description': text, 'app': {id: app.id}}).then(function (response) {
                 }, function (response) {
                 });

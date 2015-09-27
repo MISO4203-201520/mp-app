@@ -5,8 +5,10 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
+import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
+import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
@@ -50,6 +52,9 @@ public class UserService {
 
     @Inject
     private IDeveloperLogic developerLogic;
+    
+    @Inject
+    private IAdminLogic adminLogic;
 
     @Path("/login")
     @POST
@@ -68,6 +73,11 @@ public class UserService {
                     currentUser.getSession().setAttribute("Developer", provider);
                     return Response.ok(provider).build();
                 } else {
+                    AdminDTO admin = adminLogic.getAdminByUserId(currentUser.getPrincipal().toString());
+                    if(admin != null){
+                        currentUser.getSession().setAttribute("Admin", admin);
+                        return Response.ok(admin).build();
+                    }
                     return Response.status(Response.Status.BAD_REQUEST)
                             .entity(" User is not registered")
                             .type(MediaType.TEXT_PLAIN)
@@ -99,11 +109,23 @@ public class UserService {
     public Response getCurrentUser() {
         UserDTO user = new UserDTO();
         try {
-            Subject currentUser = SecurityUtils.getSubject();
+            Subject currentUser = SecurityUtils.getSubject();            
             Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
             user.setName(userAttributes.get("givenName") + " " + userAttributes.get("surname"));
             user.setEmail(userAttributes.get("email"));
-            user.setUserName(userAttributes.get("username"));
+            user.setUserName(userAttributes.get("username")); 
+            if(currentUser.getSession().getAttribute("Client")!= null){
+                user.setRole("client");
+            }else if(currentUser.getSession().getAttribute("Developer")!= null){
+                user.setRole("developer");
+            }else if(currentUser.getSession().getAttribute("Admin")!= null){
+                user.setRole("admin");
+            }else{
+                 return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("User not registerd")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+            }
             return Response.ok(user).build();
         } catch (AuthenticationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
