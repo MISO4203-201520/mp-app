@@ -30,6 +30,32 @@
                     show: function () {
                         return true;
                     }
+                }, shareSocial: {
+                    name: 'share social',
+                    displayName: 'Share',
+                    icon: 'share',
+                    class: 'primary',
+                    fn: function (app) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'src/modules/socialShare/social.html',
+                            controller: 'ModalShare',
+                            resolve: {
+                                app: function () {
+                                    $rootScope.selectedApp = app;
+                                    return app;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function (text) {
+                            svc.sendQuestion(text, app);
+                        }, function () {
+
+                        });
+                    },
+                    show: function () {
+                        return true;
+                    }
                 },
                 doQuestion: {
                     name: 'doQuestion',
@@ -142,7 +168,20 @@
 
             this.fetchRecords();
         }]);
+  mod.controller('ModalShare', function ($scope, $modalInstance, app) {
+        $scope.itemQuestion = {
+            name: app.name,
+            text: ""
+        };
 
+        $scope.ok = function () {
+            $modalInstance.close($scope.itemQuestion.text);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
     mod.controller('ModalQuestionCtrl', function ($scope, $modalInstance, app) {
         $scope.itemQuestion = {
             name: app.name,

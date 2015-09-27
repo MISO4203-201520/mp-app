@@ -1,0 +1,22 @@
+<div ng-controller="ModalShare">
+<div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
+    <div>
+        <div class="modal-dialog">
+            
+                <div class="modal-header">
+                    <h1>Share Application</h1>
+                </div>
+                <div class="modal-body">
+                    <form id="formComment" onsubmit="submitForm()">
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=example.org" target="_blank">
+  Share on Facebook
+</a>
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-text="Here is an awesome App">Tweet</a>
+
+                    </form>
+                </div>
+        </div>
+    </div>
+</div>
+</div>
