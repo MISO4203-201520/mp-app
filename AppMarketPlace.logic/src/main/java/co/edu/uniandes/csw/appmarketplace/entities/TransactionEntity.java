@@ -28,9 +28,9 @@ import javax.validation.constraints.Size;
 @NamedQueries({
     @NamedQuery(name = "TransactionEntity.findAll", query = "SELECT t FROM TransactionEntity t"),
     @NamedQuery(name = "TransactionEntity.findById", query = "SELECT t FROM TransactionEntity t WHERE t.id = :id"),
-    @NamedQuery(name = "TransactionEntity.findByApp", query = "SELECT count(t) FROM TransactionEntity t WHERE t.recipient.id = :app_id"),
+    @NamedQuery(name = "TransactionEntity.countByApp", query = "SELECT count(t) FROM TransactionEntity t WHERE t.recipient.id = :app_id"),
     @NamedQuery(name = "TransactionEntity.findByTotal", query = "SELECT t FROM TransactionEntity t WHERE t.total = :total"),
-    @NamedQuery(name = "TransactionEntity.countByClient", query = "SELECT count(t) FROM TransactionEntity t WHERE t.payer.id = :payer_id AND t.recipient.id = :app_id"),
+    @NamedQuery(name = "TransactionEntity.countByClientApp", query = "SELECT count(t) FROM TransactionEntity t WHERE t.payer.id = :payer_id AND t.recipient.id = :app_id"),
     @NamedQuery(name = "TransactionEntity.findByStatus", query = "SELECT t FROM TransactionEntity t WHERE t.status = :status")})
 public class TransactionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
