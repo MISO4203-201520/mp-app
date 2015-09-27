@@ -1,15 +1,18 @@
 (function (ng) {
     var mod = ng.module('adminModule');
 
-    mod.service('adminService', ['CrudCreator', 'adminContext', function (CrudCreator, context) {
+    mod.service('adminClientService', ['CrudCreator', 'adminClientContext', function (CrudCreator, context) {
         CrudCreator.extendService(this, context);
-
-        this.fullUser = function () {
-            return this.api.one('../users/currentUser').get();
-        };  
         
         this.disableUser = function(text){
-           // return this.api
-        }
+            
+        };
+    }]);
+    mod.service('adminDeveloperService', ['CrudCreator', 'adminDevContext', function (CrudCreator, context) {
+        CrudCreator.extendService(this, context);
+        
+        this.disableUser = function(text){
+            
+        };
     }]);
 })(window.angular);

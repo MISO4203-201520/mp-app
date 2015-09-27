@@ -2,23 +2,22 @@
     
     var mod = ng.module('adminModule');
 
-    mod.controller('adminClientCtrl', ['CrudCreator', '$scope', 'clientService', 'clientModel', 'authService', 'adminService','$location', function (CrudCreator, $scope, svc, model, adminSvc) {
+    mod.controller('adminClientCtrl', ['CrudCreator', '$scope', 'adminModel', 'adminClientService', function (CrudCreator, $scope, model, svc) {
         CrudCreator.extendController(this, svc, $scope, model, 'admin', 'Clients');
-        showList(adminSvc,$scope,this,true);        
+        showList(svc,$scope,this,true);        
     }]);
-    mod.controller('adminDevCtrl', ['CrudCreator', '$scope', 'developerService', 'developerModel', 'authService', 'adminService','$location', function (CrudCreator, $scope, svc, model, adminSvc) {
+    mod.controller('adminDevCtrl', ['CrudCreator', '$scope', 'adminModel', 'adminDeveloperService', function (CrudCreator, $scope, model, svc) {
         CrudCreator.extendController(this, svc, $scope, model, 'admin', 'Developers');
-        showList(adminSvc,$scope,this,false); 
+        showList(svc,$scope,this,false); 
     }]);
     
-    //var showList =function(authSvc,adminSvc,$location,$scope,self,first){
      var showList =function(adminSvc,$scope,self,first){
         $scope.listUsers = {
             clients:first,
             devs:!first
         }; 
         self.fetchRecords();    
-        self.actions = {
+        self.actions = {    
             disable: {
                 displayName: 'disable',
                 icon: 'remove-sign',
