@@ -26,8 +26,8 @@ public class PaymentCardLogic implements IPaymentCardLogic{
     /**
      * @generated
      */
-    public List<PaymentCardDTO> getPaymentCards(Integer page, Integer maxRecords) {
-        return PaymentCardConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
+    public List<PaymentCardDTO> getPaymentCards(Integer id,Integer page, Integer maxRecords) {
+        return PaymentCardConverter.listEntity2DTO(persistence.findAll(id, page, maxRecords));
     }
     
     /**

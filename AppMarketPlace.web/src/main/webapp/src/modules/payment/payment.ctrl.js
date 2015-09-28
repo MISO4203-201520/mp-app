@@ -3,7 +3,9 @@
 
     mod.controller('paymentCtrl', ['CrudCreator', '$scope', 'paymentCard', 'transaction', 'paymentCardsModel','$location','$timeout', '$filter', function (CrudCreator, $scope, svc, svcPay, model, $location, $timeout, $filter) {
             CrudCreator.extendController(this, svc, $scope, model, 'payment', 'Payment');
+            
             this.loadRefOptions();
+            this.fetchRecords();
 
             var self = this;            
             this.readOnly = true;

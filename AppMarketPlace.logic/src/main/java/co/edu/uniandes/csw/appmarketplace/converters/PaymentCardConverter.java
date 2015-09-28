@@ -67,6 +67,7 @@ public class PaymentCardConverter {
             dto.setFullname(entity.getFullname());
             dto.setPaymentType(PaymentMethodConverter.refEntity2DTO(entity.getPaymentType()));            
             dto.setSecurityCode(entity.getSecurityCode());
+            dto.setOwnerId(ClientConverter.refEntity2DTO(entity.getOwnerId()));
 
             return dto;
         } else {
@@ -91,6 +92,7 @@ public class PaymentCardConverter {
             entity.setId(dto.getId());
             entity.setPaymentType(PaymentMethodConverter.refDTO2Entity(dto.getPaymentType()));
             entity.setSecurityCode(dto.getSecurityCode());
+            entity.setOwnerId(ClientConverter.refDTO2Entity(dto.getOwnerId()));
             return entity;
         } else {
             return null;

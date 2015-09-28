@@ -17,6 +17,7 @@ public class PaymentCardDTO {
     private short securityCode;
     private String dueDate;
     private PaymentMethodDTO paymentType;
+    private ClientDTO ownerId;
     
     
     /**
@@ -101,6 +102,20 @@ public class PaymentCardDTO {
      */
     public void setDueDate(String dueDate) {
         this.dueDate = dueDate;
+    }
+
+    /**
+     * @return the ownerId
+     */
+    public ClientDTO getOwnerId() {
+        return ownerId;
+    }
+
+    /**
+     * @param ownerId the ownerId to set
+     */
+    public void setOwnerId(ClientDTO ownerId) {
+        this.ownerId = ownerId;
     }
     
 }

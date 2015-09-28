@@ -8,14 +8,17 @@ package co.edu.uniandes.csw.appmarketplace.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,6 +35,7 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "PaymentCardEntity.findAll", query = "SELECT p FROM PaymentCardEntity p"),
     @NamedQuery(name = "PaymentCardEntity.findById", query = "SELECT p FROM PaymentCardEntity p WHERE p.id = :id"),
     @NamedQuery(name = "PaymentCardEntity.findByFullname", query = "SELECT p FROM PaymentCardEntity p WHERE p.fullname = :fullname"),
+    @NamedQuery(name = "PaymentCardEntity.findByOwnerId", query = "SELECT p FROM PaymentCardEntity p WHERE p.ownerId.id = :ownerId"),
     @NamedQuery(name = "PaymentCardEntity.findByCardnumber", query = "SELECT p FROM PaymentCardEntity p WHERE p.cardnumber = :cardnumber")    
     })
 public class PaymentCardEntity implements Serializable {
@@ -62,8 +66,11 @@ public class PaymentCardEntity implements Serializable {
     private Date dueDate;
     @JoinColumn(name = "payment_type", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private PaymentMethodEntity paymentType;
-
+    private PaymentMethodEntity paymentType;        
+    @JoinColumn(name="owner_id", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private ClientEntity ownerId;
+    
     public PaymentCardEntity() {
     }
 
@@ -150,6 +157,20 @@ public class PaymentCardEntity implements Serializable {
     @Override
     public String toString() {
         return "co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity[ id=" + id + " ]";
+    }
+
+    /**
+     * @return the ownerId
+     */
+    public ClientEntity getOwnerId() {
+        return ownerId;
+    }
+
+    /**
+     * @param ownerId the ownerId to set
+     */
+    public void setOwnerId(ClientEntity ownerId) {
+        this.ownerId = ownerId;
     }
     
 }
