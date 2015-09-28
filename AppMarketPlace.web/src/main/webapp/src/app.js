@@ -12,7 +12,8 @@
         'xeditable',
         'commentModule',
         'paymentCardsModule',        
-        'adminModule'
+        'adminModule',
+        'forgotModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -48,6 +49,18 @@
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminClientCtrl',
                 controllerAs: alias 
+             }).when('/forgot', {
+                templateUrl: 'src/modules/forgotPass/forgot.tpl.html',
+                controller: 'forgotCtrl',
+                controllerAs: alias 
+             }).when('/verify', {
+                templateUrl: 'src/modules/forgotPass/verify.tpl.html',
+                controller: 'verifyCtrl',
+                controllerAs: alias 
+             }).when('/change', {
+                templateUrl: 'src/modules/forgotPass/change.tpl.html',
+                controller: 'forgotCtrl',
+                controllerAs: alias 
              }).when('/admin/developers', {
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
@@ -69,7 +82,6 @@
             });
             auth.setRoles({'user': 'Client', 'developer': 'Developer'});
         }]);
-
     mainApp.run(function (editableOptions) {
         editableOptions.theme = 'bs3'; // bootstrap3 theme. For Xeditable plugin Angular
     });
