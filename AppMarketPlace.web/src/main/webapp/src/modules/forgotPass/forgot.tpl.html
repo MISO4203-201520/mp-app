@@ -1,0 +1,27 @@
+<div>
+    <div class="col-md-5 col-md-offset-4">
+        <div class="col-md-12" ng-show="messages.length>0" ng-message="show">
+            <div ng-repeat="message in messages"> 
+                <div class="alert alert-{{message.type}}" role="alert">
+                    <button type="button" class="close" ng-click="close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{message.type| uppercase}}</strong> {{message.message}}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please Enter the email address associated with your account to reset your password</h3>
+                </div>
+                <div class="panel-body">
+                    <form name="forgotform" accept-charset="UTF-8" role="form">
+                        <div class="form-group">
+                            <input class="form-control" required ng-model="user.email" placeholder="Email" name="email" type="text">
+                        </div>
+                        <input class="btn btn-lg btn-success btn-block" ng-click="sendMail()" type="submit" value="Send Mail">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

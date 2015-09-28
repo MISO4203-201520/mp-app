@@ -187,14 +187,13 @@ public class UserService {
     }
     
     @Path("/forgot")
-    @GET
+    @POST
     public Response forgotPassword(UserDTO user){
         ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
         Client client = realm.getClient();
         Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
         try{
-            Account account = application.sendPasswordResetEmail("af.decastro879@uniandes.edu.co");
-            //Account account = application.sendPasswordResetEmail(user.getEmail());
+            Account account = application.sendPasswordResetEmail(user.getEmail());
             return Response.ok().build();
         }
         catch(ResourceException e){
@@ -218,7 +217,7 @@ public class UserService {
         catch(ResourceException e){
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
-                    .type(MediaType.APPLICATION_JSON)
+                    .type(MediaType.TEXT_PLAIN)
                     .build();
         }
     }
@@ -234,9 +233,11 @@ public class UserService {
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         }
         catch(ResourceException e){
+            e.printStackTrace();
+            System.out.println(e.getMessage());
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
-                    .type(MediaType.APPLICATION_JSON)
+                    .type(MediaType.TEXT_PLAIN)
                     .build();
         }
     }
