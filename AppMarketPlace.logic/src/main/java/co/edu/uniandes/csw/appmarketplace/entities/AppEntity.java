@@ -19,7 +19,8 @@ import javax.persistence.NamedQuery;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v)")
+    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName"),
+    @NamedQuery(name="AppEntity.getAppsByCategory", query="SELECT u FROM AppEntity u WHERE u.category = :category")
 })
 public class AppEntity implements Serializable {
 
@@ -42,6 +43,8 @@ public class AppEntity implements Serializable {
     private String platform;
     
     private Integer discount;
+    
+    private String category;
 
     @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
     private List<Comment> comments;
@@ -196,5 +199,19 @@ public class AppEntity implements Serializable {
     public void setQuestions(List<QuestionEntity> questions) {
         this.questions = questions;
     }    
+
+    /**
+     * @return the category
+     */
+    public String getCategory() {
+        return category;
+    }
+
+    /**
+     * @param category the category to set
+     */
+    public void setCategory(String category) {
+        this.category = category;
+    }
     
 }

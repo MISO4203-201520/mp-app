@@ -111,7 +111,6 @@ public abstract class DeveloperConverter {
     /**
      * @generated
      */
-
     public static List<DeveloperDTO> listEntity2DTO(List<DeveloperEntity> entities) {
         List<DeveloperDTO> dtos = new ArrayList<DeveloperDTO>();
         if (entities != null) {

@@ -5,10 +5,13 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
+import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
+import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
@@ -19,12 +22,14 @@ import com.stormpath.sdk.group.GroupList;
 import com.stormpath.sdk.resource.ResourceException;
 import com.stormpath.shiro.realm.ApplicationRealm;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.apache.shiro.SecurityUtils;
@@ -47,6 +52,9 @@ public class UserService {
 
     @Inject
     private IDeveloperLogic developerLogic;
+    
+    @Inject
+    private IAdminLogic adminLogic;
 
     @Path("/login")
     @POST
@@ -65,6 +73,11 @@ public class UserService {
                     currentUser.getSession().setAttribute("Developer", provider);
                     return Response.ok(provider).build();
                 } else {
+                    AdminDTO admin = adminLogic.getAdminByUserId(currentUser.getPrincipal().toString());
+                    if(admin != null){
+                        currentUser.getSession().setAttribute("Admin", admin);
+                        return Response.ok(admin).build();
+                    }
                     return Response.status(Response.Status.BAD_REQUEST)
                             .entity(" User is not registered")
                             .type(MediaType.TEXT_PLAIN)
@@ -96,11 +109,23 @@ public class UserService {
     public Response getCurrentUser() {
         UserDTO user = new UserDTO();
         try {
-            Subject currentUser = SecurityUtils.getSubject();
+            Subject currentUser = SecurityUtils.getSubject();            
             Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
             user.setName(userAttributes.get("givenName") + " " + userAttributes.get("surname"));
             user.setEmail(userAttributes.get("email"));
-            user.setUserName(userAttributes.get("username"));
+            user.setUserName(userAttributes.get("username")); 
+            if(currentUser.getSession().getAttribute("Client")!= null){
+                user.setRole("client");
+            }else if(currentUser.getSession().getAttribute("Developer")!= null){
+                user.setRole("developer");
+            }else if(currentUser.getSession().getAttribute("Admin")!= null){
+                user.setRole("admin");
+            }else{
+                 return Response.status(Response.Status.BAD_REQUEST)
+                    .entity("User not registerd")
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+            }
             return Response.ok(user).build();
         } catch (AuthenticationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -159,5 +184,59 @@ public class UserService {
             }
         }
         return acct;
+    }
+    
+    @Path("/forgot")
+    @POST
+    public Response forgotPassword(UserDTO user){
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.sendPasswordResetEmail(user.getEmail());
+            return Response.ok().build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+    }
+    
+    @Path("/verify")
+    @GET
+    public Response verifyToken(@QueryParam("sptoken") String token){
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.verifyPasswordResetToken(token);
+            return Response.ok().type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
+    }
+    
+    @Path("/change")
+    @POST
+    public Response changePassword(ForgotPasswordDTO forgot){
+        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        Client client = realm.getClient();
+        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
+        try{
+            Account account = application.resetPassword(forgot.getToken(), forgot.getNewPassword());
+            return Response.ok().type(MediaType.APPLICATION_JSON).build();
+        }
+        catch(ResourceException e){
+            return Response.status(e.getStatus())
+                    .entity(e.getMessage())
+                    .type(MediaType.TEXT_PLAIN)
+                    .build();
+        }
     }
 }

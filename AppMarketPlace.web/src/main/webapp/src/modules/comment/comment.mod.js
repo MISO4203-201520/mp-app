@@ -9,13 +9,11 @@
                 displayName: 'Comment',
                 type: 'String',
                 required: true
-            },
-            {
+            }, {
                 name: 'date',
                 displayName: 'date',
                 type: 'String',
                 required: true
             }
-            
         ]});
 })(window.angular);

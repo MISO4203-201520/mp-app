@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module('cartItemModule');
 
-    mod.controller('cartItemCtrl', ['CrudCreator', '$scope', 'cartItemService', 'cartItemModel', function (CrudCreator, $scope, svc, model) {
+    mod.controller('cartItemCtrl', ['CrudCreator', '$scope', 'cartItemService', 'cartItemModel', '$location', function (CrudCreator, $scope, svc, model,$location) {
             CrudCreator.extendController(this, svc, $scope, model, 'cartItem', 'Shopping Cart');
             var self = this;
 
@@ -35,7 +35,7 @@
             this.calcTotal = function () {
                 $scope.total = 0;
                 for (var i = 0; i < $scope.records.length; i++) {
-                    $scope.total += $scope.records[i].app.price * $scope.records[i].quantity;
+                    $scope.total += $scope.subtotal($scope.records[i]);
                 }
             };
 
@@ -54,10 +54,10 @@
                 }
             };//Realiza la validacion de la nueva cantidad asignada.
             $scope.checkout = function () {
-                self.showWarning("Not implemented yet");
+                $location.path( '/paymentCard' );
             };
             $scope.subtotal = function (record) {
-                return record.app.price * record.quantity;
+                return (record.app.price - record.app.discount)* record.quantity;
             };
         }]);
 })(window.angular);

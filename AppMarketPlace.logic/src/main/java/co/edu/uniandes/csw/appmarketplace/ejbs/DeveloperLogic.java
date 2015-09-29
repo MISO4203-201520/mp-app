@@ -15,11 +15,13 @@ import javax.inject.Inject;
 @Stateless
 public class DeveloperLogic implements IDeveloperLogic {
 
-    @Inject private DeveloperPersistence persistence;
+    @Inject
+    private DeveloperPersistence persistence;
 
     /**
      * @generated
      */
+    @Override
     public int countDevelopers() {
         return persistence.count();
     }
@@ -27,6 +29,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public List<DeveloperDTO> getDevelopers(Integer page, Integer maxRecords) {
         return DeveloperConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
@@ -34,6 +37,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public DeveloperDTO getDeveloper(Long id) {
         return DeveloperConverter.fullEntity2DTO(persistence.find(id));
     }
@@ -41,6 +45,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public DeveloperDTO createDeveloper(DeveloperDTO dto) {
         DeveloperEntity entity = DeveloperConverter.fullDTO2Entity(dto);
         persistence.create(entity);
@@ -50,6 +55,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public DeveloperDTO updateDeveloper(DeveloperDTO dto) {
         DeveloperEntity entity = persistence.update(DeveloperConverter.fullDTO2Entity(dto));
         return DeveloperConverter.fullEntity2DTO(entity);
@@ -58,6 +64,7 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public void deleteDeveloper(Long id) {
         persistence.delete(id);
     }
@@ -65,11 +72,14 @@ public class DeveloperLogic implements IDeveloperLogic {
     /**
      * @generated
      */
+    @Override
     public List<DeveloperDTO> findByName(String name) {
         return DeveloperConverter.listEntity2DTO(persistence.findByName(name));
     }
-    
+
+    @Override
     public DeveloperDTO getDeveloperByUserId(String userId) {
         return DeveloperConverter.refEntity2DTO(persistence.getDeveloperByUserId(userId));
     }
+
 }

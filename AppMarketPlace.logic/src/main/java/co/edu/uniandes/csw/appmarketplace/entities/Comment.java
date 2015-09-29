@@ -23,7 +23,7 @@ import static javax.persistence.TemporalType.DATE;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Comment.getCommentsByApp", query = "select  u from Comment u WHERE u.app = :app")
+    @NamedQuery(name = "Comment.getCommentsByApp", query = "select  u from Comment u WHERE u.app.id = :app_id")
 })
 public class Comment implements Serializable{
     

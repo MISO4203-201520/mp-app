@@ -12,7 +12,11 @@ public class ClientDTO {
     private Long id;
     private String name;
     private String userId;
+    private String fullName;
+    private String email;
+    private String status;
     private List<CartItemDTO> cartItems;
+    private List<PaymentCardDTO> cards;
     /**
      * @generated
      */
@@ -69,4 +73,41 @@ public class ClientDTO {
         this.cartItems = cartitems;
     }
 
+    /**
+     * @return the cards
+     */
+    public List<PaymentCardDTO> getCards() {
+        return cards;
+    }
+
+    /**
+     * @param cards the cards to set
+     */
+    public void setCards(List<PaymentCardDTO> cards) {
+        this.cards = cards;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

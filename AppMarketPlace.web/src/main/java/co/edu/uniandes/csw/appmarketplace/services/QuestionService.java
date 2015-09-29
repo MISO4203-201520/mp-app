@@ -35,7 +35,6 @@ import org.apache.shiro.subject.Subject;
 public class QuestionService {
     @Inject private IQuestionLogic questionLogic;
     @Inject private IAppLogic appLogic;
-    @Inject private IDeveloperLogic devLogic;
     
     @POST
     @StatusCreated
@@ -55,7 +54,7 @@ public class QuestionService {
             dto.setClient(client);
             dto.setEmail(userAttributes.get("email"));
             
-            ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client cli = realm.getClient();
             Account account = cli.getResource(app.getDeveloper().getUserId(), Account.class);
             
