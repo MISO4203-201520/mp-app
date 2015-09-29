@@ -47,6 +47,8 @@ public class AppService {
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
+    @QueryParam("category")
+    private String category;
     @QueryParam("q")
     private String appName;
     private DeveloperDTO developer = (DeveloperDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
@@ -75,6 +77,9 @@ public class AppService {
         } else {
             if (appName != null) {
                 return appLogic.findByName(appName);
+            }
+            if (category != null && !category.isEmpty()) {
+                return appLogic.getAppsByCategory(category);
             }
             if (page != null && maxRecords != null) {
                 this.response.setIntHeader("X-Total-Count", appLogic.countApps());

@@ -19,7 +19,7 @@
             };
 
             this.getAppsByCategory = function (text) {
-                return this.api.all("categories").all(text).getList();
+                return this.api.getList({category: text});
             };
 
             this.rateApp = function (app, rate) {
