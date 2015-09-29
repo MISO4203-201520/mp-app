@@ -35,7 +35,7 @@
             this.calcTotal = function () {
                 $scope.total = 0;
                 for (var i = 0; i < $scope.records.length; i++) {
-                    $scope.total += $scope.records[i].app.price * $scope.records[i].quantity;
+                    $scope.total += $scope.subtotal($scope.records[i]);
                 }
             };
 
@@ -57,7 +57,7 @@
                 $location.path( '/paymentCard' );
             };
             $scope.subtotal = function (record) {
-                return record.app.price * record.quantity;
+                return (record.app.price - record.app.discount)* record.quantity;
             };
         }]);
 })(window.angular);
