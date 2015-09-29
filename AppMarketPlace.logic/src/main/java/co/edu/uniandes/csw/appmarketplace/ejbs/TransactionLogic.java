@@ -26,6 +26,7 @@ public class TransactionLogic implements ITransactionLogic {
     /**
      * @generated
      */
+    @Override
     public List<TransactionDTO> getTransactions(Integer page, Integer maxRecords) {
         return TransactionConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
@@ -33,6 +34,7 @@ public class TransactionLogic implements ITransactionLogic {
     /**
      * @generated
      */
+    @Override
     public TransactionDTO getTransaction(Long id) {
         return TransactionConverter.fullEntity2DTO(persistence.find(id));
     }
@@ -41,6 +43,7 @@ public class TransactionLogic implements ITransactionLogic {
      * @generated
      */
     @Transactional
+    @Override
     public TransactionDTO createTransaction(TransactionDTO dto) {
         TransactionEntity entity = TransactionConverter.fullDTO2Entity(dto);
         persistence.create(entity);
@@ -51,6 +54,7 @@ public class TransactionLogic implements ITransactionLogic {
      * @generated
      */
     @Transactional
+    @Override
     public TransactionDTO updateTransaction(TransactionDTO dto) {
         TransactionEntity entity = persistence.update(TransactionConverter.fullDTO2Entity(dto));
         return TransactionConverter.fullEntity2DTO(entity);
@@ -60,6 +64,7 @@ public class TransactionLogic implements ITransactionLogic {
      * @generated
      */
     @Transactional
+    @Override
     public void deleteTransaction(Long id) {
         persistence.delete(id);
     }
@@ -67,6 +72,7 @@ public class TransactionLogic implements ITransactionLogic {
     /**
      * @generated
      */
+    @Override
     public List<TransactionDTO> findByName(String name) {
         return TransactionConverter.listEntity2DTO(persistence.findByName(name));
     }

@@ -27,6 +27,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public List<PaymentMethodDTO> getPaymentMethod(Integer page, Integer maxRecords) {
         return PaymentMethodConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
@@ -34,6 +35,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public PaymentMethodDTO getPaymentMethod(Long id) {
         return PaymentMethodConverter.fullEntity2DTO(persistence.find(id));
     }
@@ -41,6 +43,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public PaymentMethodDTO createPaymentMethod(PaymentMethodDTO dto) {
         PaymentMethodEntity entity = PaymentMethodConverter.fullDTO2Entity(dto);
         persistence.create(entity);
@@ -50,6 +53,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public PaymentMethodDTO updatePaymentMethod(PaymentMethodDTO dto) {
         PaymentMethodEntity entity = persistence.update(PaymentMethodConverter.fullDTO2Entity(dto));
         return PaymentMethodConverter.fullEntity2DTO(entity);
@@ -58,6 +62,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public void deletePaymentMethod(Long id) {
         persistence.delete(id);
     }
@@ -65,6 +70,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
     /**
      * @generated
      */
+    @Override
     public List<PaymentMethodDTO> findByName(String name) {
         return PaymentMethodConverter.listEntity2DTO(persistence.findByName(name));
     }

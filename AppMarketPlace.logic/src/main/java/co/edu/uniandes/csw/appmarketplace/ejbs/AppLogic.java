@@ -33,6 +33,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public int countApps() {
         return persistence.count();
     }
@@ -40,6 +41,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public List<AppDTO> getApps(Integer page, Integer maxRecords) {
         return AppConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
@@ -47,6 +49,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public AppDTO getApp(Long id) {
         AppDTO dto = AppConverter.fullEntity2DTO(persistence.find(id));
         dto.setDownloads(transactionPersistence.countByApp(id));
@@ -57,6 +60,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public AppDTO createApp(AppDTO dto) {
         AppEntity entity = AppConverter.fullDTO2Entity(dto);
         persistence.create(entity);
@@ -66,6 +70,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public AppDTO updateApp(AppDTO dto) {
         AppEntity entity = persistence.update(AppConverter.fullDTO2Entity(dto));
         return AppConverter.fullEntity2DTO(entity);
@@ -74,6 +79,7 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public void deleteApp(Long id) {
         persistence.delete(id);
     }
@@ -81,18 +87,22 @@ public class AppLogic implements IAppLogic {
     /**
      * @generated
      */
+    @Override
     public List<AppDTO> findByName(String name) {
         return AppConverter.listEntity2DTO(persistence.findByName(name));
     }
 
+    @Override
     public List<AppDTO> getCheapest(String developerName) {
         return AppConverter.listEntity2DTO(persistence.getCheapestApp(developerName));
     }
 
+    @Override
     public List<AppDTO> getAppsByCategory(String category) {
         return AppConverter.listEntity2DTO(persistence.getAppsByCategory(category));
     }
 
+    @Override
     public void rateApp(Long appId, Long clientId, Long rateValue) {
         Long transactions = transactionPersistence.countByAppClient(clientId, appId);
         if (transactions > 0) {
@@ -108,7 +118,7 @@ public class AppLogic implements IAppLogic {
             }
             rate.setRate(rateValue);
             ratePersistence.update(rate);
-        }else{
+        } else {
             throw new WebApplicationException(403);
         }
     }

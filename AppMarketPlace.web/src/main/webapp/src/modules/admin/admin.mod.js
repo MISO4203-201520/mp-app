@@ -5,7 +5,7 @@
     mod.constant('adminDevContext', 'admin/developers');
 
     mod.constant('adminModel', {
-       fields: [{
+        fields: [{
                 name: 'name',
                 displayName: 'Username',
                 type: 'String',
@@ -15,22 +15,21 @@
                 displayName: 'UserId',
                 type: 'String',
                 required: true
-            },{
+            }, {
                 name: 'email',
                 displayName: 'Email',
                 type: 'String',
                 required: true
-            },{
+            }, {
                 name: 'fullName',
                 displayName: 'Name',
                 type: 'String',
                 required: true
-            },{
+            }, {
                 name: 'status',
                 displayName: 'Status',
                 type: 'String',
                 required: true
-            },
-            
+            }
         ]});
 })(window.angular);

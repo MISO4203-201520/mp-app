@@ -3,7 +3,7 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'authService', 'CrudTemplateURL', function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location, authSvc, tplUrl) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location) {
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;

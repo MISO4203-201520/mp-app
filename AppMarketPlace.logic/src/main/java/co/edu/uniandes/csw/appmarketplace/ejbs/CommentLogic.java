@@ -19,20 +19,19 @@ import javax.inject.Inject;
  *
  * @author if.garcia11
  */
-
-
 @Stateless
-public class CommentLogic implements ICommentLogic{
-    
-        @Inject
-        private CommentPersistence persistence;
-        
-        public void InsertComment (CommentDTO dto){
-            try {
-                persistence.InsertComment(CommentConverter.basicDTO2Entity(dto));
-            } catch (ParseException ex) {
-                Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
-            }
+public class CommentLogic implements ICommentLogic {
+
+    @Inject
+    private CommentPersistence persistence;
+
+    @Override
+    public void InsertComment(CommentDTO dto) {
+        try {
+            persistence.InsertComment(CommentConverter.basicDTO2Entity(dto));
+        } catch (ParseException ex) {
+            Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
-    
+    }
+
 }
