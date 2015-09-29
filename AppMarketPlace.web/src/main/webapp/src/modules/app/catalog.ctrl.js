@@ -200,11 +200,7 @@
                     });
                     modalInstance.result.then(function (text) {
                         svc.getAppsByCategory(text).then(function (data) {
-                            console.log(data);
-                            $scope.records = [];
-                            for (var i = 0; i < data.length; i++) {
-                                $scope.records.push(data[i]);
-                            }
+                            $scope.records = data;
                         });
                     }, function () {
 
@@ -217,7 +213,7 @@
 
             this.fetchRecords();
         }]);
-  mod.controller('ModalShare', function ($scope, $modalInstance, app) {
+    mod.controller('ModalShare', function ($scope, $modalInstance, app) {
         $scope.itemQuestion = {
             name: app.name,
             text: ""
@@ -287,7 +283,7 @@
                 $modalInstance.dismiss('cancel');
             };
         }]);
-    
+
     mod.controller('detailsModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
             $scope.app = app;
             $scope.ok = function () {

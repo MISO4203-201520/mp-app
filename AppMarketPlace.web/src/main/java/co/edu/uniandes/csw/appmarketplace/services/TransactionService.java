@@ -15,7 +15,6 @@ import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -56,41 +55,37 @@ public class TransactionService {
     private IPaymentCardLogic paymentCardLogic;
     @Inject
     private ICartItemLogic cartItemLogic;
-    @Context
-    private HttpServletResponse response;
     @QueryParam("page")
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
     private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
-    private Object currentUser;
 
     @POST
     @StatusCreated
     public void createPayment(TransactionDTO dto) {
-         Subject currentUser = SecurityUtils.getSubject();
-        ClientDTO client = (ClientDTO) currentUser.getSession().getAttribute("Client");
-        if(client==null){          
+        Subject currentUser = SecurityUtils.getSubject();
+        if (client == null) {
             Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));
             return;
-        } 
+        }
         Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
 
         dto.setPayer(client);
         dto.setPaymentCard(paymentCardLogic.getPaymentCards(dto.getId()));
         dto.setId(null);
         dto.setStatus("Aprobado");
-        int total =0;
-        int number=0;
+        int total = 0;
+        int number = 0;
         for (CartItemDTO cartItem : clientLogic.getClient(client.getId()).getCartItems()) {
             dto.setRecipient(cartItem.getApp());
             dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString())));
             TransactionLogic.createTransaction(dto);
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
-            total+=(int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
+            total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
         }
-        Emailer.sendPaymentEmail(client.getName(), userAttributes.get("email"),  Integer.toString(total), new Date(),Integer.toString(number) );
+        Emailer.sendPaymentEmail(client.getName(), userAttributes.get("email"), Integer.toString(total), new Date(), Integer.toString(number));
     }
 
     @GET

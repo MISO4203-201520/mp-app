@@ -14,9 +14,12 @@ import java.text.ParseException;
  * @author ca.forero10
  */
 public abstract class QuestionConverter {
-    
-     public static QuestionEntity basicDTO2Entity(QuestionDTO dto) throws ParseException {
-      if (dto != null) {            
+
+    private QuestionConverter() {
+    }
+
+    public static QuestionEntity basicDTO2Entity(QuestionDTO dto) throws ParseException {
+        if (dto != null) {
             QuestionEntity entity = new QuestionEntity();
             entity.setId(dto.getId());
             entity.setEmail(dto.getEmail());

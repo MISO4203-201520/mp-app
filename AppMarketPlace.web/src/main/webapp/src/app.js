@@ -11,7 +11,7 @@
         'ngCrud',
         'xeditable',
         'commentModule',
-        'paymentCardsModule',        
+        'paymentCardsModule',
         'adminModule',
         'forgotModule'
     ]);
@@ -44,27 +44,27 @@
             }).when('/paymentCard', {
                 templateUrl: tplUrl,
                 controller: 'paymentCtrl',
-                controllerAs: alias 
-             }).when('/admin/clients', {
+                controllerAs: alias
+            }).when('/admin/clients', {
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminClientCtrl',
-                controllerAs: alias 
-             }).when('/forgot', {
+                controllerAs: alias
+            }).when('/forgot', {
                 templateUrl: 'src/modules/forgotPass/forgot.tpl.html',
                 controller: 'forgotCtrl',
-                controllerAs: alias 
-             }).when('/verify', {
+                controllerAs: alias
+            }).when('/verify', {
                 templateUrl: 'src/modules/forgotPass/verify.tpl.html',
                 controller: 'verifyCtrl',
-                controllerAs: alias 
-             }).when('/change', {
+                controllerAs: alias
+            }).when('/change', {
                 templateUrl: 'src/modules/forgotPass/change.tpl.html',
                 controller: 'forgotCtrl',
-                controllerAs: alias 
-             }).when('/admin/developers', {
+                controllerAs: alias
+            }).when('/admin/developers', {
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
-                controllerAs: alias 
+                controllerAs: alias
             }).otherwise('/catalog');
         }]);
 

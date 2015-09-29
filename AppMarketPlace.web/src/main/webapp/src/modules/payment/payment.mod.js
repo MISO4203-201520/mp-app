@@ -2,7 +2,7 @@
     var mod = ng.module('paymentCardsModule', ['ngCrud']);
 
     mod.constant('paymentContext', 'paymentCard');
-    mod.constant('paymentMethodContext', 'paymentMethod');    
+    mod.constant('paymentMethodContext', 'paymentMethod');
     mod.constant('transactionContext', 'transaction');
 
     mod.constant('paymentCardsModel', {
@@ -37,6 +37,6 @@
                 service: 'paymentMethod',
                 options: [],
                 required: true
-            }            
+            }
         ]});
 })(window.angular);

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author ac.rojas13
  */
-public class PaymentCardConverter {
+public abstract class PaymentCardConverter {
 
     private static DateFormat format =new SimpleDateFormat("yyyy-MM-dd");
     

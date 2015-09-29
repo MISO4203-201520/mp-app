@@ -14,10 +14,10 @@
                 displayName: 'UserId',
                 type: 'String',
                 required: true
-            }], 
+            }],
         childs: [{
                 name: 'cartItems',
                 displayName: 'CartItems',
                 //template: '', //override generic template
-                ctrl: 'cartItemsCtrl'            }        ]});
+                ctrl: 'cartItemsCtrl'}]});
 })(window.angular);

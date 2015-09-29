@@ -10,11 +10,8 @@ import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
-import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
-import com.stormpath.sdk.application.Application;
-import com.stormpath.sdk.application.ApplicationStatus;
 import com.stormpath.sdk.client.Client;
 import com.stormpath.shiro.realm.ApplicationRealm;
 import java.util.List;
@@ -43,7 +40,6 @@ public class AdminService {
     
     @Inject private IClientLogic clientLogic;
     @Inject private IDeveloperLogic developerLogic;
-    @Inject private IAdminLogic adminLogic;
     @Context private HttpServletResponse response;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
@@ -56,7 +52,7 @@ public class AdminService {
         }
         List<DeveloperDTO> developers = developerLogic.getDevelopers(page, maxRecords);
         for(DeveloperDTO developer: developers){
-            ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client cl = realm.getClient();
             Account account = cl.getResource(developer.getUserId(), Account.class);
             developer.setFullName(account.getFullName());
@@ -74,7 +70,7 @@ public class AdminService {
         }
         List<ClientDTO> clients = clientLogic.getClients(page, maxRecords);
         for(ClientDTO client: clients){
-            ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client cl = realm.getClient();
             Account account = cl.getResource(client.getUserId(), Account.class);
             client.setFullName(account.getFullName());
@@ -89,7 +85,7 @@ public class AdminService {
     public void disableClient(@PathParam("id") Long id) {
         ClientDTO cl = clientLogic.getClient(id);
         if(cl!=null){
-            ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client client = realm.getClient();
             Account account = client.getResource(cl.getUserId(), Account.class);
             if(account.getStatus()==AccountStatus.DISABLED)
@@ -106,7 +102,7 @@ public class AdminService {
     public void disableDeveloper(@PathParam("id") Long id) {
         DeveloperDTO dev = developerLogic.getDeveloper(id);
         if(dev!=null){
-            ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client client = realm.getClient();
             Account account = client.getResource(dev.getUserId(), Account.class);
             if(account.getStatus()==AccountStatus.DISABLED)

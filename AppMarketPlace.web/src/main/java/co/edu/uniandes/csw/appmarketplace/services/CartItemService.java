@@ -31,9 +31,6 @@ public class CartItemService {
 
     @Inject private ICartItemLogic cartItemLogic;
     @Inject  private IClientLogic clientLogic;
-    @Context private HttpServletResponse response;
-    @QueryParam("page") private Integer page;
-    @QueryParam("maxRecords") private Integer maxRecords;
     private final ClientDTO client = (ClientDTO)SecurityUtils.getSubject().getSession().getAttribute("Client");
 
     /**

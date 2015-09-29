@@ -33,7 +33,6 @@ import javax.ws.rs.core.MediaType;
 public class PaymentMethodService{
     
     @Inject private IPaymentMethodLogic paymentMethodLogic;
-    @Context private HttpServletResponse response;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
     

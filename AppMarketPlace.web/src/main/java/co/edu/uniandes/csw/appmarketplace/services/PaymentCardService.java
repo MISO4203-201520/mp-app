@@ -36,8 +36,6 @@ public class PaymentCardService {
 
     @Inject
     private IPaymentCardLogic paymentCardLogic;
-    @Context
-    private HttpServletResponse response;
     @QueryParam("page")
     private Integer page;
     @QueryParam("maxRecords")

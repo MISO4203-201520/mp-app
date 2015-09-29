@@ -15,7 +15,10 @@ import java.util.List;
  * @author ca.forero10
  */
 public abstract class AdminConverter {
-        
+
+    private AdminConverter() {
+    }
+
     /**
      * @param entity
      * @return
@@ -27,7 +30,7 @@ public abstract class AdminConverter {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
-            
+
             return dto;
         } else {
             return null;
@@ -106,7 +109,6 @@ public abstract class AdminConverter {
     /**
      * @generated
      */
-
     public static List<AdminDTO> listEntity2DTO(List<AdminEntity> entities) {
         List<AdminDTO> dtos = new ArrayList<AdminDTO>();
         if (entities != null) {

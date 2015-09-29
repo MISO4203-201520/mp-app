@@ -14,7 +14,10 @@ import java.util.List;
  *
  * @author ac.rojas13
  */
-public class TransactionConverter {
+public abstract class TransactionConverter {
+
+    private TransactionConverter() {
+    }
 
     /**
      * @param entity

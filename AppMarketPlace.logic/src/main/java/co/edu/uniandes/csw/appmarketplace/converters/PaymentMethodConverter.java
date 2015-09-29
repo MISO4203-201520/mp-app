@@ -14,7 +14,10 @@ import java.util.List;
  *
  * @author ac.rojas13
  */
-public class PaymentMethodConverter {
+public abstract class PaymentMethodConverter {
+
+    private PaymentMethodConverter() {
+    }
 
     /**
      * @param entity
@@ -54,8 +57,8 @@ public class PaymentMethodConverter {
     private static PaymentMethodDTO basicEntity2DTO(PaymentMethodEntity entity) {
         if (entity != null) {
             PaymentMethodDTO dto = new PaymentMethodDTO();
-            dto.setId(entity.getId());            
-            dto.setName(entity.getName());            
+            dto.setId(entity.getId());
+            dto.setName(entity.getName());
 
             return dto;
         } else {

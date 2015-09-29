@@ -18,10 +18,13 @@ import java.util.List;
  * @author if.garcia11
  */
 public abstract class CommentConverter {
-    
-        private static DateFormat format =new SimpleDateFormat("yyyy-MM-dd");
-    
-        public static CommentDTO refEntity2DTO(Comment entity) {
+
+    private CommentConverter() {
+    }
+
+    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static CommentDTO refEntity2DTO(Comment entity) {
         if (entity != null) {
             CommentDTO dto = new CommentDTO();
             dto.setId(entity.getId());
@@ -49,41 +52,41 @@ public abstract class CommentConverter {
             return null;
         }
     }
-    
-    public List<CommentDTO> childListDTO2Entity(List<Comment>entities ){
-    List<CommentDTO> dtos = new ArrayList<CommentDTO>();
+
+    public List<CommentDTO> childListDTO2Entity(List<Comment> entities) {
+        List<CommentDTO> dtos = new ArrayList<CommentDTO>();
         if (entities != null) {
             for (Comment entity : entities) {
                 dtos.add(basicEntity2DTO(entity));
             }
         }
-    
-    return null;
+
+        return dtos;
     }
-    
-    public List<Comment> childListEntity2DTO(List<CommentDTO>dtos ) throws ParseException{
-    List<Comment>entities = new ArrayList<Comment>();
-    
-       if (dtos != null) {
+
+    public List<Comment> childListEntity2DTO(List<CommentDTO> dtos) throws ParseException {
+        List<Comment> entities = new ArrayList<Comment>();
+
+        if (dtos != null) {
             for (CommentDTO dto : dtos) {
                 entities.add(basicDTO2Entity(dto));
-                
+
             }
         }
         return entities;
-   
+
     }
 
     private static CommentDTO basicEntity2DTO(Comment entity) {
-       
-     if (entity != null) {
+
+        if (entity != null) {
             CommentDTO dto = new CommentDTO();
             dto.setId(entity.getId());
             dto.setComment(entity.getComment());
             dto.setClient(ClientConverter.refEntity2DTO(entity.getClient()));
             dto.setApp(AppConverter.refEntity2DTO(entity.getApp()));
             dto.setDate(format.format(entity.getDate()));
-            
+
             return dto;
         } else {
             return null;
@@ -91,7 +94,7 @@ public abstract class CommentConverter {
     }
 
     public static Comment basicDTO2Entity(CommentDTO dto) throws ParseException {
-      if (dto != null) {
+        if (dto != null) {
             Comment entity = new Comment();
             entity.setId(dto.getId());
             entity.setComment(dto.getComment());
@@ -103,8 +106,8 @@ public abstract class CommentConverter {
             return null;
         }
     }
-    
-    public static List<CommentDTO> listEntity2DTO(List<Comment> entities){
+
+    public static List<CommentDTO> listEntity2DTO(List<Comment> entities) {
         List<CommentDTO> dtos = new ArrayList<CommentDTO>();
         if (entities != null) {
             for (Comment entity : entities) {
