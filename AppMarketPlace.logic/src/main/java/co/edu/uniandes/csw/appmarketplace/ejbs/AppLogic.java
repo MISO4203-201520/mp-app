@@ -43,7 +43,15 @@ public class AppLogic implements IAppLogic {
      */
     @Override
     public List<AppDTO> getApps(Integer page, Integer maxRecords) {
-        return AppConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
+        
+        List<AppDTO> apps = AppConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
+        
+        // Antes de retornar el listado, le coloco el rate a cada producto
+        for (AppDTO dto : apps) {
+            dto.setRate(ratePersistence.getAverageByApp(dto.getId()));
+        }
+        
+        return apps;
     }
 
     /**

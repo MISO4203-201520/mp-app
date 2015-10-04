@@ -14,6 +14,12 @@
                 displayName: 'Description',
                 type: 'String',
                 required: true
+            },
+             {
+                name: 'rate',
+                displayName: 'Rate',
+                type: 'Double',
+                required: true
             }, {
                 name: 'version',
                 displayName: 'Version',
