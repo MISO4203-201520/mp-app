@@ -21,6 +21,9 @@
             this.getAppsByCategory = function (text) {
                 return this.api.getList({category: text});
             };
+            this.getAppsByKeyWords = function (text) {
+                return this.api.getList({keyword: text});
+            };
 
             this.rateApp = function (app, rate) {
                 return app.all('rate').post({rate: rate});

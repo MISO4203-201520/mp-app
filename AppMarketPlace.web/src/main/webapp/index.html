@@ -58,8 +58,15 @@
         <script src="src/modules/forgotPass/forgot.svc.js"></script>
         <script src="src/modules/forgotPass/forgot.ctrl.js"></script>
         <script src="src/modules/forgotPass/verify.ctrl.js"></script>
+        <style>
+            .vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
+        </style>
     </head>
-    <body style="padding-top: 60px;">
+    <body style="padding-top: 60px;" ng-controller="catalogCtrl">
         <div class="container-fluid">
             <div class="col-md-12">
                 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -76,11 +83,13 @@
                         </div>
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
-                        <div class="collapse navbar-collapse" id="main-bar">
-                            <ul class="nav navbar-nav">
+                        <div  class="collapse navbar-collapse"  id="main-bar">
+                            <ul  class="nav navbar-nav">
                                 <li><a href="#/catalog">Catalog</a></li>
-                                <li><a href="#/admin/clients">Admin</a></li>
+                                <li><a href="#/admin/clients">Admin</a></li>                                
                             </ul>
+                            
+                            
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="active"><a href="#/shoppingCart"><span class="glyphicon glyphicon-shopping-cart" ></span> My Shopping Cart </a></li>
                                 <li class="active"><a href="#/forgot"><span class="glyphicon glyphicon-lock" ></span> Forgot your password? </a></li>

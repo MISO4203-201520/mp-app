@@ -49,6 +49,8 @@ public class AppService {
     private Integer maxRecords;
     @QueryParam("category")
     private String category;
+    @QueryParam("keyword")
+    private String keyword;
     @QueryParam("q")
     private String appName;
     private DeveloperDTO developer = (DeveloperDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
@@ -80,6 +82,9 @@ public class AppService {
             }
             if (category != null && !category.isEmpty()) {
                 return appLogic.getAppsByCategory(category);
+            }
+            if (keyword != null && !keyword.isEmpty()) {
+                return appLogic.getAppsByKeyWords(keyword);
             }
             if (page != null && maxRecords != null) {
                 this.response.setIntHeader("X-Total-Count", appLogic.countApps());
@@ -129,6 +134,11 @@ public class AppService {
     @Path("/categories/{category}")
     public List<AppDTO> getAppsByCategory(@PathParam("category") String category) {
         return appLogic.getAppsByCategory(category);
+    }
+    @GET
+    @Path("/keywords/{keyword}")
+    public List<AppDTO> getAppsByKeyWords(@PathParam("keyword") String keyword) {
+        return appLogic.getAppsByCategory(keyword);
     }
 
     @POST

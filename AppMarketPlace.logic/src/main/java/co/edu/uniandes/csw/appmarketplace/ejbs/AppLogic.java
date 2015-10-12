@@ -10,6 +10,7 @@ import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.RatePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.TransactionPersistence;
+import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -29,6 +30,8 @@ public class AppLogic implements IAppLogic {
 
     @Inject
     private TransactionPersistence transactionPersistence;
+    
+    String excludeWords[]={"a","e","i","o","u","el","la","las","los","al","un","en","es","del","lo"};
 
     /**
      * @generated
@@ -108,6 +111,47 @@ public class AppLogic implements IAppLogic {
     @Override
     public List<AppDTO> getAppsByCategory(String category) {
         return AppConverter.listEntity2DTO(persistence.getAppsByCategory(category));
+    }
+    
+    @Override
+    public List<AppDTO> getAppsByKeyWords(String keyword) {
+        List<AppEntity> lista= new ArrayList<AppEntity>();
+        lista.addAll(persistence.getAppsByKeyWords(keyword));
+        String words[]=keyword.split(" ");
+        if (words.length>1){
+            for (String word : words) {
+                if (verifyWord(word)==false) {
+                    for (AppEntity newApp:persistence.getAppsByKeyWords(word)){
+                        if (verifyExistingApp(lista,newApp)==false){
+                            lista.add(newApp);
+                        }
+                    }
+                    
+                }
+            }
+            
+        }
+        return AppConverter.listEntity2DTO(lista);
+    }
+    public Boolean verifyExistingApp(List<AppEntity> list,AppEntity newApp){
+        for (AppEntity app:list){
+            if(app.getId()==newApp.getId()){
+                return true;
+            }
+            
+        }
+        return false;
+    }
+    public Boolean verifyWord(String word){
+        
+        for (String excludeWord : excludeWords) {
+            if (word.equals(excludeWord)) {
+                return true;
+            }
+        }
+        
+        
+        return false;
     }
 
     @Override

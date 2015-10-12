@@ -24,7 +24,8 @@ import javax.persistence.TemporalType;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName"),
-    @NamedQuery(name="AppEntity.getAppsByCategory", query="SELECT u FROM AppEntity u WHERE u.category = :category")
+    @NamedQuery(name="AppEntity.getAppsByCategory", query="SELECT u FROM AppEntity u WHERE u.category = :category"),
+    @NamedQuery(name="AppEntity.getAppsByKeyWords", query="SELECT u FROM AppEntity u WHERE u.category LIKE :keyword OR u.name LIKE :keyword OR u.description LIKE :keyword")    
 })
 public class AppEntity implements Serializable {
 

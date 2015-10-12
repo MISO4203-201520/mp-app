@@ -22,6 +22,9 @@ public interface IAppLogic {
     public List<AppDTO> getCheapest(String developerName);
 
     public List<AppDTO> getAppsByCategory(String category);
+    
+    public List<AppDTO> getAppsByKeyWords(String keyword);
+    
 
     public void rateApp(Long appId, Long clientId, Long rateValue);
 }

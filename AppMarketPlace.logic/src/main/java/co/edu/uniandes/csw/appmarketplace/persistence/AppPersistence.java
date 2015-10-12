@@ -31,4 +31,10 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
         params.put("category", category);
         return executeListNamedQuery("AppEntity.getAppsByCategory", params);
     }
+    
+    public List<AppEntity> getAppsByKeyWords(String keyword) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("keyword", "%" + keyword + "%");
+        return executeListNamedQuery("AppEntity.getAppsByKeyWords", params);
+    }
 }

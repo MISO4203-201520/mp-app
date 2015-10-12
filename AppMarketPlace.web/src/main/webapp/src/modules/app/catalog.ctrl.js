@@ -7,6 +7,7 @@
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
+            
 
             this.searchByName = function (appName) {
                 var search;
@@ -16,6 +17,7 @@
                 $location.url('/catalog' + search);
             };
 
+            
             var self = this;
 
             this.recordActions = {
@@ -210,6 +212,31 @@
                     return true;
                 }
             };
+            this.globalActions.search = {
+                displayName: 'Search',
+                icon: 'search',
+                class: 'primary',
+                fn: function () {
+                    var modalInstance = $modal.open({
+                        animation: true,
+                        templateUrl: 'src/modules/app/search.tpl.html',
+                        controller: 'searchCrtl'
+                    });
+                    modalInstance.result.then(function (text) {
+                        svc.getAppsByKeyWords(text).then(function (data) {
+                            $scope.records = data;
+                        });
+                    }, function () {
+
+                    });
+                },
+                show: function () {
+                    return true;
+                }
+            };
+            
+            
+            
 
             this.fetchRecords();
         }]);
@@ -256,8 +283,22 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('FindCheapestCrtl', function ($scope, $modalInstance) {
+        $scope.in = {
+            text: ""
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.in.text);
+        };
+
+        $scope.cancel = function () {
+            $scope.in.text = "";
+            $modalInstance.dismiss('cancel');
+        };
+    });
+
+    mod.controller('searchCrtl', function ($scope, $modalInstance) {
         $scope.dev = {
             text: ""
         };
