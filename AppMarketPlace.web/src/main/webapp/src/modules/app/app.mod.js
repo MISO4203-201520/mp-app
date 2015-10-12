@@ -49,6 +49,18 @@
                 required: true
             },
              {
+                name: 'startDiscountDate',
+                displayName: 'Start Discount Date',
+                type: 'Date',
+                required: true
+            },
+             {
+                name: 'finishDiscountDate',
+                displayName: 'Finish Discount Date',
+                type: 'Date',
+                required: true
+            },
+             {
                 name: 'category',
                 displayName: 'Category',
                 type: 'String',

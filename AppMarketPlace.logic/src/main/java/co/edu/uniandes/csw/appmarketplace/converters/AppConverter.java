@@ -35,6 +35,8 @@ public abstract class AppConverter {
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
             dto.setCategory(entity.getCategory());
+            dto.setStartDiscountDate(entity.getStartDiscountDate());
+            dto.setFinishDiscountDate(entity.getFinishDiscountDate());
 
             return dto;
         } else {
@@ -75,6 +77,8 @@ public abstract class AppConverter {
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
             dto.setCategory(entity.getCategory());
+            dto.setStartDiscountDate(entity.getStartDiscountDate());
+            dto.setFinishDiscountDate(entity.getFinishDiscountDate());
 
             return dto;
         } else {
@@ -99,6 +103,8 @@ public abstract class AppConverter {
             entity.setPlatform(dto.getPlatform());
             entity.setDiscount(dto.getDiscount());
             entity.setCategory(dto.getCategory());
+            entity.setStartDiscountDate(dto.getStartDiscountDate());
+            entity.setFinishDiscountDate(dto.getFinishDiscountDate());
 
             return entity;
         } else {

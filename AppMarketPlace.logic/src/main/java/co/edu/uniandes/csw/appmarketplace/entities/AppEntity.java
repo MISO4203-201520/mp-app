@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.appmarketplace.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
@@ -12,6 +14,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @generated
@@ -45,6 +49,30 @@ public class AppEntity implements Serializable {
     private Integer discount;
     
     private String category;
+    
+    @Column(name = "startDiscountDate")
+    @Temporal(TemporalType.DATE)
+    private Date startDiscountDate;
+    
+    @Column(name = "finishDiscountDate")
+    @Temporal(TemporalType.DATE)
+    private Date finishDiscountDate;
+
+    public Date getStartDiscountDate() {
+        return startDiscountDate;
+    }
+
+    public void setStartDiscountDate(Date startDiscountDate) {
+        this.startDiscountDate = startDiscountDate;
+    }
+
+    public Date getFinishDiscountDate() {
+        return finishDiscountDate;
+    }
+
+    public void setFinishDiscountDate(Date finishDiscountDate) {
+        this.finishDiscountDate = finishDiscountDate;
+    }
 
     @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
     private List<Comment> comments;

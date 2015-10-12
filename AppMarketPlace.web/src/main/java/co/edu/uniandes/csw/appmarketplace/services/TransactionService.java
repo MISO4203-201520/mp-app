@@ -79,11 +79,23 @@ public class TransactionService {
         int number = 0;
         for (CartItemDTO cartItem : clientLogic.getClient(client.getId()).getCartItems()) {
             dto.setRecipient(cartItem.getApp());
-            dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString())));
+            Date actualDate =new Date();
+            // Verifica si esta en el rango de fechas para aplicar el descuento.
+            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+                dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString())));
+            }else{
+                dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString())));
+            }
+            
             TransactionLogic.createTransaction(dto);
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
-            total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
+            // Verifica si esta en el rango de fechas para aplicar el descuento.
+            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+                total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
+            }else
+                total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString()));
+            
         }
         Emailer.sendPaymentEmail(client.getName(), userAttributes.get("email"), Integer.toString(total), new Date(), Integer.toString(number));
     }

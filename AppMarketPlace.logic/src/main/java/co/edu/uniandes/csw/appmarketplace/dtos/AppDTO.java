@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * @generated
@@ -23,6 +25,26 @@ public class AppDTO {
     private List<CommentDTO> comments;
     private Double rate;
     private Long downloads;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date startDiscountDate;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date finishDiscountDate;
+
+    public Date getStartDiscountDate() {
+        return startDiscountDate;
+    }
+
+    public void setStartDiscountDate(Date startDiscountDate) {
+        this.startDiscountDate = startDiscountDate;
+    }
+
+    public Date getFinishDiscountDate() {
+        return finishDiscountDate;
+    }
+
+    public void setFinishDiscountDate(Date finishDiscountDate) {
+        this.finishDiscountDate = finishDiscountDate;
+    }
 
     /**
      * @generated
