@@ -7,9 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
-import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +24,8 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  * @generated
@@ -146,8 +146,15 @@ public class AppService {
     public void rateApp(@PathParam("id") Long id, RateDTO dto) {
         if (client != null && dto.getRate() != null) {
             appLogic.rateApp(id, client.getId(), dto.getRate());
-        }else{
+        } else {
             throw new WebApplicationException(401);
         }
+    }
+
+    @POST
+    @Path("{id: \\d+}/media")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void addMedia(@PathParam("id") Long id, @FormDataParam("file") FormDataContentDisposition fileDetail) {
+        System.out.println(fileDetail.getFileName());
     }
 }
