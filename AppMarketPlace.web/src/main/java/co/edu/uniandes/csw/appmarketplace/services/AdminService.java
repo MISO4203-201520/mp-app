@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
@@ -56,6 +55,8 @@ public class AdminService {
             Client cl = realm.getClient();
             Account account = cl.getResource(developer.getUserId(), Account.class);
             developer.setFullName(account.getFullName());
+            developer.setFirstName(account.getGivenName());
+            developer.setLastName(account.getSurname());
             developer.setEmail(account.getEmail());
             developer.setStatus(account.getStatus().name());
         }

@@ -29,9 +29,18 @@ public class DeveloperEntity implements Serializable {
     private String name;
 
     private String userId;
+    
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String photo;
+    private String bannerProfile;
+    private String commentProfile;
 
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppEntity> apps;
+    
+    
     /**
      * @generated
      */
@@ -89,4 +98,59 @@ public class DeveloperEntity implements Serializable {
         this.apps = apps;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        return new StringBuilder()
+                .append(this.getFirstName())
+                .append(" ")
+                .append(this.getLastName())
+                .toString();
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getBannerProfile() {
+        return bannerProfile;
+    }
+
+    public void setBannerProfile(String bannerProfile) {
+        this.bannerProfile = bannerProfile;
+    }
+
+    public String getCommentProfile() {
+        return commentProfile;
+    }
+
+    public void setCommentProfile(String commentProfile) {
+        this.commentProfile = commentProfile;
+    }
 }

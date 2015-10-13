@@ -3,11 +3,29 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'usersService', 
+        function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location, userSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
             
+            // Hidding or Showing 'My profile' option
+            // Only for developers
+            $("#devprofile").hide();
+            userSvc.getCurrentUser().then(function (user) {
+                console.log("Is developer? " + (user.role === 'developer'));
+                if (user.role === 'developer') {
+                    $("#devprofile").show();
+                    console.log("showing my profile");
+                } else {
+                    $("#devprofile").hide();
+                    console.log("hidding my profile");
+                }
+            });
+            $(".dropdown-menu > li > a").click(function () {
+                $("#devprofile").hide();
+                console.log("hidding my profile");
+            });
 
             this.searchByName = function (appName) {
                 var search;

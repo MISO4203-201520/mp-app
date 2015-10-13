@@ -65,6 +65,10 @@
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
                 controllerAs: alias
+            }).when('/devprofile', {
+                templateUrl: 'src/modules/developer/profile.tpl.html',
+                controller: 'devProfileCtrl',
+                controllerAs: alias
             }).otherwise('/catalog');
         }]);
 

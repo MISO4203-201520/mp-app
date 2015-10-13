@@ -152,6 +152,9 @@ public class UserService {
                     DeveloperDTO developer = new DeveloperDTO();
                     developer.setName(user.getUserName());
                     developer.setUserId(account.getHref());
+                    developer.setFirstName(user.getName());
+                    developer.setLastName(user.getLastName());
+                    developer.setEmail(user.getEmail());
                     developerLogic.createDeveloper(developer);
                     break;
             }

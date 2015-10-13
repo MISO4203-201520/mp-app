@@ -6,16 +6,24 @@ import java.util.List;
 /**
  * @generated
  */
-@XmlRootElement 
+@XmlRootElement
 public class DeveloperDTO {
 
     private Long id;
     private String name;
-    private String userId;    
+    private String userId;
     private String fullName;
     private String email;
     private String status;
     private List<AppDTO> apps;
+
+    private String firstName;
+    private String lastName;
+    private String photo;
+    private String bannerProfile;
+    private String commentProfile;
+    
+
     /**
      * @generated
      */
@@ -72,13 +80,20 @@ public class DeveloperDTO {
         this.apps = apps;
     }
 
-    
     public String getEmail() {
         return email;
     }
 
     public String getFullName() {
-        return fullName;
+        return new StringBuilder()
+                .append(this.getFirstName())
+                .append(" ")
+                .append(this.getLastName())
+                .toString();
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 
     public String getStatus() {
@@ -88,12 +103,48 @@ public class DeveloperDTO {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
+    
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public String getBannerProfile() {
+        return bannerProfile;
+    }
+
+    public void setBannerProfile(String bannerProfile) {
+        this.bannerProfile = bannerProfile;
+    }
+
+    public String getCommentProfile() {
+        return commentProfile;
+    }
+
+    public void setCommentProfile(String commentProfile) {
+        this.commentProfile = commentProfile;
     }
 }

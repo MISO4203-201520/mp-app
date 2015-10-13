@@ -27,6 +27,13 @@ public abstract class DeveloperConverter {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
+            
+            dto.setFirstName(entity.getFirstName());
+            dto.setLastName(entity.getLastName());
+            dto.setEmail(entity.getEmail());
+            dto.setPhoto(entity.getPhoto());
+            dto.setBannerProfile(entity.getBannerProfile());
+            dto.setCommentProfile(entity.getCommentProfile());
 
             return dto;
         } else {
@@ -59,6 +66,13 @@ public abstract class DeveloperConverter {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
+            
+            dto.setFirstName(entity.getFirstName());
+            dto.setLastName(entity.getLastName());
+            dto.setEmail(entity.getEmail());
+            dto.setPhoto(entity.getPhoto());
+            dto.setBannerProfile(entity.getBannerProfile());
+            dto.setCommentProfile(entity.getCommentProfile());
 
             return dto;
         } else {
@@ -75,6 +89,13 @@ public abstract class DeveloperConverter {
             entity.setId(dto.getId());
             entity.setName(dto.getName());
             entity.setUserId(dto.getUserId());
+            
+            entity.setFirstName(dto.getFirstName());
+            entity.setLastName(dto.getLastName());
+            entity.setEmail(dto.getEmail());
+            entity.setPhoto(dto.getPhoto());
+            entity.setBannerProfile(dto.getBannerProfile());
+            entity.setCommentProfile(dto.getCommentProfile());
 
             return entity;
         } else {
