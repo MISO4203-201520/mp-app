@@ -99,7 +99,11 @@ public class AppService {
     @GET
     @Path("{id: \\d+}")
     public AppDTO getApp(@PathParam("id") Long id) {
-        return appLogic.getApp(id);
+        AppDTO app = appLogic.getApp(id);
+        if (app == null) {
+            throw new WebApplicationException(404);
+        }
+        return app;
     }
 
     /**

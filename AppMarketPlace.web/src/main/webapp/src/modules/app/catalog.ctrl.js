@@ -31,7 +31,6 @@
                 $location.url('/catalog' + search);
             };
 
-
             var self = this;
 
             this.recordActions = {
@@ -128,7 +127,6 @@
                     }
                 }
             };
-
             this.recordActions.rate = {
                 displayName: 'Rate App',
                 icon: 'star',
@@ -154,28 +152,18 @@
                 },
                 show: function () {
                     return true;
-                }};
-
+                }
+            };
             this.recordActions.details = {
                 displayName: 'Details',
                 icon: 'list-alt',
                 class: 'info',
                 fn: function (app) {
-                    $modal.open({
-                        animation: true,
-                        templateUrl: 'src/modules/app/detailsModal.tpl.html',
-                        controller: 'detailsModalCtrl',
-                        resolve: {
-                            app: function () {
-                                return svc.fetchRecord(app);
-                            }
-                        }
-                    });
+                    $location.path('/app/' + app.id);
                 },
                 show: function () {
                     return true;
                 }};
-
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
                 icon: 'search',
@@ -201,7 +189,6 @@
                     return true;
                 }
             };
-
             this.globalActions.getAppsByCategory = {
                 displayName: 'Filter by Category',
                 icon: 'filter',
@@ -246,9 +233,6 @@
                     return true;
                 }
             };
-
-
-
 
             this.fetchRecords();
         }]);
@@ -334,13 +318,6 @@
 
             $scope.cancel = function () {
                 $modalInstance.dismiss('cancel');
-            };
-        }]);
-
-    mod.controller('detailsModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
-            $scope.app = app;
-            $scope.ok = function () {
-                $modalInstance.dismiss();
             };
         }]);
 

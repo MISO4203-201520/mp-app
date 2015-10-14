@@ -37,6 +37,9 @@
                 templateUrl: tplUrl,
                 controller: 'appCtrl',
                 controllerAs: alias
+            }).when('/app/:appId', {
+                templateUrl: 'src/modules/app/app.details.tpl.html',
+                controller: 'appDetailsCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',
