@@ -14,9 +14,6 @@
         function (CrudCreator, $scope, svc, model, userSvc, authSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'developer', 'Developer');
 
-            //TODO: Get rate by app
-            $scope.tmpRate = 4;
-
             // Hidding or Showing 'My profile' option
             // Only for developers
             userSvc.getCurrentUser().then(function (user) {
