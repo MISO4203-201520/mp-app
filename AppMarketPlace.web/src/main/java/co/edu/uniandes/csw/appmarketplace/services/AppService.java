@@ -74,23 +74,20 @@ public class AppService {
      */
     @GET
     public List<AppDTO> getApps() {
-        if (developer != null) {
-            return developerLogic.getDeveloper(developer.getId()).getApps();
-        } else {
-            if (appName != null) {
-                return appLogic.findByName(appName);
-            }
-            if (category != null && !category.isEmpty()) {
-                return appLogic.getAppsByCategory(category);
-            }
-            if (keyword != null && !keyword.isEmpty()) {
-                return appLogic.getAppsByKeyWords(keyword);
-            }
-            if (page != null && maxRecords != null) {
-                this.response.setIntHeader("X-Total-Count", appLogic.countApps());
-            }
-            return appLogic.getApps(page, maxRecords);
+
+        if (appName != null) {
+            return appLogic.findByName(appName);
         }
+        if (category != null && !category.isEmpty()) {
+            return appLogic.getAppsByCategory(category);
+        }
+        if (keyword != null && !keyword.isEmpty()) {
+            return appLogic.getAppsByKeyWords(keyword);
+        }
+        if (page != null && maxRecords != null) {
+            this.response.setIntHeader("X-Total-Count", appLogic.countApps());
+        }
+        return appLogic.getApps(page, maxRecords);
     }
 
     /**
@@ -139,6 +136,7 @@ public class AppService {
     public List<AppDTO> getAppsByCategory(@PathParam("category") String category) {
         return appLogic.getAppsByCategory(category);
     }
+
     @GET
     @Path("/keywords/{keyword}")
     public List<AppDTO> getAppsByKeyWords(@PathParam("keyword") String keyword) {
