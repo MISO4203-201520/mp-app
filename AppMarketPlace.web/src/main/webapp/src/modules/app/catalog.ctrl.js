@@ -45,6 +45,17 @@
             var self = this;
 
             this.recordActions = {
+                details: {
+                    displayName: 'Details',
+                    icon: 'list-alt',
+                    class: 'info',
+                    fn: function (app) {
+                        $location.path('/app/' + app.id);
+                    },
+                    show: function () {
+                        return true;
+                    }
+                },
                 addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
@@ -87,7 +98,7 @@
                 },
                 doQuestion: {
                     name: 'doQuestion',
-                    displayName: 'Do Question',
+                    displayName: 'Make a question',
                     icon: 'question-sign',
                     class: 'primary',
                     fn: function (app) {
@@ -138,7 +149,7 @@
                     }
                 },
                 rate: {
-                    displayName: 'Rate App',
+                    displayName: 'Rate App!',
                     icon: 'star',
                     class: 'primary',
                     fn: function (app) {
@@ -159,17 +170,6 @@
                                 self.showError('No es posible calificar la aplicación');
                             });
                         });
-                    },
-                    show: function () {
-                        return true;
-                    }
-                },
-                details: {
-                    displayName: 'Details',
-                    icon: 'list-alt',
-                    class: 'info',
-                    fn: function (app) {
-                        $location.path('/app/' + app.id);
                     },
                     show: function () {
                         return true;
