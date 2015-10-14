@@ -17,9 +17,9 @@
         }]);
     mod.service('usersService', ['CrudCreator', 'usersContext', function (CrudCreator, context) {
             CrudCreator.extendService(this, context);
-            
+
             this.getCurrentUser = function () {
                 return this.api.one('currentUser').get();
-            }
+            };
         }]);
 })(window.angular);

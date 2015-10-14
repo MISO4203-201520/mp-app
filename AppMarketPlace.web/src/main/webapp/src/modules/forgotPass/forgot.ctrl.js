@@ -40,7 +40,7 @@
                 var newMessage = {
                     "message": message,
                     "type": type
-                }
+                };
                 $scope.messages.push(newMessage);
             };
 

@@ -3,28 +3,24 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'usersService', 
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'usersService',
         function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location, userSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
-            
+
             // Hidding or Showing 'My profile' option
             // Only for developers
             $("#devprofile").hide();
             userSvc.getCurrentUser().then(function (user) {
-                console.log("Is developer? " + (user.role === 'developer'));
                 if (user.role === 'developer') {
                     $("#devprofile").show();
-                    console.log("showing my profile");
                 } else {
                     $("#devprofile").hide();
-                    console.log("hidding my profile");
                 }
             });
             $(".dropdown-menu > li > a").click(function () {
                 $("#devprofile").hide();
-                console.log("hidding my profile");
             });
 
             this.searchByName = function (appName) {
@@ -35,7 +31,7 @@
                 $location.url('/catalog' + search);
             };
 
-            
+
             var self = this;
 
             this.recordActions = {
@@ -121,9 +117,8 @@
                                 }
                             }
                         });
-                        $rootScope.modalInstance.result.then(function (text) {
+                        $rootScope.modalInstance.result.then(function () {
                             /*TODO create logic to service*/
-                            console.log("text");
                         }, function () {
 
                         });
@@ -193,7 +188,6 @@
                     });
                     modalInstance.result.then(function (text) {
                         svc.findCheapest(text).then(function (data) {
-                            console.log(data);
                             $scope.records = [];
                             for (var i = 0; i < data.length; i++) {
                                 $scope.records.push(data[i]);
@@ -252,9 +246,9 @@
                     return true;
                 }
             };
-            
-            
-            
+
+
+
 
             this.fetchRecords();
         }]);

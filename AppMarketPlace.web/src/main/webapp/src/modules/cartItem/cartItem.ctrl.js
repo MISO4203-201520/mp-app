@@ -1,25 +1,23 @@
 (function (ng) {
     var mod = ng.module('cartItemModule');
 
-    mod.controller('cartItemCtrl', ['CrudCreator', '$scope', 'cartItemService', 'cartItemModel', '$location', function (CrudCreator, $scope, svc, model,$location) {
+    mod.controller('cartItemCtrl', ['CrudCreator', '$scope', 'cartItemService', 'cartItemModel', '$location', function (CrudCreator, $scope, svc, model, $location) {
             CrudCreator.extendController(this, svc, $scope, model, 'cartItem', 'Shopping Cart');
             var self = this;
             $scope.verifyDiscount = function () {
-                
+
                 for (var i = 0; i < $scope.records.length; i++) {
-                 var date1 = new Date($scope.records[i].app.startDiscountDate);
-                date1.setDate(date1.getDate()+1);
-                var date2 = new Date($scope.records[i].app.finishDiscountDate);
-                date2.setDate(date2.getDate()+1);
-                var actualDate=new Date();
-                if (actualDate>=date1 && actualDate<=date2){
-                    // record.app.discount;
-                }else{
-                   $scope.records[i].app.discount=0;   
+                    var date1 = new Date($scope.records[i].app.startDiscountDate);
+                    date1.setDate(date1.getDate() + 1);
+                    var date2 = new Date($scope.records[i].app.finishDiscountDate);
+                    date2.setDate(date2.getDate() + 1);
+                    var actualDate = new Date();
+                    if (actualDate >= date1 && actualDate <= date2) {
+                        
+                    } else {
+                        $scope.records[i].app.discount = 0;
+                    }
                 }
-                
-                }
-                
             };
 
             var oldFetch = this.fetchRecords;
@@ -62,7 +60,7 @@
             };//guarda la cantidad anterior
 
             $scope.postVerify = function (record) {
-                var patron = /^\d*$/; //^[0-9]{3}$
+                var patron = /^\d+$/;
                 if (patron.test(record.quantity) && record.quantity > 0) {
                     self.calcTotal();
                 } else {
@@ -70,15 +68,16 @@
                     record.quantity = $scope.lastQuantity;
                     $scope.currentRecord = record;
                 }
-            };//Realiza la validacion de la nueva cantidad asignada.
-            $scope.checkout = function () {
-                $location.path( '/paymentCard' );
             };
-            $scope.subtotal = function (record) {                                 
-                   return (record.app.price - record.app.discount)* record.quantity;
-                
+            //Realiza la validacion de la nueva cantidad asignada.
+            $scope.checkout = function () {
+                $location.path('/paymentCard');
+            };
+            $scope.subtotal = function (record) {
+                return (record.app.price - record.app.discount) * record.quantity;
+
 
             };
-            
+
         }]);
 })(window.angular);

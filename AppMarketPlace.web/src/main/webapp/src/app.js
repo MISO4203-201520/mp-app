@@ -87,6 +87,6 @@
             auth.setRoles({'user': 'Client', 'developer': 'Developer'});
         }]);
     mainApp.run(function (editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. For Xeditable plugin Angular
+        editableOptions.theme = 'bs3';
     });
 })(window.angular);
