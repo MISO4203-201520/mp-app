@@ -1,10 +1,21 @@
-/* global commentSvc */
-
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', 'usersService',
-        function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location, userSvc) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', '$location', 'usersService',
+        function (CrudCreator, $scope, $modal, svc, cartItemSvc, $location, userSvc) {
+            var model = {
+                fields: [{
+                        name: 'name',
+                        displayName: 'Name',
+                        type: 'String',
+                        required: true
+                    }, {
+                        name: 'picture',
+                        displayName: 'Picture',
+                        type: 'Image',
+                        required: true
+                    }
+                ]};
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
@@ -47,7 +58,8 @@
                     show: function () {
                         return true;
                     }
-                }, shareSocial: {
+                },
+                shareSocial: {
                     name: 'share social',
                     displayName: 'Share',
                     icon: 'share',
@@ -59,7 +71,6 @@
                             controller: 'ModalShare',
                             resolve: {
                                 app: function () {
-                                    $rootScope.selectedApp = app;
                                     return app;
                                 }
                             }
@@ -99,24 +110,24 @@
                     show: function () {
                         return true;
                     }
-                }, comment: {
+                },
+                comment: {
                     name: 'add a comment',
                     displayName: 'Add a comment',
                     icon: 'pencil',
                     class: 'primary',
                     fn: function (app) {
-                        $rootScope.modalInstance = $modal.open({
+                        var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'src/modules/comment/comment.html',
                             controller: 'commentCtrl',
                             resolve: {
                                 app: function () {
-                                    $rootScope.selectedApp = app;
                                     return app;
                                 }
                             }
                         });
-                        $rootScope.modalInstance.result.then(function () {
+                        modalInstance.result.then(function () {
                             /*TODO create logic to service*/
                         }, function () {
 
@@ -125,45 +136,47 @@
                     show: function () {
                         return true;
                     }
-                }
-            };
-            this.recordActions.rate = {
-                displayName: 'Rate App',
-                icon: 'star',
-                class: 'primary',
-                fn: function (app) {
-                    var modalInstance = $modal.open({
-                        animation: true,
-                        templateUrl: 'src/modules/app/rateModal.tpl.html',
-                        controller: 'rateModalCtrl',
-                        resolve: {
-                            app: function () {
-                                return app;
+                },
+                rate: {
+                    displayName: 'Rate App',
+                    icon: 'star',
+                    class: 'primary',
+                    fn: function (app) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'src/modules/app/rateModal.tpl.html',
+                            controller: 'rateModalCtrl',
+                            resolve: {
+                                app: function () {
+                                    return app;
+                                }
                             }
-                        }
-                    });
-                    modalInstance.result.then(function (rate) {
-                        svc.rateApp(app, rate).then(function () {
-                            self.showSuccess('Aplicación calificada');
-                        }, function () {
-                            self.showError('No es posible calificar la aplicación');
                         });
-                    });
+                        modalInstance.result.then(function (rate) {
+                            svc.rateApp(app, rate).then(function () {
+                                self.showSuccess('Aplicación calificada');
+                            }, function () {
+                                self.showError('No es posible calificar la aplicación');
+                            });
+                        });
+                    },
+                    show: function () {
+                        return true;
+                    }
                 },
-                show: function () {
-                    return true;
+                details: {
+                    displayName: 'Details',
+                    icon: 'list-alt',
+                    class: 'info',
+                    fn: function (app) {
+                        $location.path('/app/' + app.id);
+                    },
+                    show: function () {
+                        return true;
+                    }
                 }
             };
-            this.recordActions.details = {
-                displayName: 'Details',
-                icon: 'list-alt',
-                class: 'info',
-                fn: function (app) {
-                    $location.path('/app/' + app.id);
-                },
-                show: function () {
-                    return true;
-                }};
+
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
                 icon: 'search',
@@ -264,7 +277,6 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('ModalFilterCategoriesCtrl', function ($scope, $modalInstance) {
         $scope.in = {
             text: ""
@@ -293,7 +305,6 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('searchCrtl', function ($scope, $modalInstance) {
         $scope.dev = {
             text: ""
@@ -308,7 +319,6 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('rateModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
             $scope.name = app.name;
             $scope.rate = 0;
