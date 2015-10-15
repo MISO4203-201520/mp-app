@@ -12,13 +12,18 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author af.esguerra10
+ * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
  */
 @Stateless
 public class RatePersistence extends CrudPersistence<RateEntity> {
+    static final Logger logger = LoggerFactory
+			.getLogger(RatePersistence.class);
 
     public RatePersistence() {
         this.entityClass = RateEntity.class;
@@ -31,8 +36,9 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("RateEntity.findByAppClient", params);
         } catch (NoResultException e) {
-            return null;
+            logger.warn("Rate cannot be found by clientId  {} and appId {}", clientId, appId);
         }
+        return null;
     }
     
     public Double getAverageByApp(Long appId){
@@ -41,7 +47,8 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("RateEntity.avgByApp", params);
         } catch (NoResultException e) {
-            return 0.0;
+            logger.warn("Rate cannot be found by appId {}", appId);
         }
+        return 0.0;
     }
 }

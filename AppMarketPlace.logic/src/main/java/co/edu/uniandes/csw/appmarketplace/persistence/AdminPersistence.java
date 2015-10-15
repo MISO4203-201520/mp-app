@@ -10,13 +10,18 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author ca.forero10
+ * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
  */
 @Stateless
-public class AdminPersistence extends CrudPersistence<AdminEntity>{
+public class AdminPersistence extends CrudPersistence<AdminEntity> {
+    static final Logger logger = LoggerFactory
+			.getLogger(AdminPersistence.class);
     
     /**
      * @generated
@@ -31,7 +36,8 @@ public class AdminPersistence extends CrudPersistence<AdminEntity>{
             params.put("user_id", userId);
             return this.executeSingleNamedQuery("Admin.getByUserId", params);
         } catch (NoResultException e) {
-            return null;
+            logger.warn("Admin cannot be found by userId  {} ", userId);
         }
+        return null;
     }
 }

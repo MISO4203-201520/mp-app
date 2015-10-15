@@ -48,6 +48,17 @@
             <artifactId>javaee-api</artifactId>
             <version>7.0</version>
         </dependency>
+        <!-- Logger implementation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${org.slf4j.version}</version>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +67,7 @@
         <sonar.jacoco.reportPath>${project.basedir}/target/jacoco.exec</sonar.jacoco.reportPath>
         <sonar.jacoco.outReportPath>target/jacoco</sonar.jacoco.outReportPath>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <org.slf4j.version>1.7.12</org.slf4j.version>
     </properties>
     <build>
         <pluginManagement>
