@@ -155,6 +155,23 @@
     mod.controller('authController', ['$scope', '$cookies', '$location', 'authService', 'defaultStatus', function ($scope, $cookies, $location, authSvc, defaultStatus) {
         this.errorctrl = defaultStatus;
         $scope.roles = authSvc.getRoles();
+        $scope.menuitems = [{id:'', label:'', icon:'', url:''}];
+        
+        $scope.$on('logged-in', function (events, user) {
+            if (user.role === 'administrator') {
+                $scope.menuitems = [{id:'registeredUsers', label:'Registered users', icon:'list-alt', url:'#/admin/clients'}];
+            } else {
+                if (user.role === 'developer') {
+                    $scope.menuitems = [{id:'devProfile', label:'My profile', icon:'user', url:'#/devprofile'}];
+                } else {
+                    if (user.role === 'user') {
+                        $scope.menuitems = [{id:'clientProfile', label:'My profile', icon:'user', url:'#/userprofile'}, 
+                                            {id:'clientCart', label:'My shopping cart', icon:'shopping-cart', url:'#/shoppingCart'}];
+                    }
+                }
+            }
+        });
+        
         $scope.isAuthenticated = function(){
             return !!authSvc.getCurrentUser();
         };
@@ -268,6 +285,8 @@ angular.module('authModule').run(['$templateCache', function($templateCache) {
     "    </button>\r" +
     "\n" +
     "    <ul class=\"dropdown-menu\">\r" +
+    "\n" +
+    "        <li id='{{menuitem.id}}' ng-repeat='menuitem in menuitems'><a ng-href='{{menuitem.url}}'><span class='glyphicon glyphicon-{{menuitem.icon}}' aria-hidden='true'></span> {{menuitem.label}}</a></li>\r" +
     "\n" +
     "        <li>\r" +
     "\n" +
