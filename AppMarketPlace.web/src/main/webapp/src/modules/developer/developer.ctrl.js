@@ -10,30 +10,22 @@
             CrudCreator.extendCompChildCtrl(this, $scope, model, 'apps', 'developer');
         }]);
 
-    mod.controller('devProfileCtrl', ['CrudCreator', '$scope', 'developerService', 'developerModel', 'usersService',
-        function (CrudCreator, $scope, svc, model, userSvc) {
+    mod.controller('devProfileCtrl', ['CrudCreator', '$scope', '$location', 'developerService', 'developerModel', 'usersService',
+        function (CrudCreator, $scope, $location, svc, model, userSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'developer', 'Developer');
 
-            // Hidding or Showing 'My profile' option
-            // Only for developers
+            // Getting current developer by username returned via userSvc
             userSvc.getCurrentUser().then(function (user) {
-                if (user.role === 'developer') {
-                    $("#devprofile").show();
-
-                    // Getting current developer by username returned via userSvc
+                if (user) {
                     svc.getDeveloperByUsername(user.userName).then(function (developer) {
-
                         $scope.developers = [];
                         if (developer) {
                             $scope.developers.push(developer);
                         }
                     });
                 } else {
-                    $("#devprofile").hide();
+                    $location.path("#/catalog");
                 }
-            });
-            $(".dropdown-menu > li > a").click(function () {
-                $("#devprofile").hide();
             });
         }]);
 })(window.angular);
