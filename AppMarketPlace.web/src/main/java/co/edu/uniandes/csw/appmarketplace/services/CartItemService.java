@@ -17,8 +17,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.apache.shiro.SecurityUtils;
 
 /**
@@ -47,6 +49,9 @@ public class CartItemService {
      */
     @GET
     public List<CartItemDTO> getCartItems() {
+        if (client == null) {
+            throw new WebApplicationException(Response.Status.FORBIDDEN);
+        }
         return clientLogic.getClient(client.getId()).getCartItems();
     }
 
