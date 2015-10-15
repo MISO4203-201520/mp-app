@@ -6,7 +6,6 @@
             
             // Find a developer by username
             this.getDeveloperByUsername = function (username) {
-                console.log(username);
                 return rest.one(context, username).get();
             };
         }]);
