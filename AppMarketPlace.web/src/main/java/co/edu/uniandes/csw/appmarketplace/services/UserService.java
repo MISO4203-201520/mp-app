@@ -21,7 +21,6 @@ import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
 import com.stormpath.sdk.resource.ResourceException;
 import com.stormpath.shiro.realm.ApplicationRealm;
-import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -37,7 +36,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.RealmSecurityManager;
-import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 
 /**
@@ -68,15 +66,16 @@ public class UserService {
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword(), user.isRememberMe());
             Subject currentUser = SecurityUtils.getSubject();
             currentUser.login(token);
-            ClientDTO client = clientLogic.getClientByUserId(currentUser.getPrincipal().toString());
+            String userHref = req.getRemoteUser();
+            ClientDTO client = clientLogic.getClientByUserId(userHref);
             if (client != null) {
                 currentUser.getSession().setAttribute("Client", client);
             } else {
-                DeveloperDTO provider = developerLogic.getDeveloperByUserId(currentUser.getPrincipal().toString());
+                DeveloperDTO provider = developerLogic.getDeveloperByUserId(userHref);
                 if (provider != null) {
                     currentUser.getSession().setAttribute("Developer", provider);
                 } else {
-                    AdminDTO admin = adminLogic.getAdminByUserId(currentUser.getPrincipal().toString());
+                    AdminDTO admin = adminLogic.getAdminByUserId(userHref);
                     if (admin != null) {
                         currentUser.getSession().setAttribute("Admin", admin);
                     } else {
@@ -87,7 +86,7 @@ public class UserService {
                     }
                 }
             }
-            return Response.ok(subjectToUserDTO(currentUser)).build();
+            return Response.ok(subjectToUserDTO()).build();
         } catch (AuthenticationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
@@ -100,8 +99,7 @@ public class UserService {
     @GET
     public Response logout() {
         try {
-            Subject currentUser = SecurityUtils.getSubject();
-            currentUser.logout();
+            SecurityUtils.getSubject().logout();
             return Response.ok().build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST).build();
@@ -112,8 +110,7 @@ public class UserService {
     @GET
     public Response getCurrentUser() {
         try {
-            Subject currentUser = SecurityUtils.getSubject();
-            return Response.ok(subjectToUserDTO(currentUser)).build();
+            return Response.ok(subjectToUserDTO()).build();
         } catch (AuthenticationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
@@ -122,7 +119,7 @@ public class UserService {
         }
     }
 
-    private UserDTO subjectToUserDTO(Subject subject) {
+    private UserDTO subjectToUserDTO() {
         String href = req.getRemoteUser();
         if (href != null) {
             UserDTO user = new UserDTO();
@@ -205,11 +202,8 @@ public class UserService {
     @Path("/forgot")
     @POST
     public Response forgotPassword(UserDTO user) {
-        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
-        Client client = realm.getClient();
-        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
         try {
-            Account account = application.sendPasswordResetEmail(user.getEmail());
+            getApplication().sendPasswordResetEmail(user.getEmail());
             return Response.ok().build();
         } catch (ResourceException e) {
             return Response.status(e.getStatus())
@@ -222,11 +216,8 @@ public class UserService {
     @Path("/verify")
     @GET
     public Response verifyToken(@QueryParam("sptoken") String token) {
-        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
-        Client client = realm.getClient();
-        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
         try {
-            Account account = application.verifyPasswordResetToken(token);
+            getApplication().verifyPasswordResetToken(token);
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         } catch (ResourceException e) {
             return Response.status(e.getStatus())
@@ -239,11 +230,8 @@ public class UserService {
     @Path("/change")
     @POST
     public Response changePassword(ForgotPasswordDTO forgot) {
-        ApplicationRealm realm = ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
-        Client client = realm.getClient();
-        Application application = client.getResource(realm.getApplicationRestUrl(), Application.class);
         try {
-            Account account = application.resetPassword(forgot.getToken(), forgot.getNewPassword());
+            getApplication().resetPassword(forgot.getToken(), forgot.getNewPassword());
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         } catch (ResourceException e) {
             return Response.status(e.getStatus())
