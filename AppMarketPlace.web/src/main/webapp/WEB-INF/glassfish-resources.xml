@@ -10,6 +10,12 @@
         <property name="databaseName" value="mp-app"/>
         <property name="User" value="grupo5"/>
         <property name="Password" value="Grupo5"/>
+        
+        <!--property name="serverName" value="localhost"/>
+        <property name="portNumber" value="5432"/>
+        <property name="databaseName" value="appoteca"/>
+        <property name="User" value="postgres"/>
+        <property name="Password" value="admin"/-->
     </jdbc-connection-pool>
     <jdbc-resource enabled="true" jndi-name="java:app/jdbc/AppMarketPlace" object-type="user" pool-name="AppMarketPlace_pool"/>
 </resources>

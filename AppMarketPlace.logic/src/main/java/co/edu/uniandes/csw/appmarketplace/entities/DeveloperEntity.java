@@ -17,7 +17,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Developer.getByUserId", query = "select u from DeveloperEntity u WHERE u.userId = :user_id")
+    @NamedQuery(name = "Developer.getByUserId", query = "select u from DeveloperEntity u WHERE u.userId = :user_id"),
+    @NamedQuery(name = "Developer.getByUsername", query = "SELECT d FROM DeveloperEntity d WHERE d.name = :username")
 })
 @XmlRootElement
 public class DeveloperEntity implements Serializable {

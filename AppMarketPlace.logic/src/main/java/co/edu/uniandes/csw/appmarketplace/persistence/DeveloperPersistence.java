@@ -28,4 +28,14 @@ public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
             return null;
         }
     }
+    
+    public DeveloperEntity getDeveloperByUsername (String username) {
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("username", username);
+            return this.executeSingleNamedQuery("Developer.getByUsername", params);
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
