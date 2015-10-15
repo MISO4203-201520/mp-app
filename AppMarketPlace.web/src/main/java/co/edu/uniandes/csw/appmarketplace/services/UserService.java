@@ -93,7 +93,7 @@ public class UserService {
             }
             return Response.ok(subjectToUserDTO()).build();
         } catch (AuthenticationException e) {
-            logger.warn("User {} cannot be logged in", user);
+            logger.warn("User {} cannot be logged in", user, e);
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
@@ -108,7 +108,7 @@ public class UserService {
             SecurityUtils.getSubject().logout();
             return Response.ok().build();
         } catch (Exception e) {
-            logger.warn("User cannot be logged out");
+            logger.warn("User cannot be logged out", e);
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
@@ -119,7 +119,7 @@ public class UserService {
         try {
             return Response.ok(subjectToUserDTO()).build();
         } catch (AuthenticationException e) {
-            logger.warn("Current user cannot be retrieved");
+            logger.warn("Current user cannot be retrieved", e);
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
@@ -168,7 +168,7 @@ public class UserService {
             }
             return Response.ok().build();
         } catch (ResourceException e) {
-            logger.warn("User {} cannot be registered as new user", user);
+            logger.warn("User {} cannot be registered as new user", user, e);
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
@@ -215,7 +215,7 @@ public class UserService {
             getApplication().sendPasswordResetEmail(user.getEmail());
             return Response.ok().build();
         } catch (ResourceException e) {
-            logger.warn("Password cannot be remembered for user {}", user);
+            logger.warn("Password cannot be remembered for user {}", user, e);
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
@@ -230,7 +230,7 @@ public class UserService {
             getApplication().verifyPasswordResetToken(token);
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         } catch (ResourceException e) {
-            logger.warn("Token {} cannot be verified", token);
+            logger.warn("Token {} cannot be verified", token, e);
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
@@ -245,7 +245,7 @@ public class UserService {
             getApplication().resetPassword(forgot.getToken(), forgot.getNewPassword());
             return Response.ok().type(MediaType.APPLICATION_JSON).build();
         } catch (ResourceException e) {
-            logger.warn("Password cannot be changed");
+            logger.warn("Password cannot be changed", e);
             return Response.status(e.getStatus())
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
