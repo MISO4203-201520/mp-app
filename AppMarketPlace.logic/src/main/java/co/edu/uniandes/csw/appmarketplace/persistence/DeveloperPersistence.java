@@ -30,7 +30,7 @@ public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
             params.put("user_id", userId);
             return this.executeSingleNamedQuery("Developer.getByUserId", params);
         } catch (NoResultException e) {
-            logger.warn("Developer cannot be found by userId  {} ", userId);
+            logger.warn("Developer cannot be found by userId  {} ", userId, e);
         }
         return null;
     }
@@ -41,7 +41,7 @@ public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
             params.put("username", username);
             return this.executeSingleNamedQuery("Developer.getByUsername", params);
         } catch (NoResultException e) {
-            logger.warn("Developer cannot be found by username  {} ", username);
+            logger.warn("Developer cannot be found by username  {} ", username, e);
         }
         return null;
     }

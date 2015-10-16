@@ -32,7 +32,7 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("TransactionEntity.countByClientApp", params);
         } catch (NoResultException e) {
-            logger.warn("Transaction cannot be found by clientId  {} and appId {}", clientId, appId);
+            logger.warn("Transaction cannot be found by clientId  {} and appId {}", clientId, appId, e);
         }
         return 0L;
     }
@@ -42,7 +42,7 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("TransactionEntity.countByApp", params);
         } catch (NoResultException e) {
-            logger.warn("Transaction cannot be found by appId {}", appId);
+            logger.warn("Transaction cannot be found by appId {}", appId, e);
         }
         return 0L;
     }

@@ -30,7 +30,7 @@ public class ClientPersistence extends CrudPersistence<ClientEntity> {
             params.put("user_id", userId);
             return this.executeSingleNamedQuery("Client.getByUserId", params);
         } catch (NoResultException e) {
-            logger.warn("Client cannot be found by userId  {} ", userId);
+            logger.warn("Client cannot be found by userId  {} ", userId, e);
         }
         return null;
     }

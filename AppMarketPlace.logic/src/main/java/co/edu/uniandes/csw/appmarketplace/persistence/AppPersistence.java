@@ -31,7 +31,7 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
             params.put("developerName", "%" + developerName + "%");
             return executeListNamedQuery("AppEntity.getCheapest", params);
         } catch (NoResultException e) {
-            logger.warn("Application cannot be found by developerName  {} ", developerName);
+            logger.warn("Application cannot be found by developerName  {} ", developerName, e);
         }
         return null;
     }
@@ -42,7 +42,7 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
             params.put("category", category);
             return executeListNamedQuery("AppEntity.getAppsByCategory", params);
         } catch (NoResultException e) {
-            logger.warn("Application cannot be found by category  {} ", category);
+            logger.warn("Application cannot be found by category  {} ", category, e);
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
             params.put("keyword", "%" + keyword + "%");
             return executeListNamedQuery("AppEntity.getAppsByKeyWords", params);
         } catch (NoResultException e) {
-            logger.warn("Application cannot be found by appId  {} ", keyword);
+            logger.warn("Application cannot be found by appId  {} ", keyword, e);
         }
         return null;
     }

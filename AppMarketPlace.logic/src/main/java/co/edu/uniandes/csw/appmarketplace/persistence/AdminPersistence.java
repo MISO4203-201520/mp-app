@@ -36,7 +36,7 @@ public class AdminPersistence extends CrudPersistence<AdminEntity> {
             params.put("user_id", userId);
             return this.executeSingleNamedQuery("Admin.getByUserId", params);
         } catch (NoResultException e) {
-            logger.warn("Admin cannot be found by userId  {} ", userId);
+            logger.warn("Admin cannot be found by userId  {} ", userId, e);
         }
         return null;
     }

@@ -36,7 +36,7 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("RateEntity.findByAppClient", params);
         } catch (NoResultException e) {
-            logger.warn("Rate cannot be found by clientId  {} and appId {}", clientId, appId);
+            logger.warn("Rate cannot be found by clientId  {} and appId {}", clientId, appId, e);
         }
         return null;
     }
@@ -47,7 +47,7 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("RateEntity.avgByApp", params);
         } catch (NoResultException e) {
-            logger.warn("Rate cannot be found by appId {}", appId);
+            logger.warn("Rate cannot be found by appId {}", appId, e);
         }
         return 0.0;
     }

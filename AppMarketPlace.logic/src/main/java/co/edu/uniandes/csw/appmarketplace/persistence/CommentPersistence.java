@@ -36,7 +36,7 @@ public class CommentPersistence extends CrudPersistence<Comment> {
             params.put("app_id", appId);
             return this.executeListNamedQuery("Comment.getCommentsByApp", params);
         } catch (NoResultException e) {
-            logger.warn("Comment cannot be found by appId  {} ", appId);
+            logger.warn("Comment cannot be found by appId  {} ", appId, e);
         }
         return null;
     }
