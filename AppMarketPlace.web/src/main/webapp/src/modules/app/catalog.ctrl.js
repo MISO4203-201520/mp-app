@@ -27,6 +27,16 @@
                 }
                 $location.url('/catalog' + search);
             };
+            $scope.searchByKeyWord = function (keyword) {
+                
+                
+                if (keyword!="" && keyword!=undefined) {
+                $location.url('/catalog?keyword='+keyword );
+                }else{
+                    $location.url('/catalog' );
+                }
+                
+            };
 
             var self = this;
 
@@ -210,28 +220,7 @@
                     return true;
                 }
             };
-            this.globalActions.search = {
-                displayName: 'Search',
-                icon: 'search',
-                class: 'primary',
-                fn: function () {
-                    var modalInstance = $modal.open({
-                        animation: true,
-                        templateUrl: 'src/modules/app/search.tpl.html',
-                        controller: 'searchCrtl'
-                    });
-                    modalInstance.result.then(function (text) {
-                        svc.getAppsByKeyWords(text).then(function (data) {
-                            $scope.records = data;
-                        });
-                    }, function () {
-
-                    });
-                },
-                show: function () {
-                    return true;
-                }
-            };
+            
 
             this.fetchRecords();
         }]);
@@ -288,20 +277,6 @@
 
         $scope.cancel = function () {
             $scope.in.text = "";
-            $modalInstance.dismiss('cancel');
-        };
-    });
-    mod.controller('searchCrtl', function ($scope, $modalInstance) {
-        $scope.dev = {
-            text: ""
-        };
-
-        $scope.ok = function () {
-            $modalInstance.close($scope.dev.text);
-        };
-
-        $scope.cancel = function () {
-            $scope.dev.text = "";
             $modalInstance.dismiss('cancel');
         };
     });
