@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @generated
+ * @author d.jmenez13
  */
 @RunWith(Arquillian.class)
 public class AppPersistenceTest {
@@ -95,6 +95,7 @@ public class AppPersistenceTest {
         for (int i = 0; i < 3; i++) {
             AppEntity entity = new AppEntity();
             entity.setName(generateRandom(String.class));
+            entity.setCategory(generateRandom(String.class));
             entity.setDescription(generateRandom(String.class));
             entity.setVersion(generateRandom(String.class));
             entity.setPicture(generateRandom(String.class));
@@ -112,6 +113,7 @@ public class AppPersistenceTest {
     public void createAppTest() {
         AppEntity newEntity = new AppEntity();
         newEntity.setName(generateRandom(String.class));
+        newEntity.setCategory(generateRandom(String.class));
         newEntity.setDescription(generateRandom(String.class));
         newEntity.setVersion(generateRandom(String.class));
         newEntity.setPicture(generateRandom(String.class));
@@ -125,6 +127,7 @@ public class AppPersistenceTest {
         AppEntity entity = em.find(AppEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
+        Assert.assertEquals(newEntity.getCategory(), entity.getCategory());
         Assert.assertEquals(newEntity.getDescription(), entity.getDescription());
         Assert.assertEquals(newEntity.getVersion(), entity.getVersion());
         Assert.assertEquals(newEntity.getPicture(), entity.getPicture());
@@ -159,6 +162,7 @@ public class AppPersistenceTest {
         AppEntity newEntity = appPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
+        Assert.assertEquals(entity.getCategory(), newEntity.getCategory());
         Assert.assertEquals(entity.getDescription(), newEntity.getDescription());
         Assert.assertEquals(entity.getVersion(), newEntity.getVersion());
         Assert.assertEquals(entity.getPicture(), newEntity.getPicture());
@@ -188,6 +192,7 @@ public class AppPersistenceTest {
 
         newEntity.setId(entity.getId());
         newEntity.setName(generateRandom(String.class));
+        newEntity.setCategory(generateRandom(String.class));
         newEntity.setDescription(generateRandom(String.class));
         newEntity.setVersion(generateRandom(String.class));
         newEntity.setPicture(generateRandom(String.class));
@@ -199,6 +204,7 @@ public class AppPersistenceTest {
         AppEntity resp = em.find(AppEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
+        Assert.assertEquals(newEntity.getCategory(), resp.getCategory());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
         Assert.assertEquals(newEntity.getVersion(), resp.getVersion());
         Assert.assertEquals(newEntity.getPicture(), resp.getPicture());
@@ -260,6 +266,33 @@ public class AppPersistenceTest {
             boolean found = false;
             for (AppEntity cacheEntity : cache) {
                 if (cacheEntity.getName().equals(ent.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Assert.fail();
+            }
+        }
+    }
+    
+    @Test
+    public void getAppsByCategory() {
+        String category = data.get(0).getCategory();
+        List<AppEntity> cachedApps = new ArrayList<AppEntity>();
+        List<AppEntity> foundApps = appPersistence.getAppsByCategory(category);
+        
+        for (AppEntity app : data) {
+            if (app.getCategory().equals(category)) {
+                cachedApps.add(app);
+            }
+        }
+        Assert.assertEquals(cachedApps.size(), foundApps.size());
+        
+        for (AppEntity foundApp : foundApps) {
+            boolean found = false;
+            for (AppEntity cachedApp : cachedApps) {
+                if (cachedApp.getName().equals(foundApp.getName())) {
                     found = true;
                     break;
                 }

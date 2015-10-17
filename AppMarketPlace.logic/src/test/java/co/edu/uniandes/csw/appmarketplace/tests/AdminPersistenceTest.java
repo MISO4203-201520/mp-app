@@ -1,7 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
-import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
-import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
+import co.edu.uniandes.csw.appmarketplace.entities.AdminEntity;
+import co.edu.uniandes.csw.appmarketplace.persistence.AdminPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,46 +20,31 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
- * @generated
+ * @author d.jmenez13
  */
 @RunWith(Arquillian.class)
-public class DeveloperPersistenceTest {
+public class AdminPersistenceTest {
 
     public static final String DEPLOY = "Prueba";
 
-    /**
-     * @generated
-     */
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DEPLOY + ".war")
-                .addPackage(DeveloperEntity.class.getPackage())
-                .addPackage(DeveloperPersistence.class.getPackage())
+                .addPackage(AdminEntity.class.getPackage())
+                .addPackage(AdminPersistence.class.getPackage())
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("META-INF/beans.xml", "beans.xml");
     }
 
-    /**
-     * @generated
-     */
     @Inject
-    private DeveloperPersistence developerPersistence;
+    private AdminPersistence adminPersistence;
 
-    /**
-     * @generated
-     */
     @PersistenceContext
     private EntityManager em;
 
-    /**
-     * @generated
-     */
     @Inject
     UserTransaction utx;
 
-    /**
-     * @generated
-     */
     @Before
     public void configTest() {
         try {
@@ -77,24 +62,15 @@ public class DeveloperPersistenceTest {
         }
     }
 
-    /**
-     * @generated
-     */
     private void clearData() {
-        em.createQuery("delete from DeveloperEntity").executeUpdate();
+        em.createQuery("delete from AdminEntity").executeUpdate();
     }
 
-    /**
-     * @generated
-     */
-    private List<DeveloperEntity> data = new ArrayList<DeveloperEntity>();
+    private List<AdminEntity> data = new ArrayList<AdminEntity>();
 
-    /**
-     * @generated
-     */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            DeveloperEntity entity = new DeveloperEntity();
+            AdminEntity entity = new AdminEntity();
             entity.setName(generateRandom(String.class));
             entity.setUserId(generateRandom(String.class));
             em.persist(entity);
@@ -102,35 +78,29 @@ public class DeveloperPersistenceTest {
         }
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void createDeveloperTest() {
-        DeveloperEntity newEntity = new DeveloperEntity();
+    public void createAdmin() {
+        AdminEntity newEntity = new AdminEntity();
         newEntity.setName(generateRandom(String.class));
         newEntity.setUserId(generateRandom(String.class));
 
-        DeveloperEntity result = developerPersistence.create(newEntity);
+        AdminEntity result = adminPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
 
-        DeveloperEntity entity = em.find(DeveloperEntity.class, result.getId());
+        AdminEntity entity = em.find(AdminEntity.class, result.getId());
 
         Assert.assertEquals(newEntity.getName(), entity.getName());
         Assert.assertEquals(newEntity.getUserId(), entity.getUserId());
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void getDevelopersTest() {
-        List<DeveloperEntity> list = developerPersistence.findAll(null, null);
+    public void getAdmins() {
+        List<AdminEntity> list = adminPersistence.findAll(null, null);
         Assert.assertEquals(data.size(), list.size());
-        for (DeveloperEntity ent : list) {
+        for (AdminEntity ent : list) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -139,67 +109,55 @@ public class DeveloperPersistenceTest {
         }
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void getDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
-        DeveloperEntity newEntity = developerPersistence.find(entity.getId());
+    public void getAdmin() {
+        AdminEntity entity = data.get(0);
+        AdminEntity newEntity = adminPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
         Assert.assertEquals(entity.getName(), newEntity.getName());
         Assert.assertEquals(entity.getUserId(), newEntity.getUserId());
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void deleteDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
-        developerPersistence.delete(entity.getId());
-        DeveloperEntity deleted = em.find(DeveloperEntity.class, entity.getId());
+    public void deleteAdmin() {
+        AdminEntity entity = data.get(0);
+        adminPersistence.delete(entity.getId());
+        AdminEntity deleted = em.find(AdminEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void updateDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
+    public void updateAdmin() {
+        AdminEntity entity = data.get(0);
 
-        DeveloperEntity newEntity = new DeveloperEntity();
+        AdminEntity newEntity = new AdminEntity();
 
         newEntity.setId(entity.getId());
         newEntity.setName(generateRandom(String.class));
         newEntity.setUserId(generateRandom(String.class));
 
-        developerPersistence.update(newEntity);
+        adminPersistence.update(newEntity);
 
-        DeveloperEntity resp = em.find(DeveloperEntity.class, entity.getId());
+        AdminEntity resp = em.find(AdminEntity.class, entity.getId());
 
         Assert.assertEquals(newEntity.getName(), resp.getName());
         Assert.assertEquals(newEntity.getUserId(), resp.getUserId());
     }
 
-    /**
-     * @generated
-     */
     @Test
-    public void getDeveloperPaginationTest() {
+    public void getAdminPagination() {
         //Page 1
-        List<DeveloperEntity> ent1 = developerPersistence.findAll(1, 2);
+        List<AdminEntity> ent1 = adminPersistence.findAll(1, 2);
         Assert.assertNotNull(ent1);
         Assert.assertEquals(2, ent1.size());
         //Page 2
-        List<DeveloperEntity> ent2 = developerPersistence.findAll(2, 2);
+        List<AdminEntity> ent2 = adminPersistence.findAll(2, 2);
         Assert.assertNotNull(ent2);
         Assert.assertEquals(1, ent2.size());
 
-        for (DeveloperEntity ent : ent1) {
+        for (AdminEntity ent : ent1) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -207,9 +165,9 @@ public class DeveloperPersistenceTest {
             Assert.assertTrue(found);
         }
 
-        for (DeveloperEntity ent : ent2) {
+        for (AdminEntity ent : ent2) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (ent.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -218,24 +176,21 @@ public class DeveloperPersistenceTest {
         }
     }
 
-    /**
-     * @generated
-     */
     @Test
     public void findByName() {
         String name = data.get(0).getName();
-        List<DeveloperEntity> cache = new ArrayList<DeveloperEntity>();
-        List<DeveloperEntity> list = developerPersistence.findByName(name);
+        List<AdminEntity> cache = new ArrayList<AdminEntity>();
+        List<AdminEntity> list = adminPersistence.findByName(name);
 
-        for (DeveloperEntity entity : data) {
+        for (AdminEntity entity : data) {
             if (entity.getName().equals(name)) {
                 cache.add(entity);
             }
         }
         Assert.assertEquals(list.size(), cache.size());
-        for (DeveloperEntity ent : list) {
+        for (AdminEntity ent : list) {
             boolean found = false;
-            for (DeveloperEntity cacheEntity : cache) {
+            for (AdminEntity cacheEntity : cache) {
                 if (cacheEntity.getName().equals(ent.getName())) {
                     found = true;
                     break;
@@ -248,26 +203,14 @@ public class DeveloperPersistenceTest {
     }
 
     @Test
-    public void getDeveloperByUserId() {
-        DeveloperEntity developerToSearch = data.get(0);
+    public void getAdminByUserId() {
+        AdminEntity adminToSearch = data.get(0);
 
-        DeveloperEntity developerFound = developerPersistence
-                .getDeveloperByUserId(developerToSearch.getUserId());
+        AdminEntity adminFound = adminPersistence
+                .getAdminByUserId(adminToSearch.getUserId());
 
-        Assert.assertNotNull(developerFound);
-        Assert.assertEquals(developerFound.getName(), developerToSearch.getName());
-        Assert.assertEquals(developerFound.getUserId(), developerToSearch.getUserId());
-    }
-
-    @Test
-    public void getDeveloperByUsername() {
-        DeveloperEntity developerToSearch = data.get(0);
-
-        DeveloperEntity developerFound = developerPersistence
-                .getDeveloperByUsername(developerToSearch.getName());
-
-        Assert.assertNotNull(developerFound);
-        Assert.assertEquals(developerFound.getName(), developerToSearch.getName());
-        Assert.assertEquals(developerFound.getUserId(), developerToSearch.getUserId());
+        Assert.assertNotNull(adminFound);
+        Assert.assertEquals(adminFound.getName(), adminToSearch.getName());
+        Assert.assertEquals(adminFound.getUserId(), adminToSearch.getUserId());
     }
 }
