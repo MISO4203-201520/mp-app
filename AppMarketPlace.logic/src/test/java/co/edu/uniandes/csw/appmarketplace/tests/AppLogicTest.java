@@ -103,6 +103,7 @@ public class AppLogicTest {
         for (int i = 0; i < 3; i++) {
             AppEntity entity = new AppEntity();
         	entity.setName(generateRandom(String.class));
+                entity.setCategory(generateRandom(String.class));
         	entity.setDescription(generateRandom(String.class));
         	entity.setVersion(generateRandom(String.class));
         	entity.setPicture(generateRandom(String.class));
@@ -120,6 +121,7 @@ public class AppLogicTest {
     public void createAppTest() {
         AppDTO dto = new AppDTO();
         dto.setName(generateRandom(String.class));
+        dto.setCategory(generateRandom(String.class));
         dto.setDescription(generateRandom(String.class));
         dto.setVersion(generateRandom(String.class));
         dto.setPicture(generateRandom(String.class));
@@ -133,6 +135,7 @@ public class AppLogicTest {
         AppEntity entity = em.find(AppEntity.class, result.getId());
 
         Assert.assertEquals(dto.getName(), entity.getName());
+        Assert.assertEquals(dto.getCategory(), entity.getCategory());
         Assert.assertEquals(dto.getDescription(), entity.getDescription());
         Assert.assertEquals(dto.getVersion(), entity.getVersion());
         Assert.assertEquals(dto.getPicture(), entity.getPicture());
@@ -167,6 +170,7 @@ public class AppLogicTest {
         AppDTO dto = appLogic.getApp(entity.getId());
         Assert.assertNotNull(dto);
         Assert.assertEquals(entity.getName(), dto.getName());
+        Assert.assertEquals(entity.getCategory(), dto.getCategory());
         Assert.assertEquals(entity.getDescription(), dto.getDescription());
         Assert.assertEquals(entity.getVersion(), dto.getVersion());
         Assert.assertEquals(entity.getPicture(), dto.getPicture());
@@ -196,6 +200,7 @@ public class AppLogicTest {
 
         dto.setId(entity.getId());
         dto.setName(generateRandom(String.class));
+        dto.setCategory(generateRandom(String.class));
         dto.setDescription(generateRandom(String.class));
         dto.setVersion(generateRandom(String.class));
         dto.setPicture(generateRandom(String.class));
@@ -207,6 +212,7 @@ public class AppLogicTest {
         AppEntity resp = em.find(AppEntity.class, entity.getId());
 
         Assert.assertEquals(dto.getName(), resp.getName());
+        Assert.assertEquals(dto.getCategory(), resp.getCategory());
         Assert.assertEquals(dto.getDescription(), resp.getDescription());
         Assert.assertEquals(dto.getVersion(), resp.getVersion());
         Assert.assertEquals(dto.getPicture(), resp.getPicture());
@@ -268,6 +274,33 @@ public class AppLogicTest {
             boolean found = false;
             for (AppEntity cacheEntity : cache) {
                 if (cacheEntity.getName().equals(dto.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Assert.fail();
+            }
+        }
+    }
+    
+    @Test
+    public void getAppsByCategory() {
+        String category = data.get(0).getCategory();
+        List<AppEntity> cachedApps = new ArrayList<AppEntity>();
+        List<AppDTO> foundApps = appLogic.getAppsByCategory(category);
+        
+        for (AppEntity app : data) {
+            if (app.getCategory().equals(category)) {
+                cachedApps.add(app);
+            }
+        }
+        Assert.assertEquals(cachedApps.size(), foundApps.size());
+        
+        for (AppDTO foundApp : foundApps) {
+            boolean found = false;
+            for (AppEntity cachedApp : cachedApps) {
+                if (cachedApp.getName().equals(foundApp.getName())) {
                     found = true;
                     break;
                 }

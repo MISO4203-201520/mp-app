@@ -1,11 +1,11 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
-import co.edu.uniandes.csw.appmarketplace.ejbs.DeveloperLogic;
-import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
-import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
-import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
-import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
-import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
+import co.edu.uniandes.csw.appmarketplace.ejbs.AdminLogic;
+import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
+import co.edu.uniandes.csw.appmarketplace.converters.AdminConverter;
+import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
+import co.edu.uniandes.csw.appmarketplace.entities.AdminEntity;
+import co.edu.uniandes.csw.appmarketplace.persistence.AdminPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.junit.runner.RunWith;
  * @generated
  */
 @RunWith(Arquillian.class)
-public class DeveloperLogicTest {
+public class AdminLogicTest {
     public static final String DEPLOY = "Prueba";
 
     /**
@@ -36,12 +36,12 @@ public class DeveloperLogicTest {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DEPLOY + ".war")
-                .addPackage(DeveloperEntity.class.getPackage())
-                .addPackage(DeveloperDTO.class.getPackage())
-                .addPackage(DeveloperConverter.class.getPackage())
-                .addPackage(DeveloperLogic.class.getPackage())
-                .addPackage(IDeveloperLogic.class.getPackage())
-                .addPackage(DeveloperPersistence.class.getPackage())
+                .addPackage(AdminEntity.class.getPackage())
+                .addPackage(AdminDTO.class.getPackage())
+                .addPackage(AdminConverter.class.getPackage())
+                .addPackage(AdminLogic.class.getPackage())
+                .addPackage(IAdminLogic.class.getPackage())
+                .addPackage(AdminPersistence.class.getPackage())
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("META-INF/beans.xml", "beans.xml");
     }
@@ -50,7 +50,7 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Inject
-    private IDeveloperLogic developerLogic;
+    private IAdminLogic adminLogic;
 
     /**
      * @generated
@@ -88,20 +88,20 @@ public class DeveloperLogicTest {
      * @generated
      */
     private void clearData() {
-        em.createQuery("delete from DeveloperEntity").executeUpdate();
+        em.createQuery("delete from AdminEntity").executeUpdate();
     }
 
     /**
      * @generated
      */
-    private List<DeveloperEntity> data = new ArrayList<DeveloperEntity>();
+    private List<AdminEntity> data = new ArrayList<AdminEntity>();
 
     /**
      * @generated
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            DeveloperEntity entity = new DeveloperEntity();
+            AdminEntity entity = new AdminEntity();
         	entity.setName(generateRandom(String.class));
         	entity.setUserId(generateRandom(String.class));
             em.persist(entity);
@@ -113,16 +113,16 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void createDeveloperTest() {
-        DeveloperDTO dto = new DeveloperDTO();
+    public void createAdminTest() {
+        AdminDTO dto = new AdminDTO();
         dto.setName(generateRandom(String.class));
         dto.setUserId(generateRandom(String.class));
 
-        DeveloperDTO result = developerLogic.createDeveloper(dto);
+        AdminDTO result = adminLogic.createAdmin(dto);
 
         Assert.assertNotNull(result);
 
-        DeveloperEntity entity = em.find(DeveloperEntity.class, result.getId());
+        AdminEntity entity = em.find(AdminEntity.class, result.getId());
 
         Assert.assertEquals(dto.getName(), entity.getName());
         Assert.assertEquals(dto.getUserId(), entity.getUserId());
@@ -132,12 +132,12 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void getDevelopersTest() {
-        List<DeveloperDTO> list = developerLogic.getDevelopers(null, null);
+    public void getAdminsTest() {
+        List<AdminDTO> list = adminLogic.getAdmins(null, null);
         Assert.assertEquals(data.size(), list.size());
-        for (DeveloperDTO dto : list) {
+        for (AdminDTO dto : list) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (dto.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -150,9 +150,9 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void getDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
-        DeveloperDTO dto = developerLogic.getDeveloper(entity.getId());
+    public void getAdminTest() {
+        AdminEntity entity = data.get(0);
+        AdminDTO dto = adminLogic.getAdmin(entity.getId());
         Assert.assertNotNull(dto);
         Assert.assertEquals(entity.getName(), dto.getName());
         Assert.assertEquals(entity.getUserId(), dto.getUserId());
@@ -162,10 +162,10 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void deleteDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
-        developerLogic.deleteDeveloper(entity.getId());
-        DeveloperEntity deleted = em.find(DeveloperEntity.class, entity.getId());
+    public void deleteAdminTest() {
+        AdminEntity entity = data.get(0);
+        adminLogic.deleteAdmin(entity.getId());
+        AdminEntity deleted = em.find(AdminEntity.class, entity.getId());
         Assert.assertNull(deleted);
     }
 
@@ -173,18 +173,18 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void updateDeveloperTest() {
-        DeveloperEntity entity = data.get(0);
+    public void updateAdminTest() {
+        AdminEntity entity = data.get(0);
 
-        DeveloperDTO dto = new DeveloperDTO();
+        AdminDTO dto = new AdminDTO();
 
         dto.setId(entity.getId());
         dto.setName(generateRandom(String.class));
         dto.setUserId(generateRandom(String.class));
 
-        developerLogic.updateDeveloper(dto);
+        adminLogic.updateAdmin(dto);
 
-        DeveloperEntity resp = em.find(DeveloperEntity.class, entity.getId());
+        AdminEntity resp = em.find(AdminEntity.class, entity.getId());
 
         Assert.assertEquals(dto.getName(), resp.getName());
         Assert.assertEquals(dto.getUserId(), resp.getUserId());
@@ -194,19 +194,19 @@ public class DeveloperLogicTest {
      * @generated
      */
     @Test
-    public void getDeveloperPaginationTest() {
+    public void getAdminPaginationTest() {
         //Page 1
-        List<DeveloperDTO> dto1 = developerLogic.getDevelopers(1, 2);
+        List<AdminDTO> dto1 = adminLogic.getAdmins(1, 2);
         Assert.assertNotNull(dto1);
         Assert.assertEquals(2, dto1.size());
         //Page 2
-        List<DeveloperDTO> dto2 = developerLogic.getDevelopers(2, 2);
+        List<AdminDTO> dto2 = adminLogic.getAdmins(2, 2);
         Assert.assertNotNull(dto2);
         Assert.assertEquals(1, dto2.size());
 
-        for (DeveloperDTO dto : dto1) {
+        for (AdminDTO dto : dto1) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (dto.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -214,9 +214,9 @@ public class DeveloperLogicTest {
             Assert.assertTrue(found);
         }
 
-        for (DeveloperDTO dto : dto2) {
+        for (AdminDTO dto : dto2) {
             boolean found = false;
-            for (DeveloperEntity entity : data) {
+            for (AdminEntity entity : data) {
                 if (dto.getId().equals(entity.getId())) {
                     found = true;
                 }
@@ -231,18 +231,18 @@ public class DeveloperLogicTest {
     @Test
     public void findByName() {
         String name = data.get(0).getName();
-        List<DeveloperEntity> cache = new ArrayList<DeveloperEntity>();
-        List<DeveloperDTO> list = developerLogic.findByName(name);
+        List<AdminEntity> cache = new ArrayList<AdminEntity>();
+        List<AdminDTO> list = adminLogic.findByName(name);
 
-        for (DeveloperEntity entity : data) {
+        for (AdminEntity entity : data) {
             if (entity.getName().equals(name)) {
                 cache.add(entity);
             }
         }
         Assert.assertEquals(cache.size(), list.size());
-        for (DeveloperDTO dto : list) {
+        for (AdminDTO dto : list) {
             boolean found = false;
-            for (DeveloperEntity cacheEntity : cache) {
+            for (AdminEntity cacheEntity : cache) {
                 if (cacheEntity.getName().equals(dto.getName())) {
                     found = true;
                     break;
@@ -255,26 +255,14 @@ public class DeveloperLogicTest {
     }
 
     @Test
-    public void getDeveloperByUserId() {
-        DeveloperEntity searchedDeveloper = data.get(0);
+    public void getAdminByUserId() {
+        AdminEntity searchedAdmin = data.get(0);
 
-        DeveloperDTO foundDeveloper = developerLogic
-                .getDeveloperByUserId(searchedDeveloper.getUserId());
+        AdminDTO foundAdmin = adminLogic
+                .getAdminByUserId(searchedAdmin.getUserId());
 
-        Assert.assertNotNull(foundDeveloper);
-        Assert.assertEquals(foundDeveloper.getName(), searchedDeveloper.getName());
-        Assert.assertEquals(foundDeveloper.getUserId(), searchedDeveloper.getUserId());
-    }
-
-    @Test
-    public void getDeveloperByUsername() {
-        DeveloperEntity searchedDeveloper = data.get(0);
-
-        DeveloperDTO foundDeveloper = developerLogic
-                .getDeveloperByUsername(searchedDeveloper.getName());
-
-        Assert.assertNotNull(foundDeveloper);
-        Assert.assertEquals(foundDeveloper.getName(), searchedDeveloper.getName());
-        Assert.assertEquals(foundDeveloper.getUserId(), searchedDeveloper.getUserId());
+        Assert.assertNotNull(foundAdmin);
+        Assert.assertEquals(foundAdmin.getName(), searchedAdmin.getName());
+        Assert.assertEquals(foundAdmin.getUserId(), searchedAdmin.getUserId());
     }
 }
