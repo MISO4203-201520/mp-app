@@ -159,7 +159,7 @@
         
         $scope.$on('logged-in', function (events, user) {
             if (user.role === 'administrator') {
-                $scope.menuitems = [{id:'registeredUsers', label:'Registered users', icon:'list-alt', url:'#/admin/clients'}];
+                $scope.menuitems = [{id:'registeredUsers', label:'Manage users', icon:'list-alt', url:'#/admin/clients'}];
             } else {
                 if (user.role === 'developer') {
                     $scope.menuitems = [{id:'devProfile', label:'My profile', icon:'user', url:'#/devprofile'}];
