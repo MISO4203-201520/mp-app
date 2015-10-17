@@ -1,5 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
+import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
+import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
@@ -18,6 +20,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @author d.jmenez13
@@ -93,14 +97,9 @@ public class AppPersistenceTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            AppEntity entity = new AppEntity();
-            entity.setName(generateRandom(String.class));
-            entity.setCategory(generateRandom(String.class));
-            entity.setDescription(generateRandom(String.class));
-            entity.setVersion(generateRandom(String.class));
-            entity.setPicture(generateRandom(String.class));
-            entity.setPrice(generateRandom(Integer.class));
-            entity.setSize(generateRandom(Integer.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            AppEntity entity = AppConverter.basicDTO2Entity(
+                    factory.manufacturePojo(AppDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -111,15 +110,9 @@ public class AppPersistenceTest {
      */
     @Test
     public void createAppTest() {
-        AppEntity newEntity = new AppEntity();
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setCategory(generateRandom(String.class));
-        newEntity.setDescription(generateRandom(String.class));
-        newEntity.setVersion(generateRandom(String.class));
-        newEntity.setPicture(generateRandom(String.class));
-        newEntity.setPrice(generateRandom(Integer.class));
-        newEntity.setSize(generateRandom(Integer.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppEntity newEntity = AppConverter.basicDTO2Entity(
+                factory.manufacturePojo(AppDTO.class));
         AppEntity result = appPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
@@ -188,16 +181,10 @@ public class AppPersistenceTest {
     public void updateAppTest() {
         AppEntity entity = data.get(0);
 
-        AppEntity newEntity = new AppEntity();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppEntity newEntity = AppConverter.basicDTO2Entity(
+                factory.manufacturePojo(AppDTO.class));
         newEntity.setId(entity.getId());
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setCategory(generateRandom(String.class));
-        newEntity.setDescription(generateRandom(String.class));
-        newEntity.setVersion(generateRandom(String.class));
-        newEntity.setPicture(generateRandom(String.class));
-        newEntity.setPrice(generateRandom(Integer.class));
-        newEntity.setSize(generateRandom(Integer.class));
 
         appPersistence.update(newEntity);
 

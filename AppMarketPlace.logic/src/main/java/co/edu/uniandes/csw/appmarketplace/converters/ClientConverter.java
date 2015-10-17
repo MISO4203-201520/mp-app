@@ -53,7 +53,7 @@ public abstract class ClientConverter {
     /**
      * @generated
      */
-    private static ClientDTO basicEntity2DTO(ClientEntity entity) {
+    public static ClientDTO basicEntity2DTO(ClientEntity entity) {
         if (entity != null) {
             ClientDTO dto = new ClientDTO();
             dto.setId(entity.getId());
@@ -69,7 +69,7 @@ public abstract class ClientConverter {
     /**
      * @generated
      */
-    private static ClientEntity basicDTO2Entity(ClientDTO dto) {
+    public static ClientEntity basicDTO2Entity(ClientDTO dto) {
         if (dto != null) {
             ClientEntity entity = new ClientEntity();
             entity.setId(dto.getId());
