@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -18,10 +19,12 @@ public class AppDTO {
     private String picture;
     private Integer price;
     private Integer size;
+    @PodamExclude
     private DeveloperDTO developer;
     private String platform;
     private Integer discount;
     private String category;
+    @PodamExclude
     private List<CommentDTO> comments;
     private Double rate;
     private Long downloads;

@@ -22,6 +22,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -101,14 +103,8 @@ public class AppLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            AppEntity entity = new AppEntity();
-        	entity.setName(generateRandom(String.class));
-                entity.setCategory(generateRandom(String.class));
-        	entity.setDescription(generateRandom(String.class));
-        	entity.setVersion(generateRandom(String.class));
-        	entity.setPicture(generateRandom(String.class));
-        	entity.setPrice(generateRandom(Integer.class));
-        	entity.setSize(generateRandom(Integer.class));
+            PodamFactory factory = new PodamFactoryImpl(); 
+            AppEntity entity = AppConverter.basicDTO2Entity(factory.manufacturePojo(AppDTO.class)); 
             em.persist(entity);
             data.add(entity);
         }
@@ -292,6 +288,33 @@ public class AppLogicTest {
         
         for (AppEntity app : data) {
             if (app.getCategory().equals(category)) {
+                cachedApps.add(app);
+            }
+        }
+        Assert.assertEquals(cachedApps.size(), foundApps.size());
+        
+        for (AppDTO foundApp : foundApps) {
+            boolean found = false;
+            for (AppEntity cachedApp : cachedApps) {
+                if (cachedApp.getName().equals(foundApp.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Assert.fail();
+            }
+        }
+    }
+    
+    @Test
+    public void getAppsByKeyWords() {
+        String keyword = data.get(0).getCategory();
+        List<AppEntity> cachedApps = new ArrayList<AppEntity>();
+        List<AppDTO> foundApps = appLogic.getAppsByKeyWords(keyword);
+        
+        for (AppEntity app : data) {
+            if (app.getCategory().contains(keyword) || app.getName().contains(keyword) || app.getDescription().contains(keyword)) {
                 cachedApps.add(app);
             }
         }

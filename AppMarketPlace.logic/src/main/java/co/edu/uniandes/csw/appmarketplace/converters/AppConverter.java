@@ -89,7 +89,7 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-    private static AppEntity basicDTO2Entity(AppDTO dto) {
+    public static AppEntity basicDTO2Entity(AppDTO dto) {
         if (dto != null) {
             AppEntity entity = new AppEntity();
             entity.setId(dto.getId());
