@@ -60,7 +60,7 @@ public abstract class DeveloperConverter {
     /**
      * @generated
      */
-    private static DeveloperDTO basicEntity2DTO(DeveloperEntity entity) {
+    public static DeveloperDTO basicEntity2DTO(DeveloperEntity entity) {
         if (entity != null) {
             DeveloperDTO dto = new DeveloperDTO();
             dto.setId(entity.getId());
@@ -83,7 +83,7 @@ public abstract class DeveloperConverter {
     /**
      * @generated
      */
-    private static DeveloperEntity basicDTO2Entity(DeveloperDTO dto) {
+    public static DeveloperEntity basicDTO2Entity(DeveloperDTO dto) {
         if (dto != null) {
             DeveloperEntity entity = new DeveloperEntity();
             entity.setId(dto.getId());

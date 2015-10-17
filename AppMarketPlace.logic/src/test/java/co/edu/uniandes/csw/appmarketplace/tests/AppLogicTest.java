@@ -6,7 +6,6 @@ import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
-import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +29,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @RunWith(Arquillian.class)
 public class AppLogicTest {
+
     public static final String DEPLOY = "Prueba";
 
     /**
@@ -103,8 +103,8 @@ public class AppLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            PodamFactory factory = new PodamFactoryImpl(); 
-            AppEntity entity = AppConverter.basicDTO2Entity(factory.manufacturePojo(AppDTO.class)); 
+            PodamFactory factory = new PodamFactoryImpl();
+            AppEntity entity = AppConverter.basicDTO2Entity(factory.manufacturePojo(AppDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -115,17 +115,9 @@ public class AppLogicTest {
      */
     @Test
     public void createAppTest() {
-        AppDTO dto = new AppDTO();
-        dto.setName(generateRandom(String.class));
-        dto.setCategory(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-        dto.setVersion(generateRandom(String.class));
-        dto.setPicture(generateRandom(String.class));
-        dto.setPrice(generateRandom(Integer.class));
-        dto.setSize(generateRandom(Integer.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppDTO dto = factory.manufacturePojo(AppDTO.class);
         AppDTO result = appLogic.createApp(dto);
-
         Assert.assertNotNull(result);
 
         AppEntity entity = em.find(AppEntity.class, result.getId());
@@ -191,17 +183,9 @@ public class AppLogicTest {
     @Test
     public void updateAppTest() {
         AppEntity entity = data.get(0);
-
-        AppDTO dto = new AppDTO();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppDTO dto = factory.manufacturePojo(AppDTO.class);
         dto.setId(entity.getId());
-        dto.setName(generateRandom(String.class));
-        dto.setCategory(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-        dto.setVersion(generateRandom(String.class));
-        dto.setPicture(generateRandom(String.class));
-        dto.setPrice(generateRandom(Integer.class));
-        dto.setSize(generateRandom(Integer.class));
 
         appLogic.updateApp(dto);
 
@@ -279,20 +263,20 @@ public class AppLogicTest {
             }
         }
     }
-    
+
     @Test
     public void getAppsByCategory() {
         String category = data.get(0).getCategory();
         List<AppEntity> cachedApps = new ArrayList<AppEntity>();
         List<AppDTO> foundApps = appLogic.getAppsByCategory(category);
-        
+
         for (AppEntity app : data) {
             if (app.getCategory().equals(category)) {
                 cachedApps.add(app);
             }
         }
         Assert.assertEquals(cachedApps.size(), foundApps.size());
-        
+
         for (AppDTO foundApp : foundApps) {
             boolean found = false;
             for (AppEntity cachedApp : cachedApps) {
@@ -306,20 +290,20 @@ public class AppLogicTest {
             }
         }
     }
-    
+
     @Test
     public void getAppsByKeyWords() {
         String keyword = data.get(0).getCategory();
         List<AppEntity> cachedApps = new ArrayList<AppEntity>();
         List<AppDTO> foundApps = appLogic.getAppsByKeyWords(keyword);
-        
+
         for (AppEntity app : data) {
             if (app.getCategory().contains(keyword) || app.getName().contains(keyword) || app.getDescription().contains(keyword)) {
                 cachedApps.add(app);
             }
         }
         Assert.assertEquals(cachedApps.size(), foundApps.size());
-        
+
         for (AppDTO foundApp : foundApps) {
             boolean found = false;
             for (AppEntity cachedApp : cachedApps) {

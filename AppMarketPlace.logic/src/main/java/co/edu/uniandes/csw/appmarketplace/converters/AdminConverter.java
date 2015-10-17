@@ -55,7 +55,7 @@ public abstract class AdminConverter {
     /**
      * @generated
      */
-    private static AdminDTO basicEntity2DTO(AdminEntity entity) {
+    public static AdminDTO basicEntity2DTO(AdminEntity entity) {
         if (entity != null) {
             AdminDTO dto = new AdminDTO();
             dto.setId(entity.getId());
@@ -70,7 +70,7 @@ public abstract class AdminConverter {
     /**
      * @generated
      */
-    private static AdminEntity basicDTO2Entity(AdminDTO dto) {
+    public static AdminEntity basicDTO2Entity(AdminDTO dto) {
         if (dto != null) {
             AdminEntity entity = new AdminEntity();
             entity.setId(dto.getId());

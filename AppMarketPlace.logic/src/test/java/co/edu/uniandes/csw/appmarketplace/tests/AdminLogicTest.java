@@ -6,7 +6,6 @@ import co.edu.uniandes.csw.appmarketplace.converters.AdminConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AdminEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AdminPersistence;
-import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +21,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -101,9 +102,8 @@ public class AdminLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            AdminEntity entity = new AdminEntity();
-        	entity.setName(generateRandom(String.class));
-        	entity.setUserId(generateRandom(String.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            AdminEntity entity = AdminConverter.basicDTO2Entity(factory.manufacturePojo(AdminDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -114,12 +114,9 @@ public class AdminLogicTest {
      */
     @Test
     public void createAdminTest() {
-        AdminDTO dto = new AdminDTO();
-        dto.setName(generateRandom(String.class));
-        dto.setUserId(generateRandom(String.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AdminDTO dto = factory.manufacturePojo(AdminDTO.class);
         AdminDTO result = adminLogic.createAdmin(dto);
-
         Assert.assertNotNull(result);
 
         AdminEntity entity = em.find(AdminEntity.class, result.getId());
@@ -175,13 +172,10 @@ public class AdminLogicTest {
     @Test
     public void updateAdminTest() {
         AdminEntity entity = data.get(0);
-
-        AdminDTO dto = new AdminDTO();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AdminDTO dto = factory.manufacturePojo(AdminDTO.class);
         dto.setId(entity.getId());
-        dto.setName(generateRandom(String.class));
-        dto.setUserId(generateRandom(String.class));
-
+        
         adminLogic.updateAdmin(dto);
 
         AdminEntity resp = em.find(AdminEntity.class, entity.getId());

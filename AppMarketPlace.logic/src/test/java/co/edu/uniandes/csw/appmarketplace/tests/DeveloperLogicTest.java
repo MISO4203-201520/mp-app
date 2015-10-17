@@ -22,6 +22,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -101,9 +103,8 @@ public class DeveloperLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            DeveloperEntity entity = new DeveloperEntity();
-        	entity.setName(generateRandom(String.class));
-        	entity.setUserId(generateRandom(String.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            DeveloperEntity entity = DeveloperConverter.basicDTO2Entity(factory.manufacturePojo(DeveloperDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -114,12 +115,9 @@ public class DeveloperLogicTest {
      */
     @Test
     public void createDeveloperTest() {
-        DeveloperDTO dto = new DeveloperDTO();
-        dto.setName(generateRandom(String.class));
-        dto.setUserId(generateRandom(String.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        DeveloperDTO dto = factory.manufacturePojo(DeveloperDTO.class);
         DeveloperDTO result = developerLogic.createDeveloper(dto);
-
         Assert.assertNotNull(result);
 
         DeveloperEntity entity = em.find(DeveloperEntity.class, result.getId());
