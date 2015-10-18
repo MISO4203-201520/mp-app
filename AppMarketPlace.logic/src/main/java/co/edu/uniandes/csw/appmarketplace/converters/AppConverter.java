@@ -119,6 +119,8 @@ public abstract class AppConverter {
         if (entity != null) {
             AppDTO dto = basicEntity2DTO(entity);
             dto.setComments(CommentConverter.listEntity2DTO(entity.getComments()));
+            dto.setImages(AppImageConverter.listEntity2DTO(entity.getImages()));
+            dto.setVideos(AppVideoConverter.listEntity2DTO(entity.getVideos()));
             return dto;
         } else {
             return null;
@@ -140,7 +142,6 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-
     public static List<AppDTO> listEntity2DTO(List<AppEntity> entities) {
         List<AppDTO> dtos = new ArrayList<AppDTO>();
         if (entities != null) {
@@ -167,7 +168,7 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-    public static AppEntity childDTO2Entity(AppDTO dto, DeveloperEntity parent){
+    public static AppEntity childDTO2Entity(AppDTO dto, DeveloperEntity parent) {
         AppEntity entity = basicDTO2Entity(dto);
         entity.setDeveloper(parent);
         return entity;
@@ -185,6 +186,5 @@ public abstract class AppConverter {
         }
         return entities;
     }
-    
-    
+
 }
