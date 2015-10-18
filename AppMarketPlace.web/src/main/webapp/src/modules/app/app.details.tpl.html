@@ -6,9 +6,27 @@
             <p>{{app.description}}</p>
         </div>
     </div>
+    <div ng-if="app.videos.length" class="col-md-12 well">
+        <div class="col-md-4 thumbnail" ng-repeat="video in app.videos">
+            <video class="video-js" controls preload="auto" data-setup="{}">
+                <source ng-src="{{video.url}}" type='{{video.mimetype}}'>
+                <p class="vjs-no-js">
+                    To view this video please enable JavaScript, and consider upgrading to a web browser that
+                    <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                </p>
+            </video>
+        </div>
+    </div>
+    <div ng-if="app.images.length" class="col-md-12 well">
+        <div class="col-md-3" ng-repeat="image in app.images">
+            <a ng-href="{{image.url}}">
+                <img ng-src="{{image.url}}" class="thumbnail img-responsive" alt="{{image.url}}"/>
+            </a>
+        </div>
+    </div>
     <div class="col-md-12 well">
         <div class="col-md-3 text-center">
-            <h1>{{app.rate || 'Not Rated'}}</h1>
+            <h1>{{app.rate|| 'Not Rated'}}</h1>
             <rating ng-model="app.rate" readonly="true"></rating>
         </div>
         <div class="col-md-3 text-center">
@@ -25,11 +43,11 @@
         </div>
         <div class="col-md-3 text-center">
             <h1>Price</h1>
-            <p>{{app.price | currency}}</p>
+            <p>{{app.price| currency}}</p>
         </div>
         <div class="col-md-3 text-center">
             <h1>Discount</h1>
-            <p>{{app.discount | currency}}</p>
+            <p>{{app.discount| currency}}</p>
         </div>
         <div class="col-md-3 text-center">
             <h1>Downloads</h1>
@@ -45,7 +63,7 @@
         <ul class="list-group">
             <li class="list-group-item" ng-repeat="comment in app.comments">
                 <p>{{comment.comment}}</p>
-                <p>{{comment.date | date}}</p>
+                <p>{{comment.date| date}}</p>
             </li>
         </ul>
     </div>

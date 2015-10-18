@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
 import java.util.HashMap;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -10,13 +11,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @generated
- * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
+ * @generated @modified by d.jmenez13 Implementing logger. Shortening technical
+ * debt.
  */
 @Stateless
 public class AppPersistence extends CrudPersistence<AppEntity> {
+
     static final Logger logger = LoggerFactory
-			.getLogger(AppPersistence.class);
+            .getLogger(AppPersistence.class);
 
     /**
      * @generated
@@ -46,7 +48,7 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
         }
         return null;
     }
-    
+
     public List<AppEntity> getAppsByKeyWords(String keyword) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();

@@ -3,6 +3,7 @@ package co.edu.uniandes.csw.appmarketplace.entities;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
@@ -23,9 +24,9 @@ import javax.persistence.TemporalType;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name="AppEntity.getCheapest", query="SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName"),
-    @NamedQuery(name="AppEntity.getAppsByCategory", query="SELECT u FROM AppEntity u WHERE u.category = :category"),
-    @NamedQuery(name="AppEntity.getAppsByKeyWords", query="SELECT u FROM AppEntity u WHERE u.category LIKE :keyword OR u.name LIKE :keyword OR u.description LIKE :keyword")    
+    @NamedQuery(name = "AppEntity.getCheapest", query = "SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName"),
+    @NamedQuery(name = "AppEntity.getAppsByCategory", query = "SELECT u FROM AppEntity u WHERE u.category = :category"),
+    @NamedQuery(name = "AppEntity.getAppsByKeyWords", query = "SELECT u FROM AppEntity u WHERE u.category LIKE :keyword OR u.name LIKE :keyword OR u.description LIKE :keyword")
 })
 public class AppEntity implements Serializable {
 
@@ -44,20 +45,26 @@ public class AppEntity implements Serializable {
     private Integer price;
 
     private Integer size;
-    
+
     private String platform;
-    
+
     private Integer discount;
-    
+
     private String category;
-    
+
     @Column(name = "startDiscountDate")
     @Temporal(TemporalType.DATE)
     private Date startDiscountDate;
-    
+
     @Column(name = "finishDiscountDate")
     @Temporal(TemporalType.DATE)
     private Date finishDiscountDate;
+
+    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppImageEntity> images;
+
+    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppVideoEntity> videos;
 
     public Date getStartDiscountDate() {
         return startDiscountDate;
@@ -75,109 +82,110 @@ public class AppEntity implements Serializable {
         this.finishDiscountDate = finishDiscountDate;
     }
 
-    @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
     private List<Comment> comments;
-    
-    @OneToMany(fetch=FetchType.LAZY,mappedBy="app")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
     private List<QuestionEntity> questions;
 
     @ManyToOne
     private DeveloperEntity developer;
+
     /**
      * @generated
      */
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
     /**
      * @generated
      */
-    public void setId(Long id){
+    public void setId(Long id) {
         this.id = id;
     }
 
     /**
      * @generated
      */
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     /**
      * @generated
      */
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
     /**
      * @generated
      */
-    public String getDescription(){
+    public String getDescription() {
         return description;
     }
 
     /**
      * @generated
      */
-    public void setDescription(String description){
+    public void setDescription(String description) {
         this.description = description;
     }
 
     /**
      * @generated
      */
-    public String getVersion(){
+    public String getVersion() {
         return version;
     }
 
     /**
      * @generated
      */
-    public void setVersion(String version){
+    public void setVersion(String version) {
         this.version = version;
     }
 
     /**
      * @generated
      */
-    public String getPicture(){
+    public String getPicture() {
         return picture;
     }
 
     /**
      * @generated
      */
-    public void setPicture(String picture){
+    public void setPicture(String picture) {
         this.picture = picture;
     }
 
     /**
      * @generated
      */
-    public Integer getPrice(){
+    public Integer getPrice() {
         return price;
     }
 
     /**
      * @generated
      */
-    public void setPrice(Integer price){
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
     /**
      * @generated
      */
-    public Integer getSize(){
+    public Integer getSize() {
         return size;
     }
 
     /**
      * @generated
      */
-    public void setSize(Integer size){
+    public void setSize(Integer size) {
         this.size = size;
     }
 
@@ -227,7 +235,7 @@ public class AppEntity implements Serializable {
 
     public void setQuestions(List<QuestionEntity> questions) {
         this.questions = questions;
-    }    
+    }
 
     /**
      * @return the category
@@ -242,5 +250,21 @@ public class AppEntity implements Serializable {
     public void setCategory(String category) {
         this.category = category;
     }
-    
+
+    public List<AppImageEntity> getImages() {
+        return images;
+    }
+
+    public void setImages(List<AppImageEntity> images) {
+        this.images = images;
+    }
+
+    public List<AppVideoEntity> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<AppVideoEntity> videos) {
+        this.videos = videos;
+    }
+
 }

@@ -40,6 +40,9 @@
             }).when('/app/:appId', {
                 templateUrl: 'src/modules/app/app.details.tpl.html',
                 controller: 'appDetailsCtrl'
+            }).when('/app/:appId/upload', {
+                templateUrl: 'src/modules/app/media.tpl.html',
+                controller: 'mediaCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',

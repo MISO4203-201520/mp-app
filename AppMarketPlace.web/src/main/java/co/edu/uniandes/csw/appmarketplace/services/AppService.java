@@ -8,8 +8,16 @@ import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -24,6 +32,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -41,6 +50,8 @@ public class AppService {
     ITransactionLogic transactionLogic;
     @Context
     private HttpServletResponse response;
+    @Context
+    private HttpServletRequest req;
     @Inject
     private IDeveloperLogic developerLogic;
     @QueryParam("page")
@@ -156,7 +167,47 @@ public class AppService {
     @POST
     @Path("{id: \\d+}/media")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void addMedia(@PathParam("id") Long id, @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        System.out.println(fileDetail.getFileName());
+    public void addMedia(
+            @PathParam("id") Long id,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail,
+            @FormDataParam("file") FormDataBodyPart bodyPart) {
+
+        String location = req.getServletContext().getRealPath("/media/" + id);
+        String fileName = fileDetail.getFileName();
+        // save it
+        try {
+            writeToFile(fileInputStream, fileName, location);
+            String mimetype = bodyPart.getMediaType().toString();
+            if (mimetype.contains("image")) {
+                appLogic.addImage(id, "media/" + id + "/" + fileName);
+            }
+            if (mimetype.contains("video")) {
+                appLogic.addVideo(id, "media/" + id + "/" + fileName);
+            }
+        } catch (IOException e) {
+            Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, "Error saving file", e);
+            throw new WebApplicationException(e, 500);
+        }
+    }
+
+    // save uploaded file to new location
+    private void writeToFile(
+            InputStream uploadedInputStream,
+            String fileName,
+            String parentFolder) throws IOException {
+
+        File file = new File(parentFolder, fileName);
+        file.getParentFile().mkdirs();
+        OutputStream out = new FileOutputStream(file);
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        out = new FileOutputStream(file);
+        while ((read = uploadedInputStream.read(bytes)) != -1) {
+            out.write(bytes, 0, read);
+        }
+        out.flush();
+        out.close();
     }
 }

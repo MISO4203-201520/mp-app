@@ -32,6 +32,10 @@ public class AppDTO {
     private Date startDiscountDate;
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date finishDiscountDate;
+    @PodamExclude
+    private List<MediaDTO> images;
+    @PodamExclude
+    private List<MediaDTO> videos;
 
     public Date getStartDiscountDate() {
         return startDiscountDate;
@@ -213,6 +217,22 @@ public class AppDTO {
 
     public void setDownloads(Long downloads) {
         this.downloads = downloads;
+    }
+
+    public List<MediaDTO> getImages() {
+        return images;
+    }
+
+    public void setImages(List<MediaDTO> images) {
+        this.images = images;
+    }
+
+    public List<MediaDTO> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<MediaDTO> videos) {
+        this.videos = videos;
     }
 
 }

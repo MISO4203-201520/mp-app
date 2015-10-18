@@ -12,6 +12,5 @@ public class RestConfig extends ResourceConfig {
         packages("co.edu.uniandes.csw.appmarketplace.services");
         packages("co.edu.uniandes.csw.appmarketplace.providers");
         register(MultiPartFeature.class);
-        register(LoggingFilter.class);
     }
 }
