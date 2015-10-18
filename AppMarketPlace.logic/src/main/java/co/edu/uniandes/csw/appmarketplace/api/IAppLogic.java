@@ -27,7 +27,7 @@ public interface IAppLogic {
 
     public void rateApp(Long appId, Long clientId, Long rateValue);
 
-    public void addImage(Long appId, String url);
+    public void addImage(Long appId, String url, String mimetype);
 
-    public void addVideo(Long appId, String url);
+    public void addVideo(Long appId, String url, String mimetype);
 }

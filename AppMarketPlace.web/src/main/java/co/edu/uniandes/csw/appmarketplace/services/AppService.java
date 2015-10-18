@@ -177,13 +177,14 @@ public class AppService {
         String fileName = fileDetail.getFileName();
         // save it
         try {
-            writeToFile(fileInputStream, fileName, location);
             String mimetype = bodyPart.getMediaType().toString();
             if (mimetype.contains("image")) {
-                appLogic.addImage(id, "media/" + id + "/" + fileName);
+                writeToFile(fileInputStream, fileName, location);
+                appLogic.addImage(id, "media/" + id + "/" + fileName, mimetype);
             }
             if (mimetype.contains("video")) {
-                appLogic.addVideo(id, "media/" + id + "/" + fileName);
+                writeToFile(fileInputStream, fileName, location);
+                appLogic.addVideo(id, "media/" + id + "/" + fileName, mimetype);
             }
         } catch (IOException e) {
             Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, "Error saving file", e);

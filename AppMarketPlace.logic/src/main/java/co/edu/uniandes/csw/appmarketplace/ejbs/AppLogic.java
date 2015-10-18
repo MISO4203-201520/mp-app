@@ -187,19 +187,21 @@ public class AppLogic implements IAppLogic {
         }
     }
 
-    public void addImage(Long appId, String url) {
+    public void addImage(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
         AppImageEntity img = new AppImageEntity();
         img.setApp(app);
         img.setUrl(url);
+        img.setMimetype(mimetype);
         imgPersistence.create(img);
     }
     
-    public void addVideo(Long appId, String url) {
+    public void addVideo(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
-        AppVideoEntity img = new AppVideoEntity();
-        img.setApp(app);
-        img.setUrl(url);
-        vidPersistence.create(img);
+        AppVideoEntity vid = new AppVideoEntity();
+        vid.setApp(app);
+        vid.setUrl(url);
+        vid.setMimetype(mimetype);
+        vidPersistence.create(vid);
     }
 }
