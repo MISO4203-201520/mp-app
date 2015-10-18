@@ -14,6 +14,8 @@ public class AppImageEntity implements Serializable{
 
     private String url;
     
+    private String mimetype;
+    
     @ManyToOne
     private AppEntity app;
 
@@ -39,5 +41,13 @@ public class AppImageEntity implements Serializable{
 
     public void setApp(AppEntity app) {
         this.app = app;
+    }
+
+    public String getMimetype() {
+        return mimetype;
+    }
+
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 }

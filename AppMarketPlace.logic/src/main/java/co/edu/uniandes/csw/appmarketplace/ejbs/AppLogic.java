@@ -4,10 +4,13 @@ import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
+import co.edu.uniandes.csw.appmarketplace.persistence.AppImagePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
+import co.edu.uniandes.csw.appmarketplace.persistence.AppVideoPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.RatePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.TransactionPersistence;
 import java.util.ArrayList;
@@ -30,6 +33,12 @@ public class AppLogic implements IAppLogic {
 
     @Inject
     private TransactionPersistence transactionPersistence;
+
+    @Inject
+    private AppImagePersistence imgPersistence;
+
+    @Inject
+    private AppVideoPersistence vidPersistence;
 
     String excludeWords[] = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
 
@@ -176,5 +185,21 @@ public class AppLogic implements IAppLogic {
         } else {
             throw new WebApplicationException(403);
         }
+    }
+
+    public void addImage(Long appId, String url) {
+        AppEntity app = persistence.find(appId);
+        AppImageEntity img = new AppImageEntity();
+        img.setApp(app);
+        img.setUrl(url);
+        imgPersistence.create(img);
+    }
+    
+    public void addVideo(Long appId, String url) {
+        AppEntity app = persistence.find(appId);
+        AppVideoEntity img = new AppVideoEntity();
+        img.setApp(app);
+        img.setUrl(url);
+        vidPersistence.create(img);
     }
 }

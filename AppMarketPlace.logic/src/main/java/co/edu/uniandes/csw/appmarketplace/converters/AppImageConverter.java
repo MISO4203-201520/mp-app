@@ -12,6 +12,7 @@ public abstract class AppImageConverter {
             MediaDTO dto = new MediaDTO();
             dto.setId(entity.getId());
             dto.setUrl(entity.getUrl());
+            dto.setMimetype(entity.getMimetype());
             dto.setApp(AppConverter.refEntity2DTO(entity.getApp()));
             return dto;
         }

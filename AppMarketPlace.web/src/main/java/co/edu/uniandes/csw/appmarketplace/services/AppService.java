@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,6 +32,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -167,16 +170,25 @@ public class AppService {
     public void addMedia(
             @PathParam("id") Long id,
             @FormDataParam("file") InputStream fileInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail) {
+            @FormDataParam("file") FormDataContentDisposition fileDetail,
+            @FormDataParam("file") FormDataBodyPart bodyPart) {
 
         String location = req.getServletContext().getRealPath("/media/" + id);
+        String fileName = fileDetail.getFileName();
         // save it
         try {
-            writeToFile(fileInputStream, fileDetail.getFileName(), location);
+            writeToFile(fileInputStream, fileName, location);
+            String mimetype = bodyPart.getMediaType().toString();
+            if (mimetype.contains("image")) {
+                appLogic.addImage(id, "media/" + id + "/" + fileName);
+            }
+            if (mimetype.contains("video")) {
+                appLogic.addVideo(id, "media/" + id + "/" + fileName);
+            }
         } catch (IOException e) {
-
+            Logger.getLogger(AppService.class.getName()).log(Level.SEVERE, "Error saving file", e);
+            throw new WebApplicationException(e, 500);
         }
-
     }
 
     // save uploaded file to new location

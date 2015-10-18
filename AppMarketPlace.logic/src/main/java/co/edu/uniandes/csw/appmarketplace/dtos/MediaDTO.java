@@ -5,7 +5,9 @@ public class MediaDTO {
     private Long id;
 
     private String url;
-    
+
+    private String mimetype;
+
     private AppDTO app;
 
     public Long getId() {
@@ -30,5 +32,13 @@ public class MediaDTO {
 
     public void setApp(AppDTO app) {
         this.app = app;
+    }
+
+    public String getMimetype() {
+        return mimetype;
+    }
+
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 }
