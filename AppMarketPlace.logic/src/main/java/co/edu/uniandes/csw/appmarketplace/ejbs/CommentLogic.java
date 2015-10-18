@@ -8,6 +8,7 @@ package co.edu.uniandes.csw.appmarketplace.ejbs;
 import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.CommentConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
+import co.edu.uniandes.csw.appmarketplace.entities.Comment;
 import co.edu.uniandes.csw.appmarketplace.persistence.CommentPersistence;
 import java.text.ParseException;
 import java.util.logging.Level;
@@ -26,12 +27,15 @@ public class CommentLogic implements ICommentLogic {
     private CommentPersistence persistence;
 
     @Override
-    public void InsertComment(CommentDTO dto) {
+    public CommentDTO InsertComment(CommentDTO dto) {
+        Comment entity=null;
         try {
-            persistence.InsertComment(CommentConverter.basicDTO2Entity(dto));
+            entity=CommentConverter.basicDTO2Entity(dto);
+            persistence.InsertComment(entity);
         } catch (ParseException ex) {
             Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return CommentConverter.refEntity2DTO(entity);
     }
 
 }

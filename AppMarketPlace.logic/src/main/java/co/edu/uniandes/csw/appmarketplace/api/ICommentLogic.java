@@ -13,5 +13,5 @@ import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
  */
 public interface ICommentLogic {
     
-    public void InsertComment (CommentDTO dto);
+    public CommentDTO InsertComment (CommentDTO dto);
 }
