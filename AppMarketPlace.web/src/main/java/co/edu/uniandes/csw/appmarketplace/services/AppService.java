@@ -8,8 +8,14 @@ import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -41,6 +47,8 @@ public class AppService {
     ITransactionLogic transactionLogic;
     @Context
     private HttpServletResponse response;
+    @Context
+    private HttpServletRequest req;
     @Inject
     private IDeveloperLogic developerLogic;
     @QueryParam("page")
@@ -156,7 +164,38 @@ public class AppService {
     @POST
     @Path("{id: \\d+}/media")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void addMedia(@PathParam("id") Long id, @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        System.out.println(fileDetail.getFileName());
+    public void addMedia(
+            @PathParam("id") Long id,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail) {
+
+        String location = req.getServletContext().getRealPath("/media/" + id);
+        // save it
+        try {
+            writeToFile(fileInputStream, fileDetail.getFileName(), location);
+        } catch (IOException e) {
+
+        }
+
+    }
+
+    // save uploaded file to new location
+    private void writeToFile(
+            InputStream uploadedInputStream,
+            String fileName,
+            String parentFolder) throws IOException {
+
+        File file = new File(parentFolder, fileName);
+        file.getParentFile().mkdirs();
+        OutputStream out = new FileOutputStream(file);
+        int read = 0;
+        byte[] bytes = new byte[1024];
+
+        out = new FileOutputStream(file);
+        while ((read = uploadedInputStream.read(bytes)) != -1) {
+            out.write(bytes, 0, read);
+        }
+        out.flush();
+        out.close();
     }
 }
