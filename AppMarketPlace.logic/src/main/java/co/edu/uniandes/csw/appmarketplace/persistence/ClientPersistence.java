@@ -34,4 +34,15 @@ public class ClientPersistence extends CrudPersistence<ClientEntity> {
         }
         return null;
     }
+    
+    public ClientEntity getClientByUsername(String username) {
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("username", username);
+            return this.executeSingleNamedQuery("Client.getByUsername", params);
+        } catch (NoResultException e) {
+            logger.warn("Client cannot be found by username  {} ", username, e);
+        }
+        return null;
+    }
 }
