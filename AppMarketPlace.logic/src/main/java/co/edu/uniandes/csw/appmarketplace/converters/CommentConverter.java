@@ -22,7 +22,7 @@ public abstract class CommentConverter {
     private CommentConverter() {
     }
 
-    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    
 
     public static CommentDTO refEntity2DTO(Comment entity) {
         if (entity != null) {
@@ -31,7 +31,7 @@ public abstract class CommentConverter {
             dto.setComment(entity.getComment());
             dto.setClient(ClientConverter.fullEntity2DTO(entity.getClient()));
             dto.setApp(AppConverter.fullEntity2DTO(entity.getApp()));
-            dto.setDate(format.format(entity.getDate()));
+            dto.setDate(entity.getDate());
             return dto;
         } else {
             return null;
@@ -85,7 +85,7 @@ public abstract class CommentConverter {
             dto.setComment(entity.getComment());
             dto.setClient(ClientConverter.refEntity2DTO(entity.getClient()));
             dto.setApp(AppConverter.refEntity2DTO(entity.getApp()));
-            dto.setDate(format.format(entity.getDate()));
+            dto.setDate(entity.getDate());
 
             return dto;
         } else {
@@ -98,7 +98,7 @@ public abstract class CommentConverter {
             Comment entity = new Comment();
             entity.setId(dto.getId());
             entity.setComment(dto.getComment());
-            entity.setDate(format.parse(dto.getDate()));
+            entity.setDate(dto.getDate());
             entity.setClient(ClientConverter.refDTO2Entity(dto.getClient()));
             entity.setApp(AppConverter.refDTO2Entity(dto.getApp()));
             return entity;
