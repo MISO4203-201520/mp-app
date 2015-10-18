@@ -32,7 +32,9 @@ public class AppDTO {
     private Date startDiscountDate;
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date finishDiscountDate;
+    @PodamExclude
     private List<MediaDTO> images;
+    @PodamExclude
     private List<MediaDTO> videos;
 
     public Date getStartDiscountDate() {
