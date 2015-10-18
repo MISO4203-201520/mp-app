@@ -1,5 +1,5 @@
 (function (ng) {
-    var mod = ng.module('appModule', ['ngCrud']);
+    var mod = ng.module('appModule', ['ngCrud', 'angularFileUpload']);
 
     mod.constant('appContext', 'apps');
 
