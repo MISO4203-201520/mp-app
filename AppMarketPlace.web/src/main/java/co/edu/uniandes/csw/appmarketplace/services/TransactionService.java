@@ -10,9 +10,11 @@ import co.edu.uniandes.csw.appmarketplace.api.ICartItemLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IPaymentCardLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
+import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.CartItemDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
 import java.util.Date;
@@ -59,12 +61,13 @@ public class TransactionService {
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
-    private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+    private final UserDTO cliente = (UserDTO) (SecurityUtils.getSubject().getSession().getAttribute("Client"));
 
     @POST
     @StatusCreated
     public void createPayment(TransactionDTO dto) {
         Subject currentUser = SecurityUtils.getSubject();
+        ClientDTO client = clientLogic.getClientByUsername(cliente.getUserName());
         if (client == null) {
             Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));
             return;
@@ -80,8 +83,9 @@ public class TransactionService {
         for (CartItemDTO cartItem : clientLogic.getClient(client.getId()).getCartItems()) {
             dto.setRecipient(cartItem.getApp());
             Date actualDate =new Date();
+            AppDTO app = cartItem.getApp();
             // Verifica si esta en el rango de fechas para aplicar el descuento.
-            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+            if (app.getStartDiscountDate() != null && app.getFinishDiscountDate()!=null && actualDate.compareTo(app.getStartDiscountDate())>=0 && actualDate.compareTo(app.getFinishDiscountDate())<=0){
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString())));
             }else{
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString())));
@@ -91,12 +95,11 @@ public class TransactionService {
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
             // Verifica si esta en el rango de fechas para aplicar el descuento.
-            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+            if (app.getStartDiscountDate() != null && app.getFinishDiscountDate()!=null && actualDate.compareTo(app.getStartDiscountDate())>=0 && actualDate.compareTo(app.getFinishDiscountDate())<=0){
                 total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
             }else
                 total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString()));
-            
-        }
+            }
         Emailer.sendPaymentEmail(client.getName(), userAttributes.get("email"), Integer.toString(total), new Date(), Integer.toString(number));
     }
 
