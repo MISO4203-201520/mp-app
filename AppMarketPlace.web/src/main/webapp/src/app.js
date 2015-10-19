@@ -37,6 +37,12 @@
                 templateUrl: tplUrl,
                 controller: 'appCtrl',
                 controllerAs: alias
+            }).when('/app/:appId', {
+                templateUrl: 'src/modules/app/app.details.tpl.html',
+                controller: 'appDetailsCtrl'
+            }).when('/app/:appId/upload', {
+                templateUrl: 'src/modules/app/media.tpl.html',
+                controller: 'mediaCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',
@@ -65,6 +71,10 @@
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
                 controllerAs: alias
+            }).when('/devprofile', {
+                templateUrl: 'src/modules/developer/profile.tpl.html',
+                controller: 'devProfileCtrl',
+                controllerAs: alias
             }).otherwise('/catalog');
         }]);
 
@@ -83,6 +93,6 @@
             auth.setRoles({'user': 'Client', 'developer': 'Developer'});
         }]);
     mainApp.run(function (editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. For Xeditable plugin Angular
+        editableOptions.theme = 'bs3';
     });
 })(window.angular);

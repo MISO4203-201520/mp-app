@@ -8,8 +8,10 @@ package co.edu.uniandes.csw.appmarketplace.ejbs;
 import co.edu.uniandes.csw.appmarketplace.api.IQuestionLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.QuestionConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
+import co.edu.uniandes.csw.appmarketplace.entities.QuestionEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.QuestionPersistence;
 import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
 import java.text.ParseException;
@@ -29,17 +31,25 @@ public class QuestionLogic implements IQuestionLogic {
     private QuestionPersistence persistence;
 
     @Override
-    public void doQuestion(QuestionDTO question, DeveloperDTO dev, AppDTO app, String devEmail) {
+    public QuestionDTO doQuestion(QuestionDTO question, DeveloperDTO dev, AppDTO app, String devEmail) {
+        
         try {
             //TODO email dev is missing
-            persistence.createQuestion(QuestionConverter.basicDTO2Entity(question));
+            QuestionEntity entity=QuestionConverter.basicDTO2Entity(question);
+            persistence.createQuestion(entity);            
+            String nombreCliente="";
+            if (question.getClient()!=null){
+                nombreCliente=question.getClient().getName();
+            }
             Emailer.sendQuestionEmail(dev.getName(),
                     devEmail, question.getDescription(),
-                    question.getDate(), question.getClient().getName(), question.getEmail(),
+                    question.getDate(), nombreCliente, question.getEmail(),
                     app.getName());
+            return QuestionConverter.basicEntity2DTO(entity);
         } catch (ParseException ex) {
             Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
 
 }

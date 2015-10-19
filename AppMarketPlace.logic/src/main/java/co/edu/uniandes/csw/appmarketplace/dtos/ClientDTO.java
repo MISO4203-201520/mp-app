@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.appmarketplace.dtos;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -15,7 +16,9 @@ public class ClientDTO {
     private String fullName;
     private String email;
     private String status;
+    @PodamExclude
     private List<CartItemDTO> cartItems;
+    @PodamExclude
     private List<PaymentCardDTO> cards;
     /**
      * @generated

@@ -32,4 +32,18 @@ public abstract class QuestionConverter {
             return null;
         }
     }
+    public static QuestionDTO basicEntity2DTO(QuestionEntity entity) throws ParseException {
+        if (entity != null) {
+            QuestionDTO dto = new QuestionDTO();
+            dto.setId(entity.getId());
+            dto.setEmail(entity.getEmail());
+            dto.setDescription(entity.getDescription());
+            dto.setDate(entity.getDate());
+            //dto.setClient(ClientConverter.refEntity2DTO(entity.getClient()));
+            //dto.setApp(AppConverter.refEntity2DTO(entity.getApp()));
+            return dto;
+        } else {
+            return null;
+        }
+    }
 }

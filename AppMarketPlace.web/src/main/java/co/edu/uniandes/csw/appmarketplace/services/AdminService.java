@@ -1,16 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.appmarketplace.services;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
-import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
-import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
@@ -20,7 +12,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -32,10 +23,6 @@ import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.RealmSecurityManager;
 
-/**
- *
- * @author ca.forero10
- */
 @Path("/admin")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
@@ -43,7 +30,6 @@ public class AdminService {
     
     @Inject private IClientLogic clientLogic;
     @Inject private IDeveloperLogic developerLogic;
-    @Inject private ICommentLogic commentLogic;
     @Context private HttpServletResponse response;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
@@ -60,6 +46,8 @@ public class AdminService {
             Client cl = realm.getClient();
             Account account = cl.getResource(developer.getUserId(), Account.class);
             developer.setFullName(account.getFullName());
+            developer.setFirstName(account.getGivenName());
+            developer.setLastName(account.getSurname());
             developer.setEmail(account.getEmail());
             developer.setStatus(account.getStatus().name());
         }
@@ -84,22 +72,6 @@ public class AdminService {
         return clients;
     }
     
-    @GET
-    @Path("/comments")
-    public List<CommentDTO> getComments() {
-        if (page != null && maxRecords != null) {
-            this.response.setIntHeader("X-Total-Count", commentLogic.countComments());
-        }
-        List<CommentDTO> comments = commentLogic.getComments(page, maxRecords);
-        return comments;
-    }
-    
-    @DELETE
-    @Path("/comments/{id: \\d+}")
-    public void deleteComment(@PathParam("id") Long id) {
-        commentLogic.deleteComment(id);
-    }
-    
     @POST
     @Path("/clients/{id: \\d+}/disable")
     public void disableClient(@PathParam("id") Long id) {
@@ -114,6 +86,7 @@ public class AdminService {
                 account.setStatus(AccountStatus.DISABLED);
             account.save();
         }
+        
     }
     
     @POST

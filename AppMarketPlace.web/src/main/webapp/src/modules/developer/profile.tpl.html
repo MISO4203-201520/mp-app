@@ -1,0 +1,53 @@
+<style>
+    a, a:active, a:hover, a:visited, h4, .col-md-3 {
+        color: white;
+    }
+</style>
+<div class="list">
+    <div class="row" ng-repeat="developer in developers">
+        <div class="col-md-12">
+            <div class="col-md-12 text-center" 
+                 style="background: gray url('{{developer.bannerProfile}}') no-repeat; 
+                 background-size: cover;">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <div class="img-thumbnail text-center" id="cover">
+                        <img class="img-responsive" style="height: 15vw;" ng-src="{{developer.photo}}" alt="profile picture" ng-show="{{developer.photo !== null}}">
+                        <img class="img-responsive" style="height: 15vw;" ng-src="images/default-profile.png" alt="profile picture" ng-hide="{{developer.photo !== null}}">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <h4>{{developer.firstName}} {{developer.lastName}}</h4>
+                    <p>{{developer.commentProfile}}</p>
+                    <a href="mailto:{{developer.email}}">{{developer.email}}</a>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Applications for sale</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-show="!developer.apps.length" class="alert alert-warning" role="alert">
+                        You don´t have applications registered in the marketplace yet!
+                    </div>
+                    <div ng-repeat="app in developer.apps" class="col-sm-4 well text-center">
+                        <div class="col-md-12">
+                            <div class="img-thumbnail text-center" id="cover">
+                                <img class="img-responsive" style="height: 64px" 
+                                     title="{{app.description}}"
+                                     ng-src="{{app.picture}}">
+                            </div>
+                        </div>
+                        <div class="caption">
+                            <span title="{{app.description}}"> {{app.name}}</span><br />
+                            <strong>{{app.price| currency}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

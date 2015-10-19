@@ -9,12 +9,17 @@ import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.NoResultException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author ac.rojas13
+ * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
  */
 public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
+    static final Logger logger = LoggerFactory
+			.getLogger(TransactionPersistence.class);
 
     public TransactionPersistence() {
         this.entityClass = TransactionEntity.class;
@@ -27,8 +32,9 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("TransactionEntity.countByClientApp", params);
         } catch (NoResultException e) {
-            return 0L;
+            logger.warn("Transaction cannot be found by clientId  {} and appId {}", clientId, appId, e);
         }
+        return 0L;
     }
     public Long countByApp(Long appId) {
         try {
@@ -36,8 +42,9 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
             params.put("app_id", appId);
             return this.executeSingleNamedQuery("TransactionEntity.countByApp", params);
         } catch (NoResultException e) {
-            return 0L;
+            logger.warn("Transaction cannot be found by appId {}", appId, e);
         }
+        return 0L;
     }
 
 }

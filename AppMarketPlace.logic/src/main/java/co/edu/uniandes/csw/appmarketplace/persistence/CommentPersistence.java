@@ -9,12 +9,18 @@ import co.edu.uniandes.csw.appmarketplace.entities.Comment;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.NoResultException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author if.garcia11
+ * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
  */
 public class CommentPersistence extends CrudPersistence<Comment> {
+    static final Logger logger = LoggerFactory
+			.getLogger(CommentPersistence.class);
 
     public CommentPersistence() {
         this.entityClass = Comment.class;
@@ -25,8 +31,13 @@ public class CommentPersistence extends CrudPersistence<Comment> {
     }
     
     public List<Comment> getCommentsByApp(Long appId){
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("app_id", appId);
-        return this.executeListNamedQuery("Comment.getCommentsByApp", params);
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("app_id", appId);
+            return this.executeListNamedQuery("Comment.getCommentsByApp", params);
+        } catch (NoResultException e) {
+            logger.warn("Comment cannot be found by appId  {} ", appId, e);
+        }
+        return null;
     }
 }

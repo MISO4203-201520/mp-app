@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import java.util.List;
 import javax.persistence.OneToMany;
 import javax.persistence.CascadeType;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,7 +17,8 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = "Client.getByUserId", query = "select u from ClientEntity u WHERE u.userId = :user_id")
+    @NamedQuery(name = "Client.getByUserId", query = "select u from ClientEntity u WHERE u.userId = :user_id"),
+    @NamedQuery(name = "Client.getByUsername", query = "select c from ClientEntity c WHERE c.name = :username")
 })
 @XmlRootElement
 public class ClientEntity implements Serializable {

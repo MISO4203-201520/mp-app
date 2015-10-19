@@ -6,6 +6,7 @@
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
 import java.util.Date;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
@@ -21,8 +22,10 @@ public class QuestionDTO {
     
     private String email;
     
+    @PodamExclude
     private AppDTO app;
     
+    @PodamExclude
     private ClientDTO client;
 
     public AppDTO getApp() {

@@ -15,6 +15,6 @@ import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
  */
 public interface IQuestionLogic {    
    
-    public void doQuestion(QuestionDTO dto, DeveloperDTO devDto, AppDTO app, String devEmail);
+    public QuestionDTO doQuestion(QuestionDTO dto, DeveloperDTO devDto, AppDTO app, String devEmail);
     
 }

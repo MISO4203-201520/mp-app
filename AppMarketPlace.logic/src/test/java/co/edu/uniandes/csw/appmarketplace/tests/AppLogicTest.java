@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.appmarketplace.ejbs.AppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
@@ -23,6 +24,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -90,6 +93,8 @@ public class AppLogicTest {
      * @generated
      */
     private void clearData() {
+        em.createQuery("delete from AppImageEntity").executeUpdate();
+        em.createQuery("delete from AppVideoEntity").executeUpdate();
         em.createQuery("delete from AppEntity").executeUpdate();
     }
 
@@ -104,16 +109,12 @@ public class AppLogicTest {
     private void insertData() {
         for (int i = 0; i < 3; i++) {
             AppEntity entity = new AppEntity();
-            entity.setName(generateRandom(String.class));
-            entity.setDescription(generateRandom(String.class));
-            entity.setVersion(generateRandom(String.class));
-            entity.setPicture(generateRandom(String.class));
-            entity.setPrice(generateRandom(Integer.class));
-            entity.setSize(generateRandom(Integer.class));
-            DeveloperEntity dev = new DeveloperEntity();
-            dev.setName(generateRandom(String.class));
-            dev.setUserId(generateRandom(String.class));
-            entity.setDeveloper(dev);
+        	entity.setName(generateRandom(String.class));
+        	entity.setDescription(generateRandom(String.class));
+        	entity.setVersion(generateRandom(String.class));
+        	entity.setPicture(generateRandom(String.class));
+        	entity.setPrice(generateRandom(Integer.class));
+        	entity.setSize(generateRandom(Integer.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -124,21 +125,15 @@ public class AppLogicTest {
      */
     @Test
     public void createAppTest() {
-        AppDTO dto = new AppDTO();
-        dto.setName(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-        dto.setVersion(generateRandom(String.class));
-        dto.setPicture(generateRandom(String.class));
-        dto.setPrice(generateRandom(Integer.class));
-        dto.setSize(generateRandom(Integer.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppDTO dto = factory.manufacturePojo(AppDTO.class);
         AppDTO result = appLogic.createApp(dto);
-
         Assert.assertNotNull(result);
 
         AppEntity entity = em.find(AppEntity.class, result.getId());
 
         Assert.assertEquals(dto.getName(), entity.getName());
+        Assert.assertEquals(dto.getCategory(), entity.getCategory());
         Assert.assertEquals(dto.getDescription(), entity.getDescription());
         Assert.assertEquals(dto.getVersion(), entity.getVersion());
         Assert.assertEquals(dto.getPicture(), entity.getPicture());
@@ -173,6 +168,7 @@ public class AppLogicTest {
         AppDTO dto = appLogic.getApp(entity.getId());
         Assert.assertNotNull(dto);
         Assert.assertEquals(entity.getName(), dto.getName());
+        Assert.assertEquals(entity.getCategory(), dto.getCategory());
         Assert.assertEquals(entity.getDescription(), dto.getDescription());
         Assert.assertEquals(entity.getVersion(), dto.getVersion());
         Assert.assertEquals(entity.getPicture(), dto.getPicture());
@@ -197,22 +193,16 @@ public class AppLogicTest {
     @Test
     public void updateAppTest() {
         AppEntity entity = data.get(0);
-
-        AppDTO dto = new AppDTO();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        AppDTO dto = factory.manufacturePojo(AppDTO.class);
         dto.setId(entity.getId());
-        dto.setName(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-        dto.setVersion(generateRandom(String.class));
-        dto.setPicture(generateRandom(String.class));
-        dto.setPrice(generateRandom(Integer.class));
-        dto.setSize(generateRandom(Integer.class));
 
         appLogic.updateApp(dto);
 
         AppEntity resp = em.find(AppEntity.class, entity.getId());
 
         Assert.assertEquals(dto.getName(), resp.getName());
+        Assert.assertEquals(dto.getCategory(), resp.getCategory());
         Assert.assertEquals(dto.getDescription(), resp.getDescription());
         Assert.assertEquals(dto.getVersion(), resp.getVersion());
         Assert.assertEquals(dto.getPicture(), resp.getPicture());
@@ -304,5 +294,79 @@ public class AppLogicTest {
 //            System.out.println("PRICE: "+current.getPrice());
 //        }
         Assert.assertTrue(true);
+    }
+    
+    public void getAppsByCategory() {
+        String category = data.get(0).getCategory();
+        List<AppEntity> cachedApps = new ArrayList<AppEntity>();
+        List<AppDTO> foundApps = appLogic.getAppsByCategory(category);
+
+        for (AppEntity app : data) {
+            if (app.getCategory().equals(category)) {
+                cachedApps.add(app);
+            }
+        }
+        Assert.assertEquals(cachedApps.size(), foundApps.size());
+
+        for (AppDTO foundApp : foundApps) {
+            boolean found = false;
+            for (AppEntity cachedApp : cachedApps) {
+                if (cachedApp.getName().equals(foundApp.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Assert.fail();
+            }
+        }
+    }
+
+    @Test
+    public void getAppsByKeyWords() {
+        String keyword = data.get(0).getCategory();
+        List<AppEntity> cachedApps = new ArrayList<AppEntity>();
+        List<AppDTO> foundApps = appLogic.getAppsByKeyWords(keyword);
+
+        for (AppEntity app : data) {
+            if (app.getCategory().contains(keyword) || app.getName().contains(keyword) || app.getDescription().contains(keyword)) {
+                cachedApps.add(app);
+            }
+        }
+        Assert.assertEquals(cachedApps.size(), foundApps.size());
+
+        for (AppDTO foundApp : foundApps) {
+            boolean found = false;
+            for (AppEntity cachedApp : cachedApps) {
+                if (cachedApp.getName().equals(foundApp.getName())) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                Assert.fail();
+            }
+        }
+    }
+
+    @Test
+    public void addImageToApp() {
+        AppEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        MediaDTO media = factory.manufacturePojo(MediaDTO.class);
+        appLogic.addImage(entity.getId(), media.getUrl(), media.getMimetype());
+        AppEntity app = em.find(AppEntity.class, entity.getId());
+        Assert.assertTrue(app.getImages().size()> 0);
+    }
+    
+    @Test
+    public void addVideoToApp() {
+        System.out.println(data.size());
+        AppEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        MediaDTO media = factory.manufacturePojo(MediaDTO.class);
+        appLogic.addVideo(entity.getId(), media.getUrl(), media.getMimetype());
+        AppEntity app = em.find(AppEntity.class, entity.getId());
+        Assert.assertTrue(app.getVideos().size()> 0);
     }
 }

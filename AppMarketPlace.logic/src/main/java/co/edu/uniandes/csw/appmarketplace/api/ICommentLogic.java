@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ICommentLogic {
     
-    public void InsertComment (CommentDTO dto);
+    public CommentDTO InsertComment (CommentDTO dto);
     public int countComments();
     public List<CommentDTO> getComments(Integer page, Integer maxRecords);
     public void deleteComment(Long id);

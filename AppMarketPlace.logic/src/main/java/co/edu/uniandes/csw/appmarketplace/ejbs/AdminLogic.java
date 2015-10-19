@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.appmarketplace.ejbs;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
@@ -16,6 +11,7 @@ import javax.inject.Inject;
 /**
  *
  * @author ca.forero10
+ * @modified by d.jimenez13 Change method name according to AdminDTO
  */
 public class AdminLogic implements IAdminLogic {
 
@@ -23,35 +19,35 @@ public class AdminLogic implements IAdminLogic {
     private AdminPersistence persistence;
 
     @Override
-    public int countClients() {
+    public int countAdmins() {
         return persistence.count();
     }
 
     @Override
-    public List<AdminDTO> getClients(Integer page, Integer maxRecords) {
+    public List<AdminDTO> getAdmins(Integer page, Integer maxRecords) {
         return AdminConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
 
     @Override
-    public AdminDTO getClient(Long id) {
+    public AdminDTO getAdmin(Long id) {
         return AdminConverter.fullEntity2DTO(persistence.find(id));
     }
 
     @Override
-    public AdminDTO createClient(AdminDTO dto) {
+    public AdminDTO createAdmin(AdminDTO dto) {
         AdminEntity entity = AdminConverter.fullDTO2Entity(dto);
         persistence.create(entity);
         return AdminConverter.fullEntity2DTO(entity);
     }
 
     @Override
-    public AdminDTO updateClient(AdminDTO dto) {
+    public AdminDTO updateAdmin(AdminDTO dto) {
         AdminEntity entity = persistence.update(AdminConverter.fullDTO2Entity(dto));
         return AdminConverter.fullEntity2DTO(entity);
     }
 
     @Override
-    public void deleteClient(Long id) {
+    public void deleteAdmin(Long id) {
         persistence.delete(id);
     }
 

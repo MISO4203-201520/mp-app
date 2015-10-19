@@ -1,7 +1,10 @@
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -16,13 +19,39 @@ public class AppDTO {
     private String picture;
     private Integer price;
     private Integer size;
+    @PodamExclude
     private DeveloperDTO developer;
     private String platform;
     private Integer discount;
     private String category;
+    @PodamExclude
     private List<CommentDTO> comments;
     private Double rate;
     private Long downloads;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date startDiscountDate;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date finishDiscountDate;
+    @PodamExclude
+    private List<MediaDTO> images;
+    @PodamExclude
+    private List<MediaDTO> videos;
+
+    public Date getStartDiscountDate() {
+        return startDiscountDate;
+    }
+
+    public void setStartDiscountDate(Date startDiscountDate) {
+        this.startDiscountDate = startDiscountDate;
+    }
+
+    public Date getFinishDiscountDate() {
+        return finishDiscountDate;
+    }
+
+    public void setFinishDiscountDate(Date finishDiscountDate) {
+        this.finishDiscountDate = finishDiscountDate;
+    }
 
     /**
      * @generated
@@ -188,6 +217,22 @@ public class AppDTO {
 
     public void setDownloads(Long downloads) {
         this.downloads = downloads;
+    }
+
+    public List<MediaDTO> getImages() {
+        return images;
+    }
+
+    public void setImages(List<MediaDTO> images) {
+        this.images = images;
+    }
+
+    public List<MediaDTO> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<MediaDTO> videos) {
+        this.videos = videos;
     }
 
 }
