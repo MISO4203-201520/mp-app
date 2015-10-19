@@ -6,7 +6,6 @@ import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
@@ -115,6 +114,7 @@ public class AppLogicTest {
         	entity.setPicture(generateRandom(String.class));
         	entity.setPrice(generateRandom(Integer.class));
         	entity.setSize(generateRandom(Integer.class));
+                entity.setCategory(generateRandom(String.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -325,6 +325,7 @@ public class AppLogicTest {
     @Test
     public void getAppsByKeyWords() {
         String keyword = data.get(0).getCategory();
+
         List<AppEntity> cachedApps = new ArrayList<AppEntity>();
         List<AppDTO> foundApps = appLogic.getAppsByKeyWords(keyword);
 
