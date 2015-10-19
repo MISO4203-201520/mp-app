@@ -2,7 +2,6 @@ package co.edu.uniandes.csw.appmarketplace.services;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import javax.ws.rs.ApplicationPath;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 
 @ApplicationPath("webresources")
