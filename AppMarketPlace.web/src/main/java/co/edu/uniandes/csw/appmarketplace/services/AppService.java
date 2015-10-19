@@ -174,7 +174,6 @@ public class AppService {
     @POST
     @Path("{id: \\d+}/rate")
     public void rateApp(@PathParam("id") Long id, RateDTO dto) {
-        
         UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
 
         if (loggedUser != null) {
