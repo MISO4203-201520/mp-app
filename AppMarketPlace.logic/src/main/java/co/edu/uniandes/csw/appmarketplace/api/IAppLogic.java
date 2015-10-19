@@ -30,4 +30,6 @@ public interface IAppLogic {
     public void addImage(Long appId, String url, String mimetype);
 
     public void addVideo(Long appId, String url, String mimetype);
+    
+    public void disableApp(Long appId);
 }

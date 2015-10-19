@@ -75,6 +75,10 @@
                 templateUrl: 'src/modules/admin/comments.tpl.html',
                 controller: 'adminCommentsCtrl',
                 controllerAs: alias
+            }).when('/admin/apps', {
+                templateUrl: 'src/modules/admin/apps.tpl.html',
+                controller: 'adminAppsCtrl',
+                controllerAs: alias
             }).when('/devprofile', {
                 templateUrl: 'src/modules/developer/profile.tpl.html',
                 controller: 'devProfileCtrl',

@@ -204,4 +204,10 @@ public class AppLogic implements IAppLogic {
         vid.setMimetype(mimetype);
         vidPersistence.create(vid);
     }
+    
+    public void disableApp(Long appId){
+        AppEntity entity = persistence.find(appId);
+        entity.setEnabled(!entity.isEnabled());
+        persistence.update(entity);
+    }
 }

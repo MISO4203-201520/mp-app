@@ -28,6 +28,7 @@ public class AppDTO {
     private List<CommentDTO> comments;
     private Double rate;
     private Long downloads;
+    private boolean enabled;
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date startDiscountDate;
     @XmlJavaTypeAdapter(DateAdapter.class)
@@ -37,6 +38,14 @@ public class AppDTO {
     @PodamExclude
     private List<MediaDTO> videos;
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+    
     public Date getStartDiscountDate() {
         return startDiscountDate;
     }

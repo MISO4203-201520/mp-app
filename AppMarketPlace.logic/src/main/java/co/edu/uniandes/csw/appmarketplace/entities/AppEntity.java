@@ -24,9 +24,9 @@ import javax.persistence.TemporalType;
 @Entity
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "AppEntity.getCheapest", query = "SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName"),
-    @NamedQuery(name = "AppEntity.getAppsByCategory", query = "SELECT u FROM AppEntity u WHERE u.category = :category"),
-    @NamedQuery(name = "AppEntity.getAppsByKeyWords", query = "SELECT u FROM AppEntity u WHERE u.category LIKE :keyword OR u.name LIKE :keyword OR u.description LIKE :keyword")
+    @NamedQuery(name = "AppEntity.getCheapest", query = "SELECT u FROM AppEntity u WHERE u.price = (SELECT MIN(v.price) FROM AppEntity v WHERE v.developer.name LIKE :developerName) AND u.developer.name LIKE :developerName AND u.enabled = TRUE"),
+    @NamedQuery(name = "AppEntity.getAppsByCategory", query = "SELECT u FROM AppEntity u WHERE u.category = :category AND u.enabled = TRUE"),
+    @NamedQuery(name = "AppEntity.getAppsByKeyWords", query = "SELECT u FROM AppEntity u WHERE u.category LIKE :keyword OR u.name LIKE :keyword OR u.description LIKE :keyword AND u.enabled = TRUE")
 })
 public class AppEntity implements Serializable {
 
@@ -51,6 +51,17 @@ public class AppEntity implements Serializable {
     private Integer discount;
 
     private String category;
+    
+    @Column(name = "IS_ACTIVE", columnDefinition = "boolean default true", nullable = false)
+    private boolean enabled;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     @Column(name = "startDiscountDate")
     @Temporal(TemporalType.DATE)

@@ -14,6 +14,11 @@
                 displayName: 'Description',
                 type: 'String',
                 required: true
+            },{
+                name: 'enabled',
+                displayName: 'Enabled',
+                type: 'String',
+                required: true
             },
              {
                 name: 'rate',
