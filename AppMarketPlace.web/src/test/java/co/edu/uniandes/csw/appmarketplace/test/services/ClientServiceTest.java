@@ -87,9 +87,12 @@ public class ClientServiceTest {
         user.setUserName(username);
         user.setPassword(password);
 
-        Response response = clienteWS.target(URLBASE).path("/users/login").request().
-                post(Entity.entity(user, MediaType.APPLICATION_JSON));
-
+        Response response = clienteWS.target(URLBASE)
+                .path("users")
+                .path("login")
+                .request(MediaType.APPLICATION_JSON)
+                .post(Entity.entity(user, MediaType.APPLICATION_JSON));
+        System.out.println(response.getStatus());
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
 
         if (foundUser != null && response.getStatus() == Ok) {
