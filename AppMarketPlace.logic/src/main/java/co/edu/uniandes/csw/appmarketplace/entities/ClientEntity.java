@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Client.getByUserId", query = "select u from ClientEntity u WHERE u.userId = :user_id"),
-    @NamedQuery(name = "Client.getByUsername", query = "select c from ClientEntity c WHERE u.name = :username")
+    @NamedQuery(name = "Client.getByUsername", query = "select c from ClientEntity c WHERE c.name = :username")
 })
 @XmlRootElement
 public class ClientEntity implements Serializable {
