@@ -2,8 +2,9 @@
     <!--Display Alerts -->
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
     <ul class="nav nav-tabs">
-        <li ng-class="listUsers.clients? 'active' : ''"><a href="#/admin/clients">Clients</a></li>
-        <li ng-class="listUsers.devs? 'active' : ''"><a href="#/admin/developers">Developers</a></li>
+        <li ng-class="'{{context}}'=='Clients'?'active' : ''"><a href="#/admin/clients">Clients</a></li>
+        <li ng-class="'{{context}}'=='Developers'?'active' : ''"><a href="#/admin/developers">Developers</a></li>
+        <li ng-class="'{{context}}'=='Comments'?'active' : ''"><a href="#/admin/comments">Comments</a></li>
     </ul>
     <div>
         <table class="table table-striped table-bordered">

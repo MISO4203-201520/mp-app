@@ -1,8 +1,10 @@
 package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
+import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
@@ -12,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,6 +33,7 @@ public class AdminService {
     
     @Inject private IClientLogic clientLogic;
     @Inject private IDeveloperLogic developerLogic;
+    @Inject private ICommentLogic commentLogic;
     @Context private HttpServletResponse response;
     @QueryParam("page") private Integer page;
     @QueryParam("maxRecords") private Integer maxRecords;
@@ -103,5 +107,5 @@ public class AdminService {
                 account.setStatus(AccountStatus.DISABLED);
             account.save();
         }
-    }
+    }  
 }
