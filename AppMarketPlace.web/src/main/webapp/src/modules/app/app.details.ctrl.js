@@ -11,7 +11,7 @@
                     displayName: 'Upload media',
                     icon: 'upload',
                     fn: function () {
-                        $location.path('#/app/' + appId + '/upload');
+                        $location.path('/app/' + appId + '/upload');
                     },
                     show: function () {
                         var user = authService.getCurrentUser();
