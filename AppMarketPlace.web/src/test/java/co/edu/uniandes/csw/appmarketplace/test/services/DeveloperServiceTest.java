@@ -7,6 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.services.DeveloperService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -14,6 +15,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -45,7 +47,7 @@ public class DeveloperServiceTest {
     public final static int Ok = 200;
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
-    public final static List<DeveloperDTO> oraculo = new ArrayList<>();
+    public final static List<DeveloperDTO> oraculo = new ArrayList<DeveloperDTO>();
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -72,7 +74,6 @@ public class DeveloperServiceTest {
 
     @BeforeClass
     public static void setUp() {
-        System.out.println("Setting up...");
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
             DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
@@ -101,16 +102,16 @@ public class DeveloperServiceTest {
 
     @Test
     @RunAsClient
-    public void t1CreateDeveloper() throws IOException {
-        Cookie cookie_session_id = login(
+    public void t00CreateDeveloper() throws IOException {
+        Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_ADMIN_USERNAME"), 
                 System.getenv("APPOTECA_ADMIN_PASSWORD"));
 
-        if (cookie_session_id != null) {
+        if (cookieSessionId != null) {
             DeveloperDTO developer = oraculo.get(0);
             Client cliente = ClientBuilder.newClient();
             Response response = cliente.target(URLBASE + PATH)
-                    .request().cookie(cookie_session_id)
+                    .request().cookie(cookieSessionId)
                     .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
             DeveloperDTO createdDeveloper = (DeveloperDTO) response.readEntity(DeveloperDTO.class);
 
@@ -125,15 +126,62 @@ public class DeveloperServiceTest {
 
     @Test
     @RunAsClient
-    public void t2GetDeveloperById() {
-        Cookie cookie_session_id = login(
+    public void t02CreateDeveloper2() throws IOException {
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+
+        if (cookieSessionId != null) {
+            DeveloperDTO developer = oraculo.get(1);
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATH)
+                    .request().cookie(cookieSessionId)
+                    .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
+            DeveloperDTO createdDeveloper = (DeveloperDTO) response.readEntity(DeveloperDTO.class);
+
+            Assert.assertEquals(Created, response.getStatus());
+            Assert.assertNotNull(createdDeveloper);
+            Assert.assertEquals(developer.getId(), createdDeveloper.getId());
+            Assert.assertEquals(createdDeveloper.getName(), oraculo.get(1).getName());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+    
+    @Test
+    @RunAsClient
+    public void t04GetDevelopers() throws IOException {
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+        
+        if (cookieSessionId != null) {
+            
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATH)
+                    .request().cookie(cookieSessionId)
+                    .get();
+            // Receiving developers in string format in order to retrieving all developers via ObjectMapper with a List
+            String stringDevelopers = response.readEntity(String.class);
+            List<DeveloperDTO> allDevelopers = new ObjectMapper().readValue(stringDevelopers, List.class);
+            Assert.assertEquals(Ok, response.getStatus());
+            Assert.assertEquals(2, allDevelopers.size());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+
+    @Test
+    @RunAsClient
+    public void t06GetDeveloperById() throws IOException {
+        Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_DEVELOPER_USERNAME"), 
                 System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
 
-        if (cookie_session_id != null) {
+        if (cookieSessionId != null) {
             Client cliente = ClientBuilder.newClient();
             DeveloperDTO foundDeveloper = cliente.target(URLBASE + PATH).path("/" + oraculo.get(0).getId())
-                    .request().cookie(cookie_session_id).get(DeveloperDTO.class);
+                    .request().cookie(cookieSessionId).get(DeveloperDTO.class);
 
             Assert.assertNotNull(foundDeveloper);
             Assert.assertEquals(foundDeveloper.getName(), oraculo.get(0).getName());
@@ -144,12 +192,12 @@ public class DeveloperServiceTest {
 
     @Test
     @RunAsClient
-    public void t3UpdateDeveloper() throws IOException {
-        Cookie cookie_session_id = login(
+    public void t08UpdateDeveloper() throws IOException {
+        Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_DEVELOPER_USERNAME"), 
                 System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
         
-        if (cookie_session_id != null) {
+        if (cookieSessionId != null) {
             DeveloperDTO developer = oraculo.get(0);
             PodamFactory factory = new PodamFactoryImpl();
             DeveloperDTO changedDeveloper = factory.manufacturePojo(DeveloperDTO.class);
@@ -158,7 +206,7 @@ public class DeveloperServiceTest {
 
             Client cliente = ClientBuilder.newClient();
             Response response = cliente.target(URLBASE + PATH).path("/" + developer.getId())
-                    .request().cookie(cookie_session_id)
+                    .request().cookie(cookieSessionId)
                     .put(Entity.entity(developer, MediaType.APPLICATION_JSON));
             DeveloperDTO updatedDeveloper = (DeveloperDTO) response.readEntity(DeveloperDTO.class);
             
@@ -173,18 +221,60 @@ public class DeveloperServiceTest {
 
     @Test
     @RunAsClient
-    public void t4GetDeveloperByUsername() {
-        Cookie cookie_session_id = login(
+    public void t10GetDeveloperByUsername() throws IOException {
+        Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_DEVELOPER_USERNAME"), 
                 System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
 
-        if (cookie_session_id != null) {
+        if (cookieSessionId != null) {
             Client cliente = ClientBuilder.newClient();
             DeveloperDTO foundDeveloper = cliente.target(URLBASE + PATH).path("/" + oraculo.get(0).getName())
-                    .request().cookie(cookie_session_id).get(DeveloperDTO.class);
+                    .request().cookie(cookieSessionId).get(DeveloperDTO.class);
 
             Assert.assertNotNull(foundDeveloper);
             Assert.assertEquals(foundDeveloper.getName(), oraculo.get(0).getName());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+
+    @Test
+    @RunAsClient
+    public void t12DeleteDeveloper() {
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+
+        if (cookieSessionId != null) {
+            Client cliente = ClientBuilder.newClient();
+            DeveloperDTO developer = oraculo.get(0);
+            Response response = cliente.target(URLBASE + PATH).path("/" + developer.getId())
+                    .request().cookie(cookieSessionId).delete();
+            Assert.assertEquals(OkWithoutContent, response.getStatus());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+    
+    @Test
+    @RunAsClient
+    public void t14GetDevelopers() throws IOException {
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+        
+        if (cookieSessionId != null) {
+            
+            Client cliente = ClientBuilder.newClient();
+            
+            Response response = cliente.target(URLBASE + PATH)
+                    .request().cookie(cookieSessionId)
+                    .get();
+            // Receiving developers in string format in order to retrieving all developers via ObjectMapper with a List
+            String stringDevelopers = response.readEntity(String.class);
+            List<DeveloperDTO> allDevelopers = new ObjectMapper().readValue(stringDevelopers, List.class);
+            Assert.assertEquals(Ok, response.getStatus());
+            Assert.assertEquals(1, allDevelopers.size());
         } else {
             Assert.fail("Access denied or Invalid credentials!");
         }
