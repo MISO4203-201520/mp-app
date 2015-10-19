@@ -22,4 +22,5 @@ nbactions.xml
 
 #Tests
 /AppMarketPlace.logic/derby.log
+/AppMarketPlace.web/derby.log
 
