@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.appmarketplace.ejbs.AppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import java.util.ArrayList;
@@ -90,6 +91,8 @@ public class AppLogicTest {
      * @generated
      */
     private void clearData() {
+        em.createQuery("delete from AppImageEntity").executeUpdate();
+        em.createQuery("delete from AppVideoEntity").executeUpdate();
         em.createQuery("delete from AppEntity").executeUpdate();
     }
 
@@ -316,5 +319,26 @@ public class AppLogicTest {
                 Assert.fail();
             }
         }
+    }
+
+    @Test
+    public void addImageToApp() {
+        AppEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        MediaDTO media = factory.manufacturePojo(MediaDTO.class);
+        appLogic.addImage(entity.getId(), media.getUrl(), media.getMimetype());
+        AppEntity app = em.find(AppEntity.class, entity.getId());
+        Assert.assertTrue(app.getImages().size()> 0);
+    }
+    
+    @Test
+    public void addVideoToApp() {
+        System.out.println(data.size());
+        AppEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        MediaDTO media = factory.manufacturePojo(MediaDTO.class);
+        appLogic.addVideo(entity.getId(), media.getUrl(), media.getMimetype());
+        AppEntity app = em.find(AppEntity.class, entity.getId());
+        Assert.assertTrue(app.getVideos().size()> 0);
     }
 }
