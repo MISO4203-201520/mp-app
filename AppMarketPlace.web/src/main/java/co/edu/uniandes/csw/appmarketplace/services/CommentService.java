@@ -5,9 +5,11 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
+import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -34,7 +36,9 @@ import org.apache.shiro.subject.Subject;
 @Produces(MediaType.APPLICATION_JSON)
 public class CommentService {
 
-    private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+    @Inject
+    private IClientLogic clientLogic;
+    private final UserDTO cliente = (UserDTO) (SecurityUtils.getSubject().getSession().getAttribute("Client"));
     @Context
     private HttpServletResponse response;
     @QueryParam("page")
@@ -49,6 +53,7 @@ public class CommentService {
     @StatusCreated
     @Consumes("application/json")
     public void insertComment(CommentDTO dto) {
+        ClientDTO client = clientLogic.getClientByUsername(cliente.getUserName());
         if (client == null) {
             return;
         } else {
