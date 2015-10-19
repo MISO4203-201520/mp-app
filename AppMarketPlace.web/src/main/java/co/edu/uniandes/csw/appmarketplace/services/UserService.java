@@ -64,6 +64,22 @@ public class UserService {
     @Context
     private HttpServletRequest req;
 
+    private UserDTO subjectToUserDTO() {
+        String href = req.getRemoteUser();
+        if (href != null) {
+            UserDTO user = new UserDTO();
+            Account account = getClient().getResource(href, Account.class);
+            user.setName(account.getGivenName());
+            user.setLastName(account.getSurname());
+            user.setEmail(account.getEmail());
+            user.setUserName(account.getUsername());
+            user.setRole(account.getGroups().iterator().next().getName());
+            return user;
+        } else {
+            return null;
+        }
+    }
+
     @Path("/login")
     @POST
     public Response login(UserDTO user) {
@@ -71,27 +87,16 @@ public class UserService {
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword(), user.isRememberMe());
             Subject currentUser = SecurityUtils.getSubject();
             currentUser.login(token);
-            String userHref = req.getRemoteUser();
-            ClientDTO client = clientLogic.getClientByUserId(userHref);
-            if (client != null) {
-                currentUser.getSession().setAttribute("Client", client);
-            } else {
-                DeveloperDTO provider = developerLogic.getDeveloperByUserId(userHref);
-                if (provider != null) {
-                    currentUser.getSession().setAttribute("Developer", provider);
-                } else {
-                    AdminDTO admin = adminLogic.getAdminByUserId(userHref);
-                    if (admin != null) {
-                        currentUser.getSession().setAttribute("Admin", admin);
-                    } else {
-                        return Response.status(Response.Status.BAD_REQUEST)
-                                .entity(" User is not registered")
-                                .type(MediaType.TEXT_PLAIN)
-                                .build();
-                    }
-                }
+            UserDTO loggedUser = subjectToUserDTO();
+            if (loggedUser.getRole().equalsIgnoreCase("admininistrator")) {
+                currentUser.getSession().setAttribute("Admin", loggedUser);
+            } else if (loggedUser.getRole().equalsIgnoreCase("developer")) {
+                currentUser.getSession().setAttribute("Developer", loggedUser);
+            } else if (loggedUser.getRole().equalsIgnoreCase("user")) {
+                currentUser.getSession().setAttribute("Client", loggedUser);
             }
-            return Response.ok(subjectToUserDTO()).build();
+            return Response.ok(loggedUser).build();
+            
         } catch (AuthenticationException e) {
             logger.warn("User {} cannot be logged in", user, e);
             return Response.status(Response.Status.BAD_REQUEST)
@@ -124,22 +129,6 @@ public class UserService {
                     .entity(e.getMessage())
                     .type(MediaType.TEXT_PLAIN)
                     .build();
-        }
-    }
-
-    private UserDTO subjectToUserDTO() {
-        String href = req.getRemoteUser();
-        if (href != null) {
-            UserDTO user = new UserDTO();
-            Account account = getClient().getResource(href, Account.class);
-            user.setName(account.getGivenName());
-            user.setLastName(account.getSurname());
-            user.setEmail(account.getEmail());
-            user.setUserName(account.getUsername());
-            user.setRole(account.getGroups().iterator().next().getName());
-            return user;
-        } else {
-            return null;
         }
     }
 
