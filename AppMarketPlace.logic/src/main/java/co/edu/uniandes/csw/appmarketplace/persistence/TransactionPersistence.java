@@ -5,8 +5,11 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
 import org.slf4j.Logger;
@@ -45,6 +48,17 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
             logger.warn("Transaction cannot be found by appId {}", appId, e);
         }
         return 0L;
+    }
+    
+    public List<TransactionEntity> getAllTransactionsByClientId(Long clientId){
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("payerId", clientId);
+            return this.executeListNamedQuery("TransactionEntity.findByClientId", params);
+        } catch (NoResultException e) {
+            logger.warn("Transaction cannot be found by clientId {}", clientId, e);
+        }
+        return null;
     }
 
 }
