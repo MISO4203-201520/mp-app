@@ -71,7 +71,7 @@
                 icon2: 'ok-sign',
                 class: 'primary',
                 fn: function (record) {
-                    adminSvc.disableUser(record.id).then(function () {
+                    adminSvc.disableUser(record.name).then(function () {
                         self.fetchRecords();
                     });
                 },
