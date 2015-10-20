@@ -10,7 +10,6 @@ import co.edu.uniandes.csw.appmarketplace.dtos.PaymentMethodDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -20,7 +19,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -44,7 +42,7 @@ public class PaymentMethodService{
     
     @GET
     public List<PaymentMethodDTO> getPaymentMethods(){
-        return paymentMethodLogic.getPaymentMethod(page, maxRecords);
+        return paymentMethodLogic.getPaymentMethods(page, maxRecords);
     }
     
     @GET

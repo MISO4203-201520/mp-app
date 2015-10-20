@@ -5,11 +5,14 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
+import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +51,14 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
         return 0L;
     }
     
+    public List<TransactionEntity> findByPayer(Long id){
+        Query q = em.createQuery("select u from " + TransactionEntity.class.getSimpleName() + " u where u.payer = :payer");        
+        ClientEntity clientEntity = em.find(ClientEntity.class, id);        
+        q.setParameter("payer", clientEntity);
+        List<TransactionEntity> list = q.getResultList();
+        return q.getResultList();
+    }
+
     public List<TransactionEntity> getAllTransactionsByClientId(Long clientId){
         try {
             Map<String, Object> params = new HashMap<String, Object>();

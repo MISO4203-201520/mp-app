@@ -35,10 +35,6 @@
 
             this.getAppById = function (id) {
                 return ra.one(context, id).get();
-            };
-            
-            this.disableApp = function (app) {
-                return this.api.one(app + '/disable').post();
-            };
+            };            
         }]);
 })(window.angular);

@@ -44,7 +44,7 @@ public class PaymentCardService {
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
-    private final UserDTO client = (UserDTO) (SecurityUtils.getSubject().getSession().getAttribute("Client"));
+    private UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
     
     @POST
     @StatusCreated
@@ -54,8 +54,8 @@ public class PaymentCardService {
 
     @GET
     public List<PaymentCardDTO> getPaymentMethods() {
-        ClientDTO cliente = clientLogic.getClientByUsername(client.getUserName());
-        return paymentCardLogic.getPaymentCards(cliente.getId(),page, maxRecords);
+        ClientDTO client = clientLogic.getClientByUsername(loggedUser.getUserName());
+        return paymentCardLogic.getPaymentCards(Long.valueOf(client.getId().toString()),page, maxRecords);
     }
 
     @GET

@@ -28,6 +28,12 @@ public class ClientEntity implements Serializable {
     private Long id;
 
     private String name;
+    
+    private String firstName;
+    
+    private String lastName;
+    
+    private String email;
 
     private String userId;
 
@@ -106,6 +112,48 @@ public class ClientEntity implements Serializable {
      */
     public void setCards(List<PaymentCardEntity> cards) {
         this.cards = cards;
+    }
+
+    /**
+     * @return the firstName
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @param firstName the firstName to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * @return the lastName
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * @param lastName the lastName to set
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    /**
+     * @return the email
+     */
+    public String getEmail() {
+        return email;
+    }
+
+    /**
+     * @param email the email to set
+     */
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
