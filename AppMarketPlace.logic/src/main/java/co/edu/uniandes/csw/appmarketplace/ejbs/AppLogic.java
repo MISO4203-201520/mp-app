@@ -127,18 +127,19 @@ public class AppLogic implements IAppLogic {
     @Override
     public List<AppDTO> getAppsByKeyWords(String keyword) {
         List<AppEntity> lista = new ArrayList<AppEntity>();
-        if (keyword != null) {
-            lista.addAll(persistence.getAppsByKeyWords(keyword));
-            String words[] = keyword.split(" ");
-            if (words.length > 1) {
-                for (String word : words) {
-                    if (verifyWord(word) == false) {
-                        for (AppEntity newApp : persistence.getAppsByKeyWords(word)) {
-                            if (verifyExistingApp(lista, newApp) == false) {
-                                lista.add(newApp);
-                            }
-                        }
+        if (keyword == null) {
+            return AppConverter.listEntity2DTO(lista);
+        }
 
+        lista.addAll(persistence.getAppsByKeyWords(keyword));
+        String words[] = keyword.split(" ");
+        if (words.length > 1) {
+            for (String word : words) {
+                if (verifyWord(word) == false) {
+                    for (AppEntity newApp : persistence.getAppsByKeyWords(word)) {
+                        if (verifyExistingApp(lista, newApp) == false) {
+                            lista.add(newApp);
+                        }
                     }
                 }
             }
@@ -188,6 +189,7 @@ public class AppLogic implements IAppLogic {
         }
     }
 
+    @Override
     public void addImage(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
         AppImageEntity img = new AppImageEntity();
@@ -197,6 +199,7 @@ public class AppLogic implements IAppLogic {
         imgPersistence.create(img);
     }
 
+    @Override
     public void addVideo(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
         AppVideoEntity vid = new AppVideoEntity();
@@ -206,6 +209,7 @@ public class AppLogic implements IAppLogic {
         vidPersistence.create(vid);
     }
 
+    @Override
     public void disableApp(Long appId) {
         AppEntity entity = persistence.find(appId);
         entity.setEnabled(!entity.isEnabled());

@@ -76,8 +76,9 @@ public class TransactionLogic implements ITransactionLogic {
     public List<TransactionDTO> findByName(String name) {
         return TransactionConverter.listEntity2DTO(persistence.findByName(name));
     }
-    
-    public List<TransactionDTO> findByClientId(Long id){
+
+    @Override
+    public List<TransactionDTO> findByClientId(Long id) {
         return TransactionConverter.listEntity2DTO(persistence.getAllTransactionsByClientId(id));
     }
 }

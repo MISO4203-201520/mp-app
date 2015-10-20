@@ -8,7 +8,6 @@
             };
             this.commentApp = function (app, comment) {
                 var date = new Date().toJSON().slice(0, 10);
-                console.log(comment);
                 var commentMock = {
                     comment: comment,
                     date: date,

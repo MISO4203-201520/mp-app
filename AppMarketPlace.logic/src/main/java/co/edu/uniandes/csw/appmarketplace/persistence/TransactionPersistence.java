@@ -5,9 +5,7 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
-import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

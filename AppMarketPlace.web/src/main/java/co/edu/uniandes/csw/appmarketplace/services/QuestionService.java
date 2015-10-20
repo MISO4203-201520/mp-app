@@ -36,7 +36,6 @@ import org.apache.shiro.subject.Subject;
 @Path("/question")
 public class QuestionService {
     @Inject private IQuestionLogic questionLogic;
-    @Inject private IAppLogic appLogic;
     
     @Inject
     private IClientLogic clientLogic;

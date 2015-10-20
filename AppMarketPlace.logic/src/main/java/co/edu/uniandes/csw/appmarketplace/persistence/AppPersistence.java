@@ -28,35 +28,20 @@ public class AppPersistence extends CrudPersistence<AppEntity> {
     }
 
     public List<AppEntity> getCheapestApp(String developerName) {
-        try {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("developerName", "%" + developerName + "%");
-            return executeListNamedQuery("AppEntity.getCheapest", params);
-        } catch (NoResultException e) {
-            logger.warn("Application cannot be found by developerName  {} ", developerName, e);
-        }
-        return null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("developerName", "%" + developerName + "%");
+        return executeListNamedQuery("AppEntity.getCheapest", params);
     }
 
     public List<AppEntity> getAppsByCategory(String category) {
-        try {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("category", category);
-            return executeListNamedQuery("AppEntity.getAppsByCategory", params);
-        } catch (NoResultException e) {
-            logger.warn("Application cannot be found by category  {} ", category, e);
-        }
-        return null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("category", category);
+        return executeListNamedQuery("AppEntity.getAppsByCategory", params);
     }
 
     public List<AppEntity> getAppsByKeyWords(String keyword) {
-        try {
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("keyword", "%" + keyword + "%");
-            return executeListNamedQuery("AppEntity.getAppsByKeyWords", params);
-        } catch (NoResultException e) {
-            logger.warn("Application cannot be found by appId  {} ", keyword, e);
-        }
-        return null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("keyword", "%" + keyword + "%");
+        return executeListNamedQuery("AppEntity.getAppsByKeyWords", params);
     }
 }
