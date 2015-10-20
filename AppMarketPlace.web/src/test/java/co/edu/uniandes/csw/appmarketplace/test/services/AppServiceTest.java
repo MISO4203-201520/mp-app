@@ -158,7 +158,7 @@ public class AppServiceTest {
         String listApps = response.readEntity(String.class);
         List<AppDTO> listAppsTest = new ObjectMapper().readValue(listApps, List.class);
         Assert.assertEquals(Ok, response.getStatus());
-        Assert.assertEquals(1, listAppsTest.size());
+        Assert.assertEquals(1, listAppsTest.size()); 
         //Assert.assertEquals(listAppsTest.get(0).getName(), oraculo.get(0).getName());
     }
     

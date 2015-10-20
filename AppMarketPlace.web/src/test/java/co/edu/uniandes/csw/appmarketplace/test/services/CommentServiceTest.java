@@ -138,7 +138,7 @@ public class CommentServiceTest {
                     .request().cookie(cookie_session_id)
                     .post(Entity.entity(cl, MediaType.APPLICATION_JSON));
         
-        Response response = cliente.target(URLBASE + PATH)
+        Response response = cliente.target(URLBASE + PATH) 
                 .request().cookie(cookie_session_id)
                 .post(Entity.entity(comment, MediaType.APPLICATION_JSON));
         CommentDTO appTest = (CommentDTO) response.readEntity(CommentDTO.class);
