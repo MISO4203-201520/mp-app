@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface IPaymentMethodLogic {
 
-    public List<PaymentMethodDTO> getPaymentMethod(Integer page, Integer maxRecords);
+    public List<PaymentMethodDTO> getPaymentMethods(Integer page, Integer maxRecords);
 
     public PaymentMethodDTO getPaymentMethod(Long id);
 

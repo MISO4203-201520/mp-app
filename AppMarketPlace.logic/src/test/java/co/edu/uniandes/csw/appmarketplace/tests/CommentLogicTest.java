@@ -5,18 +5,12 @@
  */
 package co.edu.uniandes.csw.appmarketplace.tests;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
-import co.edu.uniandes.csw.appmarketplace.converters.AdminConverter;
 import co.edu.uniandes.csw.appmarketplace.converters.CommentConverter;
-import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.ejbs.CommentLogic;
-import co.edu.uniandes.csw.appmarketplace.entities.AdminEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.Comment;
-import co.edu.uniandes.csw.appmarketplace.persistence.AdminPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.CommentPersistence;
-import static co.edu.uniandes.csw.appmarketplace.tests.AdminLogicTest.DEPLOY;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +22,9 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;

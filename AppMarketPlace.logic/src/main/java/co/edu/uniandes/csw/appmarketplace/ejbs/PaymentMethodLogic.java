@@ -28,7 +28,7 @@ public class PaymentMethodLogic implements IPaymentMethodLogic{
      * @generated
      */
     @Override
-    public List<PaymentMethodDTO> getPaymentMethod(Integer page, Integer maxRecords) {
+    public List<PaymentMethodDTO> getPaymentMethods(Integer page, Integer maxRecords) {
         return PaymentMethodConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
     

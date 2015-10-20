@@ -5,8 +5,6 @@
  */
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
-import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.co.jemos.podam.common.PodamExclude;
