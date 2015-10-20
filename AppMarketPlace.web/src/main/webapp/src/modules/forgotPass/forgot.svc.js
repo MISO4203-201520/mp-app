@@ -17,7 +17,7 @@
             this.verifyToken = function () {
                 var url = location.absUrl();
                 url = url.substring(url.indexOf("=") + 1, url.indexOf("#"));
-                this.api.customGET("verify", {"sptoken": url}).then(function (result) {
+                this.api.customGET("verify", {"sptoken": url}).then(function () {
                     location.path("/change");
                 }, function () {
                     location.path("/login");

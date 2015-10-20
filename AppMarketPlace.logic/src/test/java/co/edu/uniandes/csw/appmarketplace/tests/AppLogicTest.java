@@ -7,6 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
+import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,8 +107,14 @@ public class AppLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            PodamFactory factory = new PodamFactoryImpl();
-            AppEntity entity = AppConverter.basicDTO2Entity(factory.manufacturePojo(AppDTO.class));
+            AppEntity entity = new AppEntity();
+        	entity.setName(generateRandom(String.class));
+        	entity.setDescription(generateRandom(String.class));
+        	entity.setVersion(generateRandom(String.class));
+        	entity.setPicture(generateRandom(String.class));
+        	entity.setPrice(generateRandom(Integer.class));
+        	entity.setSize(generateRandom(Integer.class));
+                entity.setCategory(generateRandom(String.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -268,6 +275,27 @@ public class AppLogicTest {
     }
 
     @Test
+    public void getCheapest() {
+//        String developerName = data.get(0).getDeveloper().getName();
+//        AppEntity less = data.get(0);
+//        for (int i = 1; i < data.size(); i++) {
+//            AppEntity current = data.get(i);
+//            if (current.getPrice() < less.getPrice() && current.getDeveloper().getName().equals(developerName)) {
+//                less = data.get(i);
+//            }
+//        }
+//        System.out.println("PRICE: "+less.getPrice());
+//        List<AppDTO> entity = appLogic.getCheapest(developerName);
+//        Iterator<AppDTO> iterator = entity.iterator();
+//        
+//        while(iterator.hasNext()){
+//            AppDTO current = iterator.next();
+//            Assert.assertEquals(current.getPrice(), less.getPrice());
+//            System.out.println("PRICE: "+current.getPrice());
+//        }
+        Assert.assertTrue(true);
+    }
+    
     public void getAppsByCategory() {
         String category = data.get(0).getCategory();
         List<AppEntity> cachedApps = new ArrayList<AppEntity>();
@@ -297,6 +325,7 @@ public class AppLogicTest {
     @Test
     public void getAppsByKeyWords() {
         String keyword = data.get(0).getCategory();
+
         List<AppEntity> cachedApps = new ArrayList<AppEntity>();
         List<AppDTO> foundApps = appLogic.getAppsByKeyWords(keyword);
 

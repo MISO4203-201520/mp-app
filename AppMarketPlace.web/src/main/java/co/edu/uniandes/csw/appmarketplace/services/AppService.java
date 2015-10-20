@@ -117,6 +117,12 @@ public class AppService {
         }
         return appLogic.getApps(page, maxRecords);
     }
+    
+    @POST
+    @Path("/{id: \\d+}/disable")
+    public void disableApp(@PathParam("id") Long id) {
+        appLogic.disableApp(id);
+    }
 
     /**
      * @generated

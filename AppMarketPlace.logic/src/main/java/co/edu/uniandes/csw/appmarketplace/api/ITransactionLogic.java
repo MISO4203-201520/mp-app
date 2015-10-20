@@ -27,4 +27,6 @@ public interface ITransactionLogic {
     public void deleteTransaction(Long id);
 
     public List<TransactionDTO> findByName(String name);
+    
+    public List<TransactionDTO> findByClientId(Long id);
 }

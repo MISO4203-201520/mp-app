@@ -127,6 +127,10 @@ public class AppLogic implements IAppLogic {
     @Override
     public List<AppDTO> getAppsByKeyWords(String keyword) {
         List<AppEntity> lista = new ArrayList<AppEntity>();
+        if (keyword == null) {
+            return AppConverter.listEntity2DTO(lista);
+        }
+
         lista.addAll(persistence.getAppsByKeyWords(keyword));
         String words[] = keyword.split(" ");
         if (words.length > 1) {
@@ -137,10 +141,8 @@ public class AppLogic implements IAppLogic {
                             lista.add(newApp);
                         }
                     }
-
                 }
             }
-
         }
         return AppConverter.listEntity2DTO(lista);
     }
@@ -187,6 +189,7 @@ public class AppLogic implements IAppLogic {
         }
     }
 
+    @Override
     public void addImage(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
         AppImageEntity img = new AppImageEntity();
@@ -195,7 +198,8 @@ public class AppLogic implements IAppLogic {
         img.setMimetype(mimetype);
         imgPersistence.create(img);
     }
-    
+
+    @Override
     public void addVideo(Long appId, String url, String mimetype) {
         AppEntity app = persistence.find(appId);
         AppVideoEntity vid = new AppVideoEntity();
@@ -203,5 +207,12 @@ public class AppLogic implements IAppLogic {
         vid.setUrl(url);
         vid.setMimetype(mimetype);
         vidPersistence.create(vid);
+    }
+
+    @Override
+    public void disableApp(Long appId) {
+        AppEntity entity = persistence.find(appId);
+        entity.setEnabled(!entity.isEnabled());
+        persistence.update(entity);
     }
 }

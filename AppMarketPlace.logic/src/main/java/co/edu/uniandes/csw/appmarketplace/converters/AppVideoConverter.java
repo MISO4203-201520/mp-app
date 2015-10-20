@@ -7,6 +7,9 @@ import java.util.List;
 
 public abstract class AppVideoConverter {
 
+    private AppVideoConverter() {
+    }
+
     public static MediaDTO refEntity2DTO(AppVideoEntity entity) {
         if (entity != null) {
             MediaDTO dto = new MediaDTO();

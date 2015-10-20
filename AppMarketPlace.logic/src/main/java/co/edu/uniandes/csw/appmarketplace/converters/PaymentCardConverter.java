@@ -21,8 +21,11 @@ import java.util.logging.Logger;
  */
 public abstract class PaymentCardConverter {
 
-    private static DateFormat format =new SimpleDateFormat("yyyy-MM-dd");
-    
+    private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    private PaymentCardConverter() {
+    }
+
     /**
      * @param entity
      * @return
@@ -31,8 +34,8 @@ public abstract class PaymentCardConverter {
     public static PaymentCardDTO refEntity2DTO(PaymentCardEntity entity) {
         if (entity != null) {
             PaymentCardDTO dto = new PaymentCardDTO();
-            dto.setId(entity.getId());            
-            
+            dto.setId(entity.getId());
+
             return dto;
         } else {
             return null;
@@ -65,7 +68,7 @@ public abstract class PaymentCardConverter {
             dto.setCardnumber(entity.getCardnumber());
             dto.setDueDate(entity.getDueDate().toString());
             dto.setFullname(entity.getFullname());
-            dto.setPaymentType(PaymentMethodConverter.refEntity2DTO(entity.getPaymentType()));            
+            dto.setPaymentType(PaymentMethodConverter.refEntity2DTO(entity.getPaymentType()));
             dto.setSecurityCode(entity.getSecurityCode());
             dto.setOwnerId(ClientConverter.refEntity2DTO(entity.getOwnerId()));
 

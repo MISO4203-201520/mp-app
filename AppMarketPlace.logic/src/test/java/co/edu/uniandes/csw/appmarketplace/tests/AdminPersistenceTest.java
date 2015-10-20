@@ -1,10 +1,17 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
 import co.edu.uniandes.csw.appmarketplace.converters.AdminConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.ClientConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AdminEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AdminPersistence;
-import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
+import co.edu.uniandes.csw.appmarketplace.persistence.ClientPersistence;
+import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +42,23 @@ public class AdminPersistenceTest {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DEPLOY + ".war")
                 .addPackage(AdminEntity.class.getPackage())
+                .addPackage(DeveloperEntity.class.getPackage())
+                .addPackage(ClientEntity.class.getPackage())
                 .addPackage(AdminPersistence.class.getPackage())
+                .addPackage(DeveloperPersistence.class.getPackage())
+                .addPackage(ClientPersistence.class.getPackage())
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("META-INF/beans.xml", "beans.xml");
     }
 
     @Inject
     private AdminPersistence adminPersistence;
+
+    @Inject
+    private DeveloperPersistence developerPersistence;
+
+    @Inject
+    private ClientPersistence clientPersistence;
 
     @PersistenceContext
     private EntityManager em;
@@ -68,11 +85,16 @@ public class AdminPersistenceTest {
 
     private void clearData() {
         em.createQuery("delete from AdminEntity").executeUpdate();
+        em.createQuery("delete from DeveloperEntity").executeUpdate();
+        em.createQuery("delete from ClientEntity").executeUpdate();
     }
 
     private List<AdminEntity> data = new ArrayList<AdminEntity>();
+    private List<DeveloperEntity> developersData = new ArrayList<DeveloperEntity>();
+    private List<ClientEntity> clientsData = new ArrayList<ClientEntity>();
 
     private void insertData() {
+        // Inserting records for admin test
         for (int i = 0; i < 3; i++) {
             PodamFactory factory = new PodamFactoryImpl();
             AdminEntity entity = AdminConverter.basicDTO2Entity(
@@ -80,10 +102,26 @@ public class AdminPersistenceTest {
             em.persist(entity);
             data.add(entity);
         }
+        // Inserting records for developers test via admin
+        for (int i = 0; i < 3; i++) {
+            PodamFactory factory = new PodamFactoryImpl();
+            DeveloperEntity entity = DeveloperConverter.basicDTO2Entity(
+                    factory.manufacturePojo(DeveloperDTO.class));
+            em.persist(entity);
+            developersData.add(entity);
+        }
+        // Inserting records for developers test via admin
+        for (int i = 0; i < 3; i++) {
+            PodamFactory factory = new PodamFactoryImpl();
+            ClientEntity entity = ClientConverter.basicDTO2Entity(
+                    factory.manufacturePojo(ClientDTO.class));
+            em.persist(entity);
+            clientsData.add(entity);
+        }
     }
 
     @Test
-    public void createAdmin() {
+    public void t00CreateAdmin() {
         PodamFactory factory = new PodamFactoryImpl();
         AdminEntity newEntity = AdminConverter.basicDTO2Entity(
                 factory.manufacturePojo(AdminDTO.class));
@@ -98,7 +136,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void getAdmins() {
+    public void t02GetAdmins() {
         List<AdminEntity> list = adminPersistence.findAll(null, null);
         Assert.assertEquals(data.size(), list.size());
         for (AdminEntity ent : list) {
@@ -113,7 +151,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void getAdmin() {
+    public void t04GetAdmin() {
         AdminEntity entity = data.get(0);
         AdminEntity newEntity = adminPersistence.find(entity.getId());
         Assert.assertNotNull(newEntity);
@@ -122,7 +160,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void deleteAdmin() {
+    public void t06DeleteAdmin() {
         AdminEntity entity = data.get(0);
         adminPersistence.delete(entity.getId());
         AdminEntity deleted = em.find(AdminEntity.class, entity.getId());
@@ -130,7 +168,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void updateAdmin() {
+    public void t08UpdateAdmin() {
         AdminEntity entity = data.get(0);
 
         PodamFactory factory = new PodamFactoryImpl();
@@ -147,7 +185,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void getAdminPagination() {
+    public void t10GetAdminPagination() {
         //Page 1
         List<AdminEntity> ent1 = adminPersistence.findAll(1, 2);
         Assert.assertNotNull(ent1);
@@ -179,7 +217,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void findByName() {
+    public void t12FindByName() {
         String name = data.get(0).getName();
         List<AdminEntity> cache = new ArrayList<AdminEntity>();
         List<AdminEntity> list = adminPersistence.findByName(name);
@@ -205,7 +243,7 @@ public class AdminPersistenceTest {
     }
 
     @Test
-    public void getAdminByUserId() {
+    public void t14GetAdminByUserId() {
         AdminEntity adminToSearch = data.get(0);
 
         AdminEntity adminFound = adminPersistence
@@ -214,5 +252,35 @@ public class AdminPersistenceTest {
         Assert.assertNotNull(adminFound);
         Assert.assertEquals(adminFound.getName(), adminToSearch.getName());
         Assert.assertEquals(adminFound.getUserId(), adminToSearch.getUserId());
+    }
+
+    @Test
+    public void t16GetDevelopersViaAdmin() {
+        List<DeveloperEntity> list = developerPersistence.findAll(null, null);
+        Assert.assertEquals(developersData.size(), list.size());
+        for (DeveloperEntity ent : list) {
+            boolean found = false;
+            for (DeveloperEntity entity : developersData) {
+                if (ent.getId().equals(entity.getId())) {
+                    found = true;
+                }
+            }
+            Assert.assertTrue(found);
+        }
+    }
+
+    @Test
+    public void t18GetClientsViaAdmin() {
+        List<ClientEntity> list = clientPersistence.findAll(null, null);
+        Assert.assertEquals(clientsData.size(), list.size());
+        for (ClientEntity ent : list) {
+            boolean found = false;
+            for (ClientEntity entity : clientsData) {
+                if (ent.getId().equals(entity.getId())) {
+                    found = true;
+                }
+            }
+            Assert.assertTrue(found);
+        }
     }
 }

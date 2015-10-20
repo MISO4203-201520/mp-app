@@ -13,7 +13,8 @@
         'commentModule',
         'paymentCardsModule',
         'adminModule',
-        'forgotModule'
+        'forgotModule',
+        'transactionModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -70,6 +71,18 @@
             }).when('/admin/developers', {
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
+                controllerAs: alias
+            }).when('/admin/comments', {
+                templateUrl: 'src/modules/admin/comments.tpl.html',
+                controller: 'adminCommentsCtrl',
+                controllerAs: alias
+            }).when('/admin/apps', {
+                templateUrl: 'src/modules/admin/apps.tpl.html',
+                controller: 'adminAppsCtrl',
+                controllerAs: alias
+            }).when('/history', {
+                templateUrl: 'src/modules/transaction/history.tpl.html',
+                controller: 'transactionCtrl',
                 controllerAs: alias
             }).when('/devprofile', {
                 templateUrl: 'src/modules/developer/profile.tpl.html',

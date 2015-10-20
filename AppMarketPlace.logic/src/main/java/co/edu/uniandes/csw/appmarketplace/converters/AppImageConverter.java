@@ -7,6 +7,9 @@ import java.util.List;
 
 public abstract class AppImageConverter {
 
+    private AppImageConverter() {
+    }
+
     public static MediaDTO refEntity2DTO(AppImageEntity entity) {
         if (entity != null) {
             MediaDTO dto = new MediaDTO();

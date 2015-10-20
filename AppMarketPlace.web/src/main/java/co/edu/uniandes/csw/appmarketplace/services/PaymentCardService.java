@@ -44,8 +44,8 @@ public class PaymentCardService {
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
-    private UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
-
+    private UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client")
+    
     @POST
     @StatusCreated
     public void createPayment(PaymentCardDTO dto) {

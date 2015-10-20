@@ -10,6 +10,7 @@ import co.edu.uniandes.csw.appmarketplace.api.ICartItemLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IPaymentCardLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
+import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.CartItemDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
@@ -69,9 +70,8 @@ public class TransactionService {
     @StatusCreated
     public void createPayment(TransactionDTO dto) throws ParseException {
         Subject currentUser = SecurityUtils.getSubject();
-        if (loggedUser == null) {
-            Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));
-            return;
+        if (loggedUser == null) {            
+            Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));            
         }
         Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
         ClientDTO client = clientLogic.getClientByUsername(loggedUser.getUserName());
@@ -87,8 +87,9 @@ public class TransactionService {
         for (CartItemDTO cartItem : clientLogic.getClient(client.getId()).getCartItems()) {
             dto.setRecipient(cartItem.getApp());
             Date actualDate =new Date();
+            AppDTO app = cartItem.getApp();
             // Verifica si esta en el rango de fechas para aplicar el descuento.
-            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+            if (app.getStartDiscountDate() != null && app.getFinishDiscountDate()!=null && actualDate.compareTo(app.getStartDiscountDate())>=0 && actualDate.compareTo(app.getFinishDiscountDate())<=0){
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString())));
             }else{
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString())));
@@ -98,12 +99,11 @@ public class TransactionService {
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
             // Verifica si esta en el rango de fechas para aplicar el descuento.
-            if (actualDate.compareTo(cartItem.getApp().getStartDiscountDate())>=0 && actualDate.compareTo(cartItem.getApp().getFinishDiscountDate())<=0){
+            if (app.getStartDiscountDate() != null && app.getFinishDiscountDate()!=null && actualDate.compareTo(app.getStartDiscountDate())>=0 && actualDate.compareTo(app.getFinishDiscountDate())<=0){
                 total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice() - appLogic.getApp(cartItem.getApp().getId()).getDiscount()) * Long.parseLong(cartItem.getQuantity().toString()));
             }else
                 total += (int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString()));
-            
-        }
+            }
         Emailer.sendPaymentEmail(client.getName(), userAttributes.get("email"), Integer.toString(total), new Date(), Integer.toString(number));
     }
 
@@ -135,5 +135,11 @@ public class TransactionService {
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
         TransactionLogic.deleteTransaction(id);
+    }
+    
+    @GET
+    @Path("client/{id: \\d+}")
+    public List<TransactionDTO> getByClientId(@PathParam("id") Long id) {
+        return TransactionLogic.findByClientId(id);
     }
 }

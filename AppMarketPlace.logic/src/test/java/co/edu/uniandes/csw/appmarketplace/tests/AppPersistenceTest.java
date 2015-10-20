@@ -4,7 +4,6 @@ import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
-import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -270,7 +269,7 @@ public class AppPersistenceTest {
         List<AppEntity> foundApps = appPersistence.getAppsByCategory(category);
         
         for (AppEntity app : data) {
-            if (app.getCategory().equals(category)) {
+            if (app.getCategory().equals(category) && app.isEnabled()) {
                 cachedApps.add(app);
             }
         }

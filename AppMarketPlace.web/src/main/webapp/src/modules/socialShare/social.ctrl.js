@@ -1,6 +1,6 @@
 (function (ng, $) {
     var mod = ng.module('commentModule');
-    mod.controller('socialCtrl', ['CrudCreator', '$scope', 'commentService', 'commentModel', '$http', '$modal', function (CrudCreator, $scope, svc, model, $http, $modal) {
+    mod.controller('socialCtrl', ['$scope', '$http', function ($scope, $http) {
             $scope.model = {};
             submitForm = function () {
                 $("#commentsubmit").button('loading');

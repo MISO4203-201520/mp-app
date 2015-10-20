@@ -82,6 +82,7 @@ public class DeveloperLogic implements IDeveloperLogic {
         return DeveloperConverter.refEntity2DTO(persistence.getDeveloperByUserId(userId));
     }
 
+    @Override
     public DeveloperDTO getDeveloperByUsername(String username) {
         return DeveloperConverter.fullEntity2DTO(persistence.getDeveloperByUsername(username));
     }
