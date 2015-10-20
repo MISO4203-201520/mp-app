@@ -7,6 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
 import com.stormpath.sdk.client.Client;
+import com.stormpath.sdk.resource.ResourceException;
 import com.stormpath.shiro.realm.ApplicationRealm;
 import java.util.List;
 import javax.inject.Inject;
@@ -22,11 +23,20 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.RealmSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/**
+ * @modified by d.jimenez13 Find developers and clients by username instead id to avoid test errors
+ *                          Switch account status for developers and clients to catch ResourceException 
+ *                          and avoid test errors
+ */
 @Path("/admin")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminService {
+    static final Logger logger = LoggerFactory
+            .getLogger(AdminService.class);
 
     @Inject
     private IClientLogic clientLogic;
@@ -45,7 +55,22 @@ public class AdminService {
         if (page != null && maxRecords != null) {
             this.response.setIntHeader("X-Total-Count", developerLogic.countDevelopers());
         }
-        return developerLogic.getDevelopers(page, maxRecords);
+        List<DeveloperDTO> developers = developerLogic.getDevelopers(page, maxRecords);
+        for (DeveloperDTO developer : developers) {
+            ApplicationRealm realm = (ApplicationRealm)
+                    ((RealmSecurityManager) SecurityUtils.getSecurityManager())
+                            .getRealms().iterator().next();
+            Client clientWS = realm.getClient();
+            Account account = null;
+            try {
+                account = clientWS.getResource(developer.getUserId(), Account.class);
+                developer.setStatus(account.getStatus().name());
+            } catch (ResourceException e) {
+                logger.warn("Account resource for developer {} was not found!", 
+                        developer.getUserId(), e);
+            }
+        }
+        return developers;
     }
 
     @GET
@@ -54,7 +79,22 @@ public class AdminService {
         if (page != null && maxRecords != null) {
             this.response.setIntHeader("X-Total-Count", clientLogic.countClients());
         }
-        return clientLogic.getClients(page, maxRecords);
+        List<ClientDTO> clients = clientLogic.getClients(page, maxRecords);
+        for(ClientDTO client: clients){
+            ApplicationRealm realm = (ApplicationRealm)
+                    ((RealmSecurityManager) SecurityUtils.getSecurityManager())
+                            .getRealms().iterator().next();
+            Client clientWS = realm.getClient();
+            Account account = null;
+            try {
+                account = clientWS.getResource(client.getUserId(), Account.class);
+                client.setStatus(account.getStatus().name());
+            } catch (ResourceException e) {
+                logger.warn("Account resource for client {} was not found!", 
+                        client.getUserId(), e);
+            }
+        }
+        return clients;
     }
 
     @POST
