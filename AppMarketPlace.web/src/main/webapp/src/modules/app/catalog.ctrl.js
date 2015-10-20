@@ -1,8 +1,8 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', '$location',
-        function (CrudCreator, $scope, $modal, svc, cartItemSvc, $location) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', 'commentService', '$location',
+        function (CrudCreator, $scope, $modal, svc, cartItemSvc, commentSvc, $location) {
             var model = {
                 fields: [{
                         name: 'name',
@@ -127,14 +127,20 @@
                         var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'src/modules/comment/comment.html',
-                            controller: 'commentCtrl',
+                            controller: 'commentModalCtrl',
                             resolve: {
                                 app: function () {
                                     return app;
                                 }
                             }
                         });
-                        modalInstance.result.then(function () {
+                        modalInstance.result.then(function (comment) {
+                            console.log(app);
+                            commentSvc.commentApp(app,comment).then(function () {
+                                self.showSuccess('Comentario agregado');
+                            }, function () {
+                                self.showError('No es posible agregar el comentario');
+                            });
                             /*TODO create logic to service*/
                         }, function () {
 
@@ -285,6 +291,17 @@
             $scope.rate = 0;
             $scope.ok = function () {
                 $modalInstance.close($scope.rate);
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        }]);
+    mod.controller('commentModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.name = app.name;
+            $scope.comment = "";
+            $scope.ok = function () {
+                $modalInstance.close($scope.comment);
             };
 
             $scope.cancel = function () {
