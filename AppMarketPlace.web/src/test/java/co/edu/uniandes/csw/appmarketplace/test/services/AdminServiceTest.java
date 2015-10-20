@@ -267,4 +267,70 @@ public class AdminServiceTest {
             Assert.fail("Access denied or Invalid credentials!");
         }
     }
+
+    @Test
+    @RunAsClient
+    public void t12CreateClientToDisable() throws IOException {
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+
+        if (cookieSessionId != null) {
+            ClientDTO client = clientsOraculo.get(1);
+            // Create a client with a name existing in stormpath.
+            client.setName(System.getenv("APPOTECA_CLIENT_TODISABLE_USERNAME"));
+            client.setUserId(System.getenv("APPOTECA_CLIENT_TODISABLE_USERID"));
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATHCLIENT)
+                    .request().cookie(cookieSessionId)
+                    .post(Entity.entity(client, MediaType.APPLICATION_JSON));
+            ClientDTO createdClient = (ClientDTO) response.readEntity(ClientDTO.class);
+
+            Assert.assertEquals(Created, response.getStatus());
+            Assert.assertNotNull(createdClient);
+            Assert.assertEquals(client.getId(), createdClient.getId());
+            Assert.assertEquals(createdClient.getName(), client.getName());
+            Assert.assertEquals(createdClient.getUserId(), client.getUserId());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+
+    @Test
+    @RunAsClient
+    public void t14DisableClient() throws IOException {
+        ClientDTO clientToDisable = new ClientDTO();
+        
+        Cookie cookieSessionIdGetClient = login(
+                System.getenv("APPOTECA_CLIENT_USERNAME"), 
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
+        // Getting a client to disable or enable the account
+        if (cookieSessionIdGetClient != null) {
+            Client clienteWS = ClientBuilder.newClient();
+            ClientDTO client = clientsOraculo.get(1);
+            client.setName(System.getenv("APPOTECA_CLIENT_TODISABLE_USERNAME"));
+            
+            // Find a client to disable or enable by username (It dependes on current stormpath status)
+            // It must exist in stormpath.
+            clientToDisable = clienteWS.target(URLBASE + PATHCLIENT).path("/" + client.getName())
+                    .request().cookie(cookieSessionIdGetClient).get(ClientDTO.class);
+            Assert.assertNotNull(clientToDisable);
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+        
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"), 
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+        if (cookieSessionId != null) {
+            Client clienteWS = ClientBuilder.newClient();
+            // Changing client status to disabled or enable (It dependes on current stormpath status)
+            Response response = clienteWS.target(URLBASE + PATH + PATHCLIENT).path("/" + clientToDisable.getName() + "/disable")
+                    .request().cookie(cookieSessionIdGetClient)
+                    .post(Entity.entity(clientToDisable, MediaType.APPLICATION_JSON));
+            Assert.assertEquals(OkWithoutContent, response.getStatus());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
 }

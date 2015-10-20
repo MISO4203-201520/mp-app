@@ -59,6 +59,12 @@ public class ClientService {
     public ClientDTO getClient(@PathParam("id") Long id) {
         return clientLogic.getClient(id);
     }
+    
+    @GET
+    @Path("{username}")
+    public ClientDTO getDeveloperByUsername(@PathParam("username") String username) {
+        return clientLogic.getClientByUsername(username);
+    }
 
     /**
      * @generated
