@@ -1,9 +1,21 @@
-/* global commentSvc */
-
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$rootScope', '$modal', 'appService', 'appModel', 'cartItemService', '$location', function (CrudCreator, $scope, $rootScope, $modal, svc, model, cartItemSvc, $location) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', 'commentService', '$location',
+        function (CrudCreator, $scope, $modal, svc, cartItemSvc, commentSvc, $location) {
+            var model = {
+                fields: [{
+                        name: 'name',
+                        displayName: 'Name',
+                        type: 'String',
+                        required: true
+                    }, {
+                        name: 'picture',
+                        displayName: 'Picture',
+                        type: 'Image',
+                        required: true
+                    }
+                ]};
             CrudCreator.extendController(this, svc, $scope, model, 'catalog', 'Catalog');
             this.asGallery = true;
             this.readOnly = true;
@@ -15,10 +27,31 @@
                 }
                 $location.url('/catalog' + search);
             };
+            $scope.searchByKeyWord = function (keyword) {
+
+
+                if (keyword) {
+                    $location.url('/catalog?keyword=' + keyword);
+                } else {
+                    $location.url('/catalog');
+                }
+
+            };
 
             var self = this;
 
             this.recordActions = {
+                details: {
+                    displayName: 'Details',
+                    icon: 'list-alt',
+                    class: 'info',
+                    fn: function (app) {
+                        $location.path('/app/' + app.id);
+                    },
+                    show: function () {
+                        return true;
+                    }
+                },
                 addToCart: {
                     displayName: 'Add to Cart',
                     icon: 'shopping-cart',
@@ -32,7 +65,8 @@
                     show: function () {
                         return true;
                     }
-                }, shareSocial: {
+                },
+                shareSocial: {
                     name: 'share social',
                     displayName: 'Share',
                     icon: 'share',
@@ -44,7 +78,6 @@
                             controller: 'ModalShare',
                             resolve: {
                                 app: function () {
-                                    $rootScope.selectedApp = app;
                                     return app;
                                 }
                             }
@@ -61,7 +94,7 @@
                 },
                 doQuestion: {
                     name: 'doQuestion',
-                    displayName: 'Do Question',
+                    displayName: 'Make a question',
                     icon: 'question-sign',
                     class: 'primary',
                     fn: function (app) {
@@ -84,26 +117,30 @@
                     show: function () {
                         return true;
                     }
-                }, comment: {
+                },
+                comment: {
                     name: 'add a comment',
                     displayName: 'Add a comment',
                     icon: 'pencil',
                     class: 'primary',
                     fn: function (app) {
-                        $rootScope.modalInstance = $modal.open({
+                        var modalInstance = $modal.open({
                             animation: true,
                             templateUrl: 'src/modules/comment/comment.html',
-                            controller: 'commentCtrl',
+                            controller: 'commentModalCtrl',
                             resolve: {
                                 app: function () {
-                                    $rootScope.selectedApp = app;
                                     return app;
                                 }
                             }
                         });
-                        $rootScope.modalInstance.result.then(function (text) {
+                        modalInstance.result.then(function (comment) {
+                            commentSvc.commentApp(app, comment).then(function () {
+                                self.showSuccess('Comentario agregado');
+                            }, function () {
+                                self.showError('No es posible agregar el comentario');
+                            });
                             /*TODO create logic to service*/
-                            console.log("text");
                         }, function () {
 
                         });
@@ -111,55 +148,35 @@
                     show: function () {
                         return true;
                     }
+                },
+                rate: {
+                    displayName: 'Rate App!',
+                    icon: 'star',
+                    class: 'primary',
+                    fn: function (app) {
+                        var modalInstance = $modal.open({
+                            animation: true,
+                            templateUrl: 'src/modules/app/rateModal.tpl.html',
+                            controller: 'rateModalCtrl',
+                            resolve: {
+                                app: function () {
+                                    return app;
+                                }
+                            }
+                        });
+                        modalInstance.result.then(function (rate) {
+                            svc.rateApp(app, rate).then(function () {
+                                self.showSuccess('Aplicación calificada');
+                            }, function () {
+                                self.showError('No es posible calificar la aplicación');
+                            });
+                        });
+                    },
+                    show: function () {
+                        return true;
+                    }
                 }
             };
-
-            this.recordActions.rate = {
-                displayName: 'Rate App',
-                icon: 'star',
-                class: 'primary',
-                fn: function (app) {
-                    var modalInstance = $modal.open({
-                        animation: true,
-                        templateUrl: 'src/modules/app/rateModal.tpl.html',
-                        controller: 'rateModalCtrl',
-                        resolve: {
-                            app: function () {
-                                return app;
-                            }
-                        }
-                    });
-                    modalInstance.result.then(function (rate) {
-                        svc.rateApp(app, rate).then(function () {
-                            self.showSuccess('Aplicación calificada');
-                        }, function () {
-                            self.showError('No es posible calificar la aplicación');
-                        });
-                    });
-                },
-                show: function () {
-                    return true;
-                }};
-
-            this.recordActions.details = {
-                displayName: 'Details',
-                icon: 'list-alt',
-                class: 'info',
-                fn: function (app) {
-                    $modal.open({
-                        animation: true,
-                        templateUrl: 'src/modules/app/detailsModal.tpl.html',
-                        controller: 'detailsModalCtrl',
-                        resolve: {
-                            app: function () {
-                                return svc.fetchRecord(app);
-                            }
-                        }
-                    });
-                },
-                show: function () {
-                    return true;
-                }};
 
             this.globalActions.getCheapest = {
                 displayName: 'Find Cheapest',
@@ -173,7 +190,6 @@
                     });
                     modalInstance.result.then(function (text) {
                         svc.findCheapest(text).then(function (data) {
-                            console.log(data);
                             $scope.records = [];
                             for (var i = 0; i < data.length; i++) {
                                 $scope.records.push(data[i]);
@@ -187,7 +203,6 @@
                     return true;
                 }
             };
-
             this.globalActions.getAppsByCategory = {
                 displayName: 'Filter by Category',
                 icon: 'filter',
@@ -210,6 +225,7 @@
                     return true;
                 }
             };
+
 
             this.fetchRecords();
         }]);
@@ -241,7 +257,6 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('ModalFilterCategoriesCtrl', function ($scope, $modalInstance) {
         $scope.in = {
             text: ""
@@ -256,22 +271,20 @@
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('FindCheapestCrtl', function ($scope, $modalInstance) {
-        $scope.dev = {
+        $scope.in = {
             text: ""
         };
 
         $scope.ok = function () {
-            $modalInstance.close($scope.dev.text);
+            $modalInstance.close($scope.in.text);
         };
 
         $scope.cancel = function () {
-            $scope.dev.text = "";
+            $scope.in.text = "";
             $modalInstance.dismiss('cancel');
         };
     });
-
     mod.controller('rateModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
             $scope.name = app.name;
             $scope.rate = 0;
@@ -283,11 +296,15 @@
                 $modalInstance.dismiss('cancel');
             };
         }]);
-
-    mod.controller('detailsModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
-            $scope.app = app;
+    mod.controller('commentModalCtrl', ['$scope', '$modalInstance', 'app', function ($scope, $modalInstance, app) {
+            $scope.name = app.name;
+            $scope.comment = "";
             $scope.ok = function () {
-                $modalInstance.dismiss();
+                $modalInstance.close($scope.comment);
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
             };
         }]);
 

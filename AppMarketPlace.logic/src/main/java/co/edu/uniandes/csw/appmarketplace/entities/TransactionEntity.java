@@ -6,6 +6,7 @@
 package co.edu.uniandes.csw.appmarketplace.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import static javax.persistence.TemporalType.DATE;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -31,7 +34,9 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "TransactionEntity.countByApp", query = "SELECT count(t) FROM TransactionEntity t WHERE t.recipient.id = :app_id"),
     @NamedQuery(name = "TransactionEntity.findByTotal", query = "SELECT t FROM TransactionEntity t WHERE t.total = :total"),
     @NamedQuery(name = "TransactionEntity.countByClientApp", query = "SELECT count(t) FROM TransactionEntity t WHERE t.payer.id = :payer_id AND t.recipient.id = :app_id"),
-    @NamedQuery(name = "TransactionEntity.findByStatus", query = "SELECT t FROM TransactionEntity t WHERE t.status = :status")})
+    @NamedQuery(name = "TransactionEntity.findByStatus", query = "SELECT t FROM TransactionEntity t WHERE t.status = :status"),
+    @NamedQuery(name = "TransactionEntity.findByClientId", query = "SELECT t FROM TransactionEntity t WHERE t.payer.id = :payerId")
+})
 public class TransactionEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -55,9 +60,14 @@ public class TransactionEntity implements Serializable {
     @Size(min = 1, max = 20)
     @Column(name = "status")
     private String status;
+    @Temporal(DATE)
+    private Date date;
     @JoinColumn(name = "payment_card", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private PaymentCardEntity paymentCard;
+    @JoinColumn(name = "app", referencedColumnName = "id")
+    @ManyToOne(optional = false)
+    private AppEntity appId;
 
     public TransactionEntity() {
     }
@@ -155,6 +165,34 @@ public class TransactionEntity implements Serializable {
      */
     public void setRecipient(AppEntity recipient) {
         this.recipient = recipient;
+    }
+
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the appId
+     */
+    public AppEntity getAppId() {
+        return appId;
+    }
+
+    /**
+     * @param appId the appId to set
+     */
+    public void setAppId(AppEntity appId) {
+        this.appId = appId;
     }
     
 }

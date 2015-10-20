@@ -1,5 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
+import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
+import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
@@ -18,12 +20,15 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
  */
 @RunWith(Arquillian.class)
 public class DeveloperPersistenceTest {
+
     public static final String DEPLOY = "Prueba";
 
     /**
@@ -93,9 +98,9 @@ public class DeveloperPersistenceTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            DeveloperEntity entity = new DeveloperEntity();
-            entity.setName(generateRandom(String.class));
-            entity.setUserId(generateRandom(String.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            DeveloperEntity entity = DeveloperConverter.basicDTO2Entity(
+                    factory.manufacturePojo(DeveloperDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -106,10 +111,9 @@ public class DeveloperPersistenceTest {
      */
     @Test
     public void createDeveloperTest() {
-        DeveloperEntity newEntity = new DeveloperEntity();
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setUserId(generateRandom(String.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        DeveloperEntity newEntity = DeveloperConverter.basicDTO2Entity(
+                factory.manufacturePojo(DeveloperDTO.class));
         DeveloperEntity result = developerPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
@@ -168,11 +172,10 @@ public class DeveloperPersistenceTest {
     public void updateDeveloperTest() {
         DeveloperEntity entity = data.get(0);
 
-        DeveloperEntity newEntity = new DeveloperEntity();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        DeveloperEntity newEntity = DeveloperConverter.basicDTO2Entity(
+                factory.manufacturePojo(DeveloperDTO.class));
         newEntity.setId(entity.getId());
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setUserId(generateRandom(String.class));
 
         developerPersistence.update(newEntity);
 
@@ -244,5 +247,29 @@ public class DeveloperPersistenceTest {
                 Assert.fail();
             }
         }
+    }
+
+    @Test
+    public void getDeveloperByUserId() {
+        DeveloperEntity developerToSearch = data.get(0);
+
+        DeveloperEntity developerFound = developerPersistence
+                .getDeveloperByUserId(developerToSearch.getUserId());
+
+        Assert.assertNotNull(developerFound);
+        Assert.assertEquals(developerFound.getName(), developerToSearch.getName());
+        Assert.assertEquals(developerFound.getUserId(), developerToSearch.getUserId());
+    }
+
+    @Test
+    public void getDeveloperByUsername() {
+        DeveloperEntity developerToSearch = data.get(0);
+
+        DeveloperEntity developerFound = developerPersistence
+                .getDeveloperByUsername(developerToSearch.getName());
+
+        Assert.assertNotNull(developerFound);
+        Assert.assertEquals(developerFound.getName(), developerToSearch.getName());
+        Assert.assertEquals(developerFound.getUserId(), developerToSearch.getUserId());
     }
 }

@@ -35,6 +35,9 @@ public abstract class AppConverter {
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
             dto.setCategory(entity.getCategory());
+            dto.setStartDiscountDate(entity.getStartDiscountDate());
+            dto.setFinishDiscountDate(entity.getFinishDiscountDate());
+            dto.setEnabled(entity.isEnabled());
 
             return dto;
         } else {
@@ -75,6 +78,9 @@ public abstract class AppConverter {
             dto.setPlatform(entity.getPlatform());
             dto.setDiscount(entity.getDiscount());
             dto.setCategory(entity.getCategory());
+            dto.setStartDiscountDate(entity.getStartDiscountDate());
+            dto.setFinishDiscountDate(entity.getFinishDiscountDate());
+            dto.setEnabled(entity.isEnabled());
 
             return dto;
         } else {
@@ -85,7 +91,7 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-    private static AppEntity basicDTO2Entity(AppDTO dto) {
+    public static AppEntity basicDTO2Entity(AppDTO dto) {
         if (dto != null) {
             AppEntity entity = new AppEntity();
             entity.setId(dto.getId());
@@ -99,6 +105,9 @@ public abstract class AppConverter {
             entity.setPlatform(dto.getPlatform());
             entity.setDiscount(dto.getDiscount());
             entity.setCategory(dto.getCategory());
+            entity.setStartDiscountDate(dto.getStartDiscountDate());
+            entity.setFinishDiscountDate(dto.getFinishDiscountDate());
+            dto.setEnabled(entity.isEnabled());
 
             return entity;
         } else {
@@ -113,6 +122,8 @@ public abstract class AppConverter {
         if (entity != null) {
             AppDTO dto = basicEntity2DTO(entity);
             dto.setComments(CommentConverter.listEntity2DTO(entity.getComments()));
+            dto.setImages(AppImageConverter.listEntity2DTO(entity.getImages()));
+            dto.setVideos(AppVideoConverter.listEntity2DTO(entity.getVideos()));
             return dto;
         } else {
             return null;
@@ -134,7 +145,6 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-
     public static List<AppDTO> listEntity2DTO(List<AppEntity> entities) {
         List<AppDTO> dtos = new ArrayList<AppDTO>();
         if (entities != null) {
@@ -161,7 +171,7 @@ public abstract class AppConverter {
     /**
      * @generated
      */
-    public static AppEntity childDTO2Entity(AppDTO dto, DeveloperEntity parent){
+    public static AppEntity childDTO2Entity(AppDTO dto, DeveloperEntity parent) {
         AppEntity entity = basicDTO2Entity(dto);
         entity.setDeveloper(parent);
         return entity;
@@ -179,6 +189,5 @@ public abstract class AppConverter {
         }
         return entities;
     }
-    
-    
+
 }

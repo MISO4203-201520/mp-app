@@ -10,8 +10,33 @@
                 type: 'String',
                 required: true
             }, {
-                name: 'userId',
-                displayName: 'UserId',
+                name: 'firstName',
+                displayName: 'First name',
+                type: 'String',
+                required: true
+            }, {
+                name: 'lastName',
+                displayName: 'Last name',
+                type: 'String',
+                required: true
+            }, {
+                name: 'email',
+                displayName: 'Email',
+                type: 'String',
+                required: true
+            }, {
+                name: 'photo',
+                displayName: 'Profile photo',
+                type: 'Image',
+                required: true
+            }, {
+                name: 'bannerProfile',
+                displayName: 'Profile banner',
+                type: 'Image',
+                required: true
+            }, {
+                name: 'commentProfile',
+                displayName: 'Profile comment',
                 type: 'String',
                 required: true
             }],

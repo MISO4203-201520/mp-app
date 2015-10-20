@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.appmarketplace.dtos;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -12,10 +13,14 @@ public class ClientDTO {
     private Long id;
     private String name;
     private String userId;
+    private String firstName;
+    private String lastName;
     private String fullName;
     private String email;
     private String status;
+    @PodamExclude
     private List<CartItemDTO> cartItems;
+    @PodamExclude
     private List<PaymentCardDTO> cards;
     /**
      * @generated
@@ -109,5 +114,33 @@ public class ClientDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    /**
+     * @return the firstName
+     */
+    public String getFirstName() {
+        return firstName;
+    }
+
+    /**
+     * @param firstName the firstName to set
+     */
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    /**
+     * @return the lastName
+     */
+    public String getLastName() {
+        return lastName;
+    }
+
+    /**
+     * @param lastName the lastName to set
+     */
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

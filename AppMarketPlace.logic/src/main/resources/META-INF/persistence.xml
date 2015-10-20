@@ -6,6 +6,10 @@
     <class>co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.PaymentMethodEntity</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.Developerentity_1</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.Cliententity_1</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.Purchasedrecordentity</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.Appentity_1</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>

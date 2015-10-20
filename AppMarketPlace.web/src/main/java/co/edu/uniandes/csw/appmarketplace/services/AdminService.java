@@ -1,11 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.appmarketplace.services;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
@@ -13,6 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
 import com.stormpath.sdk.client.Client;
+import com.stormpath.sdk.resource.ResourceException;
 import com.stormpath.shiro.realm.ApplicationRealm;
 import java.util.List;
 import javax.inject.Inject;
@@ -28,22 +23,32 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.RealmSecurityManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- *
- * @author ca.forero10
+ * @modified by d.jimenez13 Find developers and clients by username instead id to avoid test errors
+ *                          Switch account status for developers and clients to catch ResourceException 
+ *                          and avoid test errors
  */
 @Path("/admin")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AdminService {
-    
-    @Inject private IClientLogic clientLogic;
-    @Inject private IDeveloperLogic developerLogic;
-    @Context private HttpServletResponse response;
-    @QueryParam("page") private Integer page;
-    @QueryParam("maxRecords") private Integer maxRecords;
-    
+    static final Logger logger = LoggerFactory
+            .getLogger(AdminService.class);
+
+    @Inject
+    private IClientLogic clientLogic;
+    @Inject
+    private IDeveloperLogic developerLogic;
+    @Context
+    private HttpServletResponse response;
+    @QueryParam("page")
+    private Integer page;
+    @QueryParam("maxRecords")
+    private Integer maxRecords;
+
     @GET
     @Path("/developers")
     public List<DeveloperDTO> getDevelopers() {
@@ -51,17 +56,23 @@ public class AdminService {
             this.response.setIntHeader("X-Total-Count", developerLogic.countDevelopers());
         }
         List<DeveloperDTO> developers = developerLogic.getDevelopers(page, maxRecords);
-        for(DeveloperDTO developer: developers){
-            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
-            Client cl = realm.getClient();
-            Account account = cl.getResource(developer.getUserId(), Account.class);
-            developer.setFullName(account.getFullName());
-            developer.setEmail(account.getEmail());
-            developer.setStatus(account.getStatus().name());
+        for (DeveloperDTO developer : developers) {
+            ApplicationRealm realm = (ApplicationRealm)
+                    ((RealmSecurityManager) SecurityUtils.getSecurityManager())
+                            .getRealms().iterator().next();
+            Client clientWS = realm.getClient();
+            Account account = null;
+            try {
+                account = clientWS.getResource(developer.getUserId(), Account.class);
+                developer.setStatus(account.getStatus().name());
+            } catch (ResourceException e) {
+                logger.warn("Account resource for developer {} was not found!", 
+                        developer.getUserId(), e);
+            }
         }
         return developers;
     }
-    
+
     @GET
     @Path("/clients")
     public List<ClientDTO> getClients() {
@@ -70,45 +81,54 @@ public class AdminService {
         }
         List<ClientDTO> clients = clientLogic.getClients(page, maxRecords);
         for(ClientDTO client: clients){
-            ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
-            Client cl = realm.getClient();
-            Account account = cl.getResource(client.getUserId(), Account.class);
-            client.setFullName(account.getFullName());
-            client.setEmail(account.getEmail());
-            client.setStatus(account.getStatus().name());
+            ApplicationRealm realm = (ApplicationRealm)
+                    ((RealmSecurityManager) SecurityUtils.getSecurityManager())
+                            .getRealms().iterator().next();
+            Client clientWS = realm.getClient();
+            Account account = null;
+            try {
+                account = clientWS.getResource(client.getUserId(), Account.class);
+                client.setStatus(account.getStatus().name());
+            } catch (ResourceException e) {
+                logger.warn("Account resource for client {} was not found!", 
+                        client.getUserId(), e);
+            }
         }
         return clients;
     }
-    
+
     @POST
-    @Path("/clients/{id: \\d+}/disable")
-    public void disableClient(@PathParam("id") Long id) {
-        ClientDTO cl = clientLogic.getClient(id);
-        if(cl!=null){
+    @Path("/clients/{username}/disable")
+    public void disableClient(@PathParam("username") String username) {
+        ClientDTO cliente = clientLogic.getClientByUsername(username);
+        if (cliente != null) {
             ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client client = realm.getClient();
-            Account account = client.getResource(cl.getUserId(), Account.class);
-            if(account.getStatus()==AccountStatus.DISABLED)
-               account.setStatus(AccountStatus.ENABLED);
-            else if(account.getStatus()==AccountStatus.ENABLED)
+            Account account = client.getResource(cliente.getUserId(), Account.class);
+            if (account.getStatus() == AccountStatus.DISABLED) {
+                account.setStatus(AccountStatus.ENABLED);
+            } else if (account.getStatus() == AccountStatus.ENABLED) {
                 account.setStatus(AccountStatus.DISABLED);
+            }
             account.save();
         }
-        
+
     }
-    
+
     @POST
-    @Path("/developers/{id: \\d+}/disable")
-    public void disableDeveloper(@PathParam("id") Long id) {
-        DeveloperDTO dev = developerLogic.getDeveloper(id);
-        if(dev!=null){
+    @Path("/developers/{username}/disable")
+    public void disableDeveloper(@PathParam("username") String username) {
+        DeveloperDTO developer = developerLogic.getDeveloperByUsername(username);
+
+        if (developer != null) {
             ApplicationRealm realm = (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
             Client client = realm.getClient();
-            Account account = client.getResource(dev.getUserId(), Account.class);
-            if(account.getStatus()==AccountStatus.DISABLED)
-               account.setStatus(AccountStatus.ENABLED);
-            else if(account.getStatus()==AccountStatus.ENABLED)
+            Account account = client.getResource(developer.getUserId(), Account.class);
+            if (account.getStatus() == AccountStatus.DISABLED) {
+                account.setStatus(AccountStatus.ENABLED);
+            } else if (account.getStatus() == AccountStatus.ENABLED) {
                 account.setStatus(AccountStatus.DISABLED);
+            }
             account.save();
         }
     }

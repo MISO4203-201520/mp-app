@@ -9,9 +9,17 @@ import co.edu.uniandes.csw.appmarketplace.api.IPaymentCardLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.PaymentCardConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.PaymentCardDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity;
+import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.PaymentCardPersistence;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.transaction.Transactional;
 
 /**
@@ -19,6 +27,9 @@ import javax.transaction.Transactional;
  * @author ac.rojas13
  */
 public class PaymentCardLogic implements IPaymentCardLogic{
+    
+    static final Logger logger = LoggerFactory
+            .getLogger(AppPersistence.class);
 
     @Inject
     private PaymentCardPersistence persistence;
@@ -27,8 +38,8 @@ public class PaymentCardLogic implements IPaymentCardLogic{
      * @generated
      */
     @Override
-    public List<PaymentCardDTO> getPaymentCards(Integer id,Integer page, Integer maxRecords) {
-        return PaymentCardConverter.listEntity2DTO(persistence.findAll(id, page, maxRecords));
+    public List<PaymentCardDTO> getPaymentCards(Long id,Integer page, Integer maxRecords) {
+        return PaymentCardConverter.listEntity2DTO(persistence.findAll(Integer.parseInt(id.toString()), page, maxRecords));
     }
     
     /**

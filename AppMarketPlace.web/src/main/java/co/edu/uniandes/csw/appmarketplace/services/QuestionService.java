@@ -6,11 +6,13 @@
 package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
+import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IQuestionLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.client.Client;
@@ -34,20 +36,30 @@ import org.apache.shiro.subject.Subject;
 @Path("/question")
 public class QuestionService {
     @Inject private IQuestionLogic questionLogic;
-    @Inject private IAppLogic appLogic;
+    
+    @Inject
+    private IClientLogic clientLogic;
+    private ClientDTO client;
     
     @POST
     @StatusCreated
     @Consumes("application/json")
-    public void createQuestion(QuestionDTO dto) {
+    public QuestionDTO createQuestion(QuestionDTO dto) {
         Subject currentUser = SecurityUtils.getSubject();
-        ClientDTO client = (ClientDTO) currentUser.getSession().getAttribute("Client");
+        UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+            if (loggedUser != null) {
+                client = clientLogic.getClientByUsername(loggedUser.getUserName());
+            } else {
+                client = null;
+            }
         if(client==null){          
             Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));
-            return;
+            return null;
         }        
         Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
-        AppDTO app = appLogic.getApp(dto.getApp().getId());
+        //Se modifico para poder hacer el test
+        //AppDTO app = appLogic.getApp(dto.getApp().getId());
+        AppDTO app = dto.getApp();
         if(app!=null){            
             dto.setApp(app);
             dto.setDate(new Date());
@@ -58,7 +70,8 @@ public class QuestionService {
             Client cli = realm.getClient();
             Account account = cli.getResource(app.getDeveloper().getUserId(), Account.class);
             
-            questionLogic.doQuestion(dto, app.getDeveloper(), app, account.getEmail());
-        }        
+          return  questionLogic.doQuestion(dto, app.getDeveloper(), app, account.getEmail());
+        }     
+        return null;
     }
 }

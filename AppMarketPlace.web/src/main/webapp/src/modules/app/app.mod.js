@@ -1,5 +1,5 @@
 (function (ng) {
-    var mod = ng.module('appModule', ['ngCrud']);
+    var mod = ng.module('appModule', ['ngCrud', 'angularFileUpload']);
 
     mod.constant('appContext', 'apps');
 
@@ -13,6 +13,17 @@
                 name: 'description',
                 displayName: 'Description',
                 type: 'String',
+                required: true
+            },{
+                name: 'enabled',
+                displayName: 'Enabled',
+                type: 'String',
+                required: true
+            },
+             {
+                name: 'rate',
+                displayName: 'Rate',
+                type: 'Double',
                 required: true
             }, {
                 name: 'version',
@@ -46,6 +57,18 @@
                 name: 'discount',
                 displayName: 'Discount',
                 type: 'Currency',
+                required: true
+            },
+             {
+                name: 'startDiscountDate',
+                displayName: 'Start Discount Date',
+                type: 'Date',
+                required: true
+            },
+             {
+                name: 'finishDiscountDate',
+                displayName: 'Finish Discount Date',
+                type: 'Date',
                 required: true
             },
              {

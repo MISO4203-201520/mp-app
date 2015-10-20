@@ -27,6 +27,9 @@ public abstract class ClientConverter {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
+            dto.setFirstName(entity.getFirstName());
+            dto.setLastName(entity.getLastName());
+            dto.setEmail(entity.getEmail());
             
             return dto;
         } else {
@@ -53,13 +56,16 @@ public abstract class ClientConverter {
     /**
      * @generated
      */
-    private static ClientDTO basicEntity2DTO(ClientEntity entity) {
+    public static ClientDTO basicEntity2DTO(ClientEntity entity) {
         if (entity != null) {
             ClientDTO dto = new ClientDTO();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
             dto.setCards(PaymentCardConverter.listEntity2DTO(entity.getCards()));
+            dto.setFirstName(entity.getFirstName());
+            dto.setLastName(entity.getLastName());
+            dto.setEmail(entity.getEmail());
             return dto;
         } else {
             return null;
@@ -69,13 +75,17 @@ public abstract class ClientConverter {
     /**
      * @generated
      */
-    private static ClientEntity basicDTO2Entity(ClientDTO dto) {
+    public static ClientEntity basicDTO2Entity(ClientDTO dto) {
         if (dto != null) {
             ClientEntity entity = new ClientEntity();
             entity.setId(dto.getId());
             entity.setName(dto.getName());
             entity.setUserId(dto.getUserId());
             entity.setCards(PaymentCardConverter.listDTO2Entity(dto.getCards()));
+            entity.setFirstName(dto.getFirstName());
+            entity.setLastName(dto.getLastName());
+            entity.setEmail(dto.getEmail());            
+                    
             return entity;
         } else {
             return null;

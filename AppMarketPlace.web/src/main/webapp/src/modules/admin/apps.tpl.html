@@ -1,0 +1,41 @@
+<div>
+    <!--Display Alerts -->
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
+    <ul class="nav nav-tabs">
+        <li ng-class="'{{context}}'=='Clients'?'active' : ''"><a href="#/admin/clients">Clients</a></li>
+        <li ng-class="'{{context}}'=='Developers'?'active' : ''"><a href="#/admin/developers">Developers</a></li>
+        <li ng-class="'{{context}}'=='Comments'?'active' : ''"><a href="#/admin/comments">Comments</a></li>
+        <li ng-class="'{{context}}'=='Apps'?'active' : ''"><a href="#/admin/apps">Apps</a></li>
+    </ul>
+    <div>
+        <div ng-repeat="record in records">
+            <div class="col-md-3 col-sm-4 col-lg-2 well">
+                <div class="col-md-12 text-center">
+                    <p>{{record.name}}</p>
+                    <img ng-src="{{record.picture}}" alt="Description" height="100px" width="100px"/>
+                </div>
+                <div class="text-center">
+                    <button ng-repeat="(key, action) in ctrl.actions" id="{{key}}-btn" 
+                            ng-class="'btn btn-danger btn-sm'" 
+                            ng-hide="{{record.enabled}}" 
+                            ng-click="action.fn(record)">
+                        <span ng-class="'glyphicon glyphicon-{{action.icon}}'"></span> 
+                        DISABLED
+                    </button>
+                    <button ng-repeat="(key, action) in ctrl.actions" id="{{key}}-btn" 
+                            ng-class="'btn btn-success btn-sm'" 
+                            ng-show="{{record.enabled}}" 
+                            ng-click="action.fn(record)">
+                        <span ng-class="'glyphicon glyphicon-{{action.icon2}}'"></span> 
+                        ENABLED
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            <pagination ng-show="ctrl.numPages > 1" num-pages="ctrl.numPages" total-items="ctrl.totalItems"
+                        ng-model="ctrl.currentPage" ng-change="ctrl.pageChanged()" items-per-page="ctrl.itemsPerPage"
+                        max-size="ctrl.maxSize" class="pagination-md" boundary-links="true" rotate="false"></pagination>
+        </div>
+    </div>
+</div>

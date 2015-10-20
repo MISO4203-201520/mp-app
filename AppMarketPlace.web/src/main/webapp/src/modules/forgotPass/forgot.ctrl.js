@@ -6,9 +6,9 @@
             $scope.messages = [];
             $scope.sendMail = function () {
                 $scope.messages = [];
-                svc.sendForgotMail($scope.user.email).then(function (result) {
+                svc.sendForgotMail($scope.user.email).then(function () {
                     $scope.addMessage("Email was sent", "success");
-                }, function (error) {
+                }, function () {
                     $scope.addMessage("Email you provided does not exist", "danger");
                 });
             };
@@ -40,7 +40,7 @@
                 var newMessage = {
                     "message": message,
                     "type": type
-                }
+                };
                 $scope.messages.push(newMessage);
             };
 

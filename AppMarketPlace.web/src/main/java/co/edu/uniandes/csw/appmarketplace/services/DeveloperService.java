@@ -59,6 +59,12 @@ public class DeveloperService {
     public DeveloperDTO getDeveloper(@PathParam("id") Long id) {
         return developerLogic.getDeveloper(id);
     }
+    
+    @GET
+    @Path("{username}")
+    public DeveloperDTO getDeveloperByUsername(@PathParam("username") String username) {
+        return developerLogic.getDeveloperByUsername(username);
+    }
 
     /**
      * @generated

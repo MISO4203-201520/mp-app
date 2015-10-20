@@ -5,6 +5,9 @@
  */
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 /**
  *
  * @author ac.rojas13
@@ -17,6 +20,9 @@ public class TransactionDTO {
     private int total;
     private String status;
     private PaymentCardDTO paymentCard;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date date;
+    private AppDTO appId;
 
     /**
      * @return the id
@@ -100,6 +106,34 @@ public class TransactionDTO {
      */
     public void setPaymentCard(PaymentCardDTO paymentCard) {
         this.paymentCard = paymentCard;
+    }
+
+    /**
+     * @return the date
+     */
+    public Date getDate() {
+        return date;
+    }
+
+    /**
+     * @param date the date to set
+     */
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    /**
+     * @return the appId
+     */
+    public AppDTO getAppId() {
+        return appId;
+    }
+
+    /**
+     * @param appId the appId to set
+     */
+    public void setAppId(AppDTO appId) {
+        this.appId = appId;
     }
 
 }

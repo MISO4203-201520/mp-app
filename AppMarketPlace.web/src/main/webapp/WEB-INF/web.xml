@@ -17,14 +17,6 @@
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-    
-    <servlet>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>javax.ws.rs.core.Application</servlet-name>
-        <url-pattern>/webresources/*</url-pattern>
-    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

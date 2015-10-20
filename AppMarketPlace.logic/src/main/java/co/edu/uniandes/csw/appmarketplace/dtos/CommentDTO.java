@@ -5,9 +5,9 @@
  */
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
-import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
@@ -19,10 +19,13 @@ public class CommentDTO {
     
     private String comment;
 
-    private String date ;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date date ;
 
+    @PodamExclude
     private ClientDTO client;
     
+    @PodamExclude
     private AppDTO app;
 
     public Long getId() {
@@ -41,11 +44,11 @@ public class CommentDTO {
         this.comment = comment;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

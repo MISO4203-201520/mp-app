@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="mainApp">
     <head>
-        <title>AppMarketPlace</title>
+        <title>Appoteca</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://bootswatch.com/spacelab/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="https://bootswatch.com/cosmo/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="src/modules/app/media.style.css" rel="stylesheet" type="text/css"/>
+        <link href="http://vjs.zencdn.net/5.0.0/video-js.css" rel="stylesheet">
+
         <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -16,10 +19,12 @@
         <script src="https://code.angularjs.org/1.4.3/angular-cookies.min.js"></script>
         <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.12.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/restangular/1.4.0/restangular.min.js"></script>
-        <script src="https://rawgit.com/recursosCSWuniandes/ng-crud/master/dist/ngcrud.min.js"></script>
-        <script src="https://rawgit.com/recursosCSWuniandes/ng-crud/master/dist/ngcrud-mocks.min.js"></script>
-        <script src="https://rawgit.com/recursosCSWuniandes/ng-crud-auth/master/dist/ngcrud-auth.min.js"></script>
+        <script src="http://rawgit.com/recursosCSWuniandes/ng-crud/master/dist/ngcrud.min.js"></script>
+        <script src="http://rawgit.com/recursosCSWuniandes/ng-crud/master/dist/ngcrud-mocks.min.js"></script>
+        <script src="src/ngcrud-auth.js" type="text/javascript"></script>
+        <script src="http://rawgit.com/nervgh/angular-file-upload/master/dist/angular-file-upload.min.js"></script>
         <script src="http://vitalets.github.io/angular-xeditable/dist/js/xeditable.min.js"></script>
+        <script src="http://vjs.zencdn.net/5.0.0/video.js"></script>
 
         <script src="src/app.js"></script>
 
@@ -27,11 +32,13 @@
         <script src="src/modules/app/app.svc.js"></script>
         <script src="src/modules/app/app.ctrl.js" type="text/javascript"></script>
         <script src="src/modules/app/catalog.ctrl.js" type="text/javascript"></script>
-        
+        <script src="src/modules/app/app.details.ctrl.js" type="text/javascript"></script>
+        <script src="src/modules/app/media.ctrl.js" type="text/javascript"></script>
+
         <script src="src/modules/cartItem/cartItem.mod.js"></script>
         <script src="src/modules/cartItem/cartItem.svc.js"></script>
         <script src="src/modules/cartItem/cartItem.ctrl.js" type="text/javascript"></script>
-        
+
         <script src="src/modules/client/client.mod.js"></script>
         <script src="src/modules/client/client.svc.js"></script>
         <script src="src/modules/client/client.ctrl.js"></script>
@@ -39,27 +46,38 @@
         <script src="src/modules/comment/comment.mod.js"></script>
         <script src="src/modules/comment/comment.svc.js"></script>
         <script src="src/modules/comment/comment.ctrl.js"></script>
-        
+
         <script src="src/modules/socialShare/social.ctrl.js"></script>
 
         <script src="src/modules/developer/developer.mod.js"></script>
         <script src="src/modules/developer/developer.svc.js"></script>
         <script src="src/modules/developer/developer.ctrl.js"></script>
-        
+
         <script src="src/modules/payment/payment.mod.js"></script>
         <script src="src/modules/payment/payment.svc.js"></script>
         <script src="src/modules/payment/payment.ctrl.js"></script>
-        
+
         <script src="src/modules/admin/admin.mod.js"></script>
         <script src="src/modules/admin/admin.svc.js"></script>
         <script src="src/modules/admin/admin.ctrl.js"></script>
-        
+
         <script src="src/modules/forgotPass/forgot.mod.js"></script>
         <script src="src/modules/forgotPass/forgot.svc.js"></script>
         <script src="src/modules/forgotPass/forgot.ctrl.js"></script>
         <script src="src/modules/forgotPass/verify.ctrl.js"></script>
+        
+        <script src="src/modules/transaction/transaction.mod.js"></script>
+        <script src="src/modules/transaction/transaction.svc.js"></script>
+        <script src="src/modules/transaction/transaction.ctrl.js"></script>
+        <style>
+            .vcenter {
+                display: inline-block;
+                vertical-align: middle;
+                float: none;
+            }
+        </style>
     </head>
-    <body style="padding-top: 60px;">
+    <body style="padding-top: 70px;" ng-controller="catalogCtrl">
         <div class="container-fluid">
             <div class="col-md-12">
                 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -72,21 +90,23 @@
                                 <span class="icon-bar"></span>
                                 <span class="icon-bar"></span>
                             </button>
-                            <a class="navbar-brand" href="#/catalog">AppMarketPlace</a>
+                            <a class="navbar-brand" href="">Appoteca</a>
                         </div>
 
                         <!-- Collect the nav links, forms, and other content for toggling -->
-                        <div class="collapse navbar-collapse" id="main-bar">
-                            <ul class="nav navbar-nav">
-                                <li><a href="#/catalog">Catalog</a></li>
-                                <li><a href="#/admin/clients">Admin</a></li>
+                        <div  class="collapse navbar-collapse"  id="main-bar">
+                            <ul  class="nav navbar-nav">
+                                <li><a href="#/catalog">Catalog</a></li>  
                             </ul>
+                            <form novalidate class="navbar-form navbar-left" role="search" ng-submit="searchByKeyWord(keyword)" ng-controller="catalogCtrl">
+                                <div class="form-group"> 
+                                    <input id="txtBuscarApp" type="text" class="form-control" placeholder="Search..." ng-model="keyword" required>
+                                </div>
+                                <button id="btnBuscar" type="submit" class="btn btn-default" style="background-color: whitesmoke; color: black"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                            </form>
+
                             <ul class="nav navbar-nav navbar-right">
-                                <li class="active"><a href="#/shoppingCart"><span class="glyphicon glyphicon-shopping-cart" ></span> My Shopping Cart </a></li>
-                                <li class="active"><a href="#/forgot"><span class="glyphicon glyphicon-lock" ></span> Forgot your password? </a></li>
-                                <li>
-                                <login-button></login-button>
-                                </li>
+                                <li><login-button></login-button></li>
                             </ul>
                         </div> <!-- /.navbar-collapse -->
                     </div> <!-- /.container-fluid -->

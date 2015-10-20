@@ -17,6 +17,8 @@ public interface ITransactionLogic {
     public List<TransactionDTO> getTransactions(Integer page, Integer maxRecords);
 
     public TransactionDTO getTransaction(Long id);
+    
+    public List<TransactionDTO> getTransactionByPayer(Long id);
 
     public TransactionDTO createTransaction(TransactionDTO dto);
 
@@ -25,4 +27,6 @@ public interface ITransactionLogic {
     public void deleteTransaction(Long id);
 
     public List<TransactionDTO> findByName(String name);
+    
+    public List<TransactionDTO> findByClientId(Long id);
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface IPaymentCardLogic {
 
-    public List<PaymentCardDTO> getPaymentCards(Integer id,Integer page, Integer maxRecords);
+    public List<PaymentCardDTO> getPaymentCards(Long id,Integer page, Integer maxRecords);
 
     public PaymentCardDTO getPaymentCards(Long id);
 

@@ -23,5 +23,13 @@ public interface IAppLogic {
 
     public List<AppDTO> getAppsByCategory(String category);
 
+    public List<AppDTO> getAppsByKeyWords(String keyword);
+
     public void rateApp(Long appId, Long clientId, Long rateValue);
+
+    public void addImage(Long appId, String url, String mimetype);
+
+    public void addVideo(Long appId, String url, String mimetype);
+    
+    public void disableApp(Long appId);
 }

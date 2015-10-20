@@ -13,7 +13,8 @@
         'commentModule',
         'paymentCardsModule',
         'adminModule',
-        'forgotModule'
+        'forgotModule',
+        'transactionModule'
     ]);
 
     mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
@@ -37,6 +38,12 @@
                 templateUrl: tplUrl,
                 controller: 'appCtrl',
                 controllerAs: alias
+            }).when('/app/:appId', {
+                templateUrl: 'src/modules/app/app.details.tpl.html',
+                controller: 'appDetailsCtrl'
+            }).when('/app/:appId/upload', {
+                templateUrl: 'src/modules/app/media.tpl.html',
+                controller: 'mediaCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',
@@ -65,6 +72,26 @@
                 templateUrl: 'src/modules/admin/users.tpl.html',
                 controller: 'adminDevCtrl',
                 controllerAs: alias
+            }).when('/admin/comments', {
+                templateUrl: 'src/modules/admin/comments.tpl.html',
+                controller: 'adminCommentsCtrl',
+                controllerAs: alias
+            }).when('/admin/apps', {
+                templateUrl: 'src/modules/admin/apps.tpl.html',
+                controller: 'adminAppsCtrl',
+                controllerAs: alias
+            }).when('/history', {
+                templateUrl: 'src/modules/transaction/history.tpl.html',
+                controller: 'transactionCtrl',
+                controllerAs: alias
+            }).when('/devprofile', {
+                templateUrl: 'src/modules/developer/profile.tpl.html',
+                controller: 'devProfileCtrl',
+                controllerAs: alias
+            }).when('/clientprofile', {
+                templateUrl: 'src/modules/client/clientProfile.tpl.html',
+                controller: 'clientProfileCtrl',
+                controllerAs: alias
             }).otherwise('/catalog');
         }]);
 
@@ -83,6 +110,6 @@
             auth.setRoles({'user': 'Client', 'developer': 'Developer'});
         }]);
     mainApp.run(function (editableOptions) {
-        editableOptions.theme = 'bs3'; // bootstrap3 theme. For Xeditable plugin Angular
+        editableOptions.theme = 'bs3';
     });
 })(window.angular);

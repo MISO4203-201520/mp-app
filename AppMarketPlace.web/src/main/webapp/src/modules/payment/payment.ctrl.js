@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module('paymentCardsModule');
 
-    mod.controller('paymentCtrl', ['CrudCreator', '$scope', 'paymentCard', 'transaction', 'paymentCardsModel', '$location', '$timeout', '$filter', function (CrudCreator, $scope, svc, svcPay, model, $location, $timeout, $filter) {
+    mod.controller('paymentCtrl', ['CrudCreator', '$scope', 'paymentCard', 'transaction', 'paymentCardsModel', '$location', '$timeout', function (CrudCreator, $scope, svc, svcPay, model, $location, $timeout) {
             CrudCreator.extendController(this, svc, $scope, model, 'payment', 'Payment');
 
             this.loadRefOptions();
@@ -15,6 +15,7 @@
                 icon: 'usd',
                 class: 'primary',
                 fn: function (record) {
+
                     svcPay.placePayment(record).then(function () {
                         self.showSuccess("Pago realizado exitosamente ... redirigiendo a catalogo");
                     }).then($timeout(payCompleted, 4000));

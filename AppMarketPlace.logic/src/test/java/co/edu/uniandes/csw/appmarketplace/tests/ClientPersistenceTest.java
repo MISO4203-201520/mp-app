@@ -1,5 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
+import co.edu.uniandes.csw.appmarketplace.converters.ClientConverter;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.ClientPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
@@ -18,6 +20,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -93,9 +97,9 @@ public class ClientPersistenceTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            ClientEntity entity = new ClientEntity();
-            entity.setName(generateRandom(String.class));
-            entity.setUserId(generateRandom(String.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            ClientEntity entity = ClientConverter.basicDTO2Entity(
+                    factory.manufacturePojo(ClientDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -106,10 +110,9 @@ public class ClientPersistenceTest {
      */
     @Test
     public void createClientTest() {
-        ClientEntity newEntity = new ClientEntity();
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setUserId(generateRandom(String.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        ClientEntity newEntity = ClientConverter.basicDTO2Entity(
+                factory.manufacturePojo(ClientDTO.class));
         ClientEntity result = clientPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
@@ -168,11 +171,10 @@ public class ClientPersistenceTest {
     public void updateClientTest() {
         ClientEntity entity = data.get(0);
 
-        ClientEntity newEntity = new ClientEntity();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        ClientEntity newEntity = ClientConverter.basicDTO2Entity(
+                factory.manufacturePojo(ClientDTO.class));
         newEntity.setId(entity.getId());
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setUserId(generateRandom(String.class));
 
         clientPersistence.update(newEntity);
 
