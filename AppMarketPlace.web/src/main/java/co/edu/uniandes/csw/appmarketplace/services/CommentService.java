@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class CommentService {
 
-    private ClientDTO client;
     @Inject
     private IClientLogic clientLogic;
+    private final UserDTO cliente = (UserDTO) (SecurityUtils.getSubject().getSession().getAttribute("Client"));
     @Context
     private HttpServletResponse response;
     @QueryParam("page")
@@ -57,17 +57,14 @@ public class CommentService {
     @StatusCreated
     @Consumes("application/json")
     public CommentDTO insertComment(CommentDTO dto) {
-        UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
-
-        if (loggedUser != null) {
-            client = clientLogic.getClientByUsername(loggedUser.getUserName());
+        ClientDTO client = clientLogic.getClientByUsername(cliente.getUserName());
+        if (client == null) {
+            return null;
+        } else {
             dto.setClient(client);
 
             return commentLogic.InsertComment(dto);
-        } else {
-            client = null;
-        }
-        return null;
+        } 
     }
 
     @GET
