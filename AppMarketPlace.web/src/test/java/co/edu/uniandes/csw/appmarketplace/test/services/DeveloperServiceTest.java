@@ -27,6 +27,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -39,7 +40,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
-public class DeveloperServiceTest {
+@Ignore public class DeveloperServiceTest {
 
     public final static String URLRESOURCES = "src/main/webapp";
     public final static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";

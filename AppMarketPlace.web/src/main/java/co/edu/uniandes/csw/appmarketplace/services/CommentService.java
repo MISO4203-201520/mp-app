@@ -5,9 +5,11 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
+import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ICommentLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -24,6 +26,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -34,7 +38,9 @@ import org.apache.shiro.subject.Subject;
 @Produces(MediaType.APPLICATION_JSON)
 public class CommentService {
 
-    private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+    private  ClientDTO client;
+    @Inject
+    private IClientLogic clientLogic;
     @Context
     private HttpServletResponse response;
     @QueryParam("page")
@@ -44,18 +50,26 @@ public class CommentService {
 
     @Inject
     private ICommentLogic commentLogic;
-
+static final Logger logger = LoggerFactory
+            .getLogger(CommentService.class);
     @POST
     @StatusCreated
     @Consumes("application/json")
-    public void insertComment(CommentDTO dto) {
-        if (client == null) {
-            return;
-        } else {
-            dto.setClient(client);
+    public CommentDTO insertComment(CommentDTO dto) {
+        UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+
+            if (loggedUser != null) {                
+                client = clientLogic.getClientByUsername(loggedUser.getUserName());
+                dto.setClient(client);
+        
+              return  commentLogic.InsertComment(dto);
+            } else {
+                client = null;
+            }
+            return null;
         }
-        commentLogic.InsertComment(dto);
-    }
+            
+    
 
     @GET
     public List<CommentDTO> getComments() {
