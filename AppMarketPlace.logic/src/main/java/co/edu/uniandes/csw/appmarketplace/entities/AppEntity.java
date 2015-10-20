@@ -53,7 +53,7 @@ public class AppEntity implements Serializable {
     private String category;
     
     @Column(name = "IS_ACTIVE", columnDefinition = "boolean default true", nullable = false)
-    private boolean enabled;
+    private boolean enabled = true;
 
     public boolean isEnabled() {
         return enabled;

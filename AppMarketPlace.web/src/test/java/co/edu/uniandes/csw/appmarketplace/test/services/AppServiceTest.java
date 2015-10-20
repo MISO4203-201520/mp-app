@@ -5,19 +5,15 @@
  */
 package co.edu.uniandes.csw.appmarketplace.test.services;
 
-import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
-import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.appmarketplace.services.AppService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -37,14 +33,11 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
-
-
 
 /**
  *
@@ -84,7 +77,7 @@ public class AppServiceTest {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
         return war;
     }
-    
+
     @BeforeClass
     public static void setUp() throws IOException {
         for (int i = 0; i < 5; i++) {
@@ -92,11 +85,9 @@ public class AppServiceTest {
             AppDTO app = factory.manufacturePojo(AppDTO.class);
             oraculo.add(app);
         }
-        
-           
+
     }
 
-    
     private static Cookie login(String username, String password) {
         Client cliente = ClientBuilder.newClient();
 
@@ -121,45 +112,61 @@ public class AppServiceTest {
      */
     @Test
     @RunAsClient
-    public void t1CreateApp() {
+    public void t01CreateApp() {
         Cookie cookie_session_id = login(
-                System.getenv("APPOTECA_DEVELOPER_USERNAME"), 
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
                 System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
         if (cookie_session_id != null) {
-           AppDTO app = oraculo.get(0);
-           Client cliente = ClientBuilder.newClient();
-           PodamFactory factory = new PodamFactoryImpl();
-           DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
-           developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
-           Response response2 = cliente.target(URLBASE + "/developers")
+            AppDTO app = oraculo.get(0);
+            
+            Client cliente = ClientBuilder.newClient();
+            PodamFactory factory = new PodamFactoryImpl();
+            DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
+            developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
+            Response response2 = cliente.target(URLBASE + "/developers")
                     .request().cookie(cookie_session_id)
                     .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
-        
-        Response response = cliente.target(URLBASE + PATH)
-                .request().cookie(cookie_session_id)
-                .post(Entity.entity(app, MediaType.APPLICATION_JSON));
-        AppDTO appTest = (AppDTO) response.readEntity(AppDTO.class);
-        Assert.assertEquals(app.getName(), appTest.getName());
-        Assert.assertEquals(app.getDescription(), appTest.getDescription());
-        Assert.assertEquals(app.getId(), appTest.getId());
-        Assert.assertEquals(Created, response.getStatus()); 
-        }else{
+
+            Response response = cliente.target(URLBASE + PATH)
+                    .request().cookie(cookie_session_id)
+                    .post(Entity.entity(app, MediaType.APPLICATION_JSON));
+            AppDTO appTest = (AppDTO) response.readEntity(AppDTO.class);
+            Assert.assertEquals(app.getName(), appTest.getName());
+            Assert.assertEquals(app.getDescription(), appTest.getDescription());
+            Assert.assertEquals(app.getId(), appTest.getId());
+            Assert.assertEquals(Created, response.getStatus());
+        } else {
             Assert.fail("Access denied or Invalid credentials!");
         }
-        
+
     }
-    
+
     @Test
     @RunAsClient
-    public void t2getAppsByKeyWords() throws IOException {
+    public void t02GetAppsByKeyWords() throws IOException {
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATH + "?keyword=" + oraculo.get(0).getName()).register(LoggingFilter.class)
                 .request().get();
         String listApps = response.readEntity(String.class);
         List<AppDTO> listAppsTest = new ObjectMapper().readValue(listApps, List.class);
         Assert.assertEquals(Ok, response.getStatus());
-        Assert.assertEquals(1, listAppsTest.size()); 
-        //Assert.assertEquals(listAppsTest.get(0).getName(), oraculo.get(0).getName());
+        Assert.assertEquals(1, listAppsTest.size());
     }
-    
+
+    @Test
+    @RunAsClient
+    public void t04GetAppsByCategory() throws IOException {
+        String category = oraculo.get(0).getCategory();
+
+        Client cliente = ClientBuilder.newClient();
+
+        Response response = cliente.target(URLBASE + PATH).path("/categories/" + category)
+                .request().get();
+        // Receiving apps in string format in order to retrieving all of them via ObjectMapper with a List
+        String stringApps = response.readEntity(String.class);
+        List<AppDTO> appsByCategory = new ObjectMapper().readValue(stringApps, List.class);
+        Assert.assertEquals(Ok, response.getStatus());
+        Assert.assertEquals(1, appsByCategory.size());
+    }
+
 }
