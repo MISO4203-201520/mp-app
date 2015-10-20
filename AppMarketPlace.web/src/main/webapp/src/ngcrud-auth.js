@@ -114,7 +114,7 @@
                     });
                 },
                 register: function (user) {
-                    return self.api.customPOST(user, values.registerURL).then(function (data) {
+                    return self.api.customPOST(user, values.registerURL).then(function () {
                         $location.path(values.loginPath);
                     });
                 },
@@ -189,8 +189,7 @@
         this.login = function (user) {
             var self = this;
             if (user && user.userName && user.password) {
-                authSvc.login(user).then(function (data) {
-                    console.log("success", data);
+                authSvc.login(user).then(function () {
                 }, function (data) {
                     self.errorctrl = {status: true, type: "danger", msg: ":" + data.data};
                 });

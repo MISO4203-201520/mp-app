@@ -43,23 +43,21 @@ import org.slf4j.LoggerFactory;
 /**
  *
  * @author Jhonatan
- * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
+ * @modified by d.jmenez13 Implementing logger. Shortening technical debt.
  */
 @Path("/users")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
+
     static final Logger logger = LoggerFactory
-			.getLogger(UserService.class);
+            .getLogger(UserService.class);
 
     @Inject
     private IClientLogic clientLogic;
 
     @Inject
     private IDeveloperLogic developerLogic;
-
-    @Inject
-    private IAdminLogic adminLogic;
 
     @Context
     private HttpServletRequest req;
@@ -88,15 +86,15 @@ public class UserService {
             Subject currentUser = SecurityUtils.getSubject();
             currentUser.login(token);
             UserDTO loggedUser = subjectToUserDTO();
-            if (loggedUser.getRole().equalsIgnoreCase("admininistrator")) {
+            if ("admininistrator".equalsIgnoreCase(loggedUser.getRole())) {
                 currentUser.getSession().setAttribute("Admin", loggedUser);
-            } else if (loggedUser.getRole().equalsIgnoreCase("developer")) {
+            } else if ("developer".equalsIgnoreCase(loggedUser.getRole())) {
                 currentUser.getSession().setAttribute("Developer", loggedUser);
-            } else if (loggedUser.getRole().equalsIgnoreCase("user")) {
+            } else if ("user".equalsIgnoreCase(loggedUser.getRole())) {
                 currentUser.getSession().setAttribute("Client", loggedUser);
             }
             return Response.ok(loggedUser).build();
-            
+
         } catch (AuthenticationException e) {
             logger.warn("User {} cannot be logged in", user, e);
             return Response.status(Response.Status.BAD_REQUEST)
@@ -154,6 +152,8 @@ public class UserService {
                     developer.setEmail(user.getEmail());
                     developerLogic.createDeveloper(developer);
                     break;
+                default:
+                    break;
             }
             return Response.ok().build();
         } catch (ResourceException e) {
@@ -166,7 +166,7 @@ public class UserService {
     }
 
     private ApplicationRealm getRealm() {
-        return ((ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next());
+        return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
     }
 
     private Client getClient() {

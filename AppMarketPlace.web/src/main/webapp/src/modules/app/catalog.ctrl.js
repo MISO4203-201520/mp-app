@@ -28,14 +28,14 @@
                 $location.url('/catalog' + search);
             };
             $scope.searchByKeyWord = function (keyword) {
-                
-                
-                if (keyword!="" && keyword!=undefined) {
-                $location.url('/catalog?keyword='+keyword );
-                }else{
-                    $location.url('/catalog' );
+
+
+                if (keyword) {
+                    $location.url('/catalog?keyword=' + keyword);
+                } else {
+                    $location.url('/catalog');
                 }
-                
+
             };
 
             var self = this;
@@ -135,8 +135,7 @@
                             }
                         });
                         modalInstance.result.then(function (comment) {
-                            console.log(app);
-                            commentSvc.commentApp(app,comment).then(function () {
+                            commentSvc.commentApp(app, comment).then(function () {
                                 self.showSuccess('Comentario agregado');
                             }, function () {
                                 self.showError('No es posible agregar el comentario');
@@ -226,7 +225,7 @@
                     return true;
                 }
             };
-            
+
 
             this.fetchRecords();
         }]);

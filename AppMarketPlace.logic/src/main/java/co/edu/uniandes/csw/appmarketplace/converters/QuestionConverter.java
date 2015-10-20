@@ -39,8 +39,6 @@ public abstract class QuestionConverter {
             dto.setEmail(entity.getEmail());
             dto.setDescription(entity.getDescription());
             dto.setDate(entity.getDate());
-            //dto.setClient(ClientConverter.refEntity2DTO(entity.getClient()));
-            //dto.setApp(AppConverter.refEntity2DTO(entity.getApp()));
             return dto;
         } else {
             return null;

@@ -20,7 +20,10 @@ import javax.mail.internet.MimeMessage;
  *
  * @author ca.forero10
  */
-public class Emailer {
+public abstract class Emailer {
+
+    private Emailer() {
+    }
 
     static Properties mailServerProperties;
     static Session getMailSession;
@@ -48,10 +51,8 @@ public class Emailer {
             transport.connect(HOST, FROM, PASSWORD);
             transport.sendMessage(generateMailMessage, generateMailMessage.getAllRecipients());
             transport.close();
-            System.out.println("Mail has been sent succesfully");
         } catch (Exception ex) {
             Logger.getLogger(Emailer.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("error mail");
 
         }
     }
@@ -78,7 +79,6 @@ public class Emailer {
                 + "\"" + question + "\" sent:" + (date)
                 + "<br>"
                 + "If you want to response, you can send an email directly to <b>" + clientEmail + "</b>";
-        System.out.println("Send email to " + devEmail + " " + message);
         new Thread() {
             @Override
             public void run() {
@@ -97,7 +97,6 @@ public class Emailer {
                 + "<br>"
                 + "the cost of the transaction was <b>" + cost + "</b>" + " The date was: " + "<br>" + (date) + "</b>"
                 + "<br>" + "We hope you enjoy your applications.";
-        System.out.println("Send email to " + userEmail + " " + message);
         new Thread() {
             @Override
             public void run() {

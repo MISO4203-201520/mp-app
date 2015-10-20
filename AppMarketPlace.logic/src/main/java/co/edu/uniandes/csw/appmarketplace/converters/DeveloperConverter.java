@@ -62,17 +62,7 @@ public abstract class DeveloperConverter {
      */
     public static DeveloperDTO basicEntity2DTO(DeveloperEntity entity) {
         if (entity != null) {
-            DeveloperDTO dto = new DeveloperDTO();
-            dto.setId(entity.getId());
-            dto.setName(entity.getName());
-            dto.setUserId(entity.getUserId());
-            
-            dto.setFirstName(entity.getFirstName());
-            dto.setLastName(entity.getLastName());
-            dto.setEmail(entity.getEmail());
-            dto.setPhoto(entity.getPhoto());
-            dto.setBannerProfile(entity.getBannerProfile());
-            dto.setCommentProfile(entity.getCommentProfile());
+            DeveloperDTO dto = refEntity2DTO(entity);
 
             return dto;
         } else {
