@@ -18,4 +18,5 @@ public interface ICommentLogic {
     public int countComments();
     public List<CommentDTO> getComments(Integer page, Integer maxRecords);
     public void deleteComment(Long id);
+    public Long countByAppClient(Long idCliente,Long idApp);
 }

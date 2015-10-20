@@ -49,6 +49,7 @@ public class CommentService {
 
     @Inject
     private ICommentLogic commentLogic;
+    
 
     static final Logger logger = LoggerFactory
             .getLogger(CommentService.class);
@@ -66,6 +67,8 @@ public class CommentService {
             return commentLogic.InsertComment(dto);
         } 
     }
+    
+    
 
     @GET
     public List<CommentDTO> getComments() {
@@ -74,6 +77,19 @@ public class CommentService {
         }
         List<CommentDTO> comments = commentLogic.getComments(page, maxRecords);
         return comments;
+    }
+    
+    @GET
+    @Path("/countbyappclient/{appid}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String countByAppClient(@PathParam("appid") Long appid) {
+        ClientDTO client = clientLogic.getClientByUsername(cliente.getUserName());
+        if (client == null) {
+            return null;
+        } else {
+
+            return commentLogic.countByAppClient(client.getId(), appid).toString();
+        } 
     }
 
     @DELETE

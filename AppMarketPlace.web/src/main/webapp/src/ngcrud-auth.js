@@ -265,7 +265,7 @@ angular.module('authModule').run(['$templateCache', function($templateCache) {
   'use strict';
 
   $templateCache.put('src/templates/button.html',
-    "<button ng-hide=\"isAuthenticated()\" type=\"button\" class=\"btn btn-default navbar-btn\" ng-click=\"goToLogin()\">\r" +
+    "<button id='btnLogin' ng-hide=\"isAuthenticated()\" type=\"button\" class=\"btn btn-default navbar-btn\" ng-click=\"goToLogin()\">\r" +
     "\n" +
     "    <span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span> Login\r" +
     "\n" +
@@ -351,13 +351,13 @@ angular.module('authModule').run(['$templateCache', function($templateCache) {
     "\n" +
     "                        <div class=\"form-group\">\r" +
     "\n" +
-    "                            <input class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username or Email\" name=\"username\" type=\"text\">\r" +
+    "                            <input id='txtUsername' class=\"form-control\" required ng-model=\"user.userName\" placeholder=\"Username or Email\" name=\"username\" type=\"text\">\r" +
     "\n" +
     "                        </div>\r" +
     "\n" +
     "                        <div class=\"form-group\">\r" +
     "\n" +
-    "                            <input class=\"form-control\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\" >\r" +
+    "                            <input id='txtPassword' class=\"form-control\" required ng-model=\"user.password\" placeholder=\"Password\" name=\"password\" type=\"password\" >\r" +
     "\n" +
     "                        </div>\r" +
     "\n" +
@@ -371,7 +371,7 @@ angular.module('authModule').run(['$templateCache', function($templateCache) {
     "\n" +
     "                        </div>\r" +
     "\n" +
-    "                        <input class=\"btn btn-lg btn-success btn-block\" ng-click=\"authCtrl.login(user)\" type=\"submit\" value=\"Login\">\r" +
+    "                        <input id='login' class=\"btn btn-lg btn-success btn-block\" ng-click=\"authCtrl.login(user)\" type=\"submit\" value=\"Login\">\r" +
     "\n" +
     "                    </form>\r" +
     "\n" +

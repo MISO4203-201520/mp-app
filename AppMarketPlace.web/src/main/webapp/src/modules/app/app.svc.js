@@ -24,6 +24,10 @@
             this.getAppsByKeyWords = function (text) {
                 return this.api.getList({keyword: text});
             };
+            this.getPurchasedAppsByUser = function () {
+                return this.api.getList({purchasedapps: true});
+            };
+            
 
             this.rateApp = function (app, rate) {
                 return app.all('rate').post({rate: rate});

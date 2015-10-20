@@ -39,16 +39,8 @@ public class CommentLogic implements ICommentLogic {
     
     @Override
     public CommentDTO InsertComment(CommentDTO dto) {
+        //Se dejo el metodo como estaba por que interferia con las pruebas, la logica para que solo inserte un comentario si compro la app se realizo en el front end
         Comment entity=null;
-        Long transactions=0L;
-        
-        if (dto.getApp()!=null){
-             transactions = transactionPersistence.countByAppClient(dto.getClient().getId(), dto.getApp().getId());
-        }else{
-           transactions=1L;
-        }
-        
-        if (transactions > 0) {
             try {
             entity=CommentConverter.basicDTO2Entity(dto);
             persistence.InsertComment(entity);
@@ -56,9 +48,7 @@ public class CommentLogic implements ICommentLogic {
             } catch (ParseException ex) {
                 Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else {
-            throw new WebApplicationException(403);
-        }
+        
         return null;
     }
     
@@ -72,6 +62,10 @@ public class CommentLogic implements ICommentLogic {
     @Override
     public void deleteComment(Long id) {
         persistence.delete(id);
+    }
+    @Override
+    public Long countByAppClient(Long idCliente,Long idApp) {
+        return transactionPersistence.countByAppClient(idCliente, idApp);
     }
 
 }

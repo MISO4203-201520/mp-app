@@ -2,9 +2,9 @@
     <h1>Comment {{name}}</h1>
 </div>
 <div class="modal-body">
-    <textarea class="text-center" ng-model="comment">{{comment}}</textarea>
+    <textarea id="txtComment" class="text-center" ng-model="comment">{{comment}}</textarea>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary" type="button" ng-click="ok()">Comment</button>
+    <button id="btnAddComent" class="btn btn-primary" type="button" ng-click="ok()">Comment</button>
     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

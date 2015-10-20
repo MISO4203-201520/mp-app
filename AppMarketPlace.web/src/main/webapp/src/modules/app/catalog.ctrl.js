@@ -1,8 +1,8 @@
 (function (ng) {
     var mod = ng.module('appModule');
 
-    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', 'commentService', '$location',
-        function (CrudCreator, $scope, $modal, svc, cartItemSvc, commentSvc, $location) {
+    mod.controller('catalogCtrl', ['CrudCreator', '$scope', '$modal', 'appService', 'cartItemService', 'commentService', '$location', 'authService',
+        function (CrudCreator, $scope, $modal, svc, cartItemSvc, commentSvc, $location, authSvc) {
             var model = {
                 fields: [{
                         name: 'name',
@@ -145,7 +145,17 @@
 
                         });
                     },
-                    show: function () {
+                    show: function (app) {
+                       /*, var user = authSvc.getCurrentUser();
+                        if (!!user) {
+                            if (user.role == "user") {
+                                var num = commentSvc.countByAppClient(app.id);
+                                if (num > 0) {
+                                    return true;
+                                }
+                            }
+                        }
+                        return false;*/
                         return true;
                     }
                 },

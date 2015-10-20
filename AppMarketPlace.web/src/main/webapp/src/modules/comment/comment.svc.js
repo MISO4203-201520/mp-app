@@ -17,5 +17,9 @@
                 };
                 return this.api.post(commentMock);
             };
+            
+            this.countByAppClient = function (idApp) {
+                return this.api.one('countbyappclient', idApp).get();
+            };
         }]);
 })(window.angular);
