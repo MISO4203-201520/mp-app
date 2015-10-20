@@ -126,4 +126,10 @@ public class TransactionService {
     public void deleteApp(@PathParam("id") Long id) {
         TransactionLogic.deleteTransaction(id);
     }
+    
+    @GET
+    @Path("client/{id: \\d+}")
+    public List<TransactionDTO> getByClientId(@PathParam("id") Long id) {
+        return TransactionLogic.findByClientId(id);
+    }
 }
