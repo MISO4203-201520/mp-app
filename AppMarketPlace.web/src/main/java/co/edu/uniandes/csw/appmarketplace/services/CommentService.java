@@ -25,7 +25,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +37,7 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class CommentService {
 
-    private  ClientDTO client;
+    private ClientDTO client;
     @Inject
     private IClientLogic clientLogic;
     @Context
@@ -50,26 +49,26 @@ public class CommentService {
 
     @Inject
     private ICommentLogic commentLogic;
-static final Logger logger = LoggerFactory
+
+    static final Logger logger = LoggerFactory
             .getLogger(CommentService.class);
+
     @POST
     @StatusCreated
     @Consumes("application/json")
     public CommentDTO insertComment(CommentDTO dto) {
         UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
 
-            if (loggedUser != null) {                
-                client = clientLogic.getClientByUsername(loggedUser.getUserName());
-                dto.setClient(client);
-        
-              return  commentLogic.InsertComment(dto);
-            } else {
-                client = null;
-            }
-            return null;
+        if (loggedUser != null) {
+            client = clientLogic.getClientByUsername(loggedUser.getUserName());
+            dto.setClient(client);
+
+            return commentLogic.InsertComment(dto);
+        } else {
+            client = null;
         }
-            
-    
+        return null;
+    }
 
     @GET
     public List<CommentDTO> getComments() {
