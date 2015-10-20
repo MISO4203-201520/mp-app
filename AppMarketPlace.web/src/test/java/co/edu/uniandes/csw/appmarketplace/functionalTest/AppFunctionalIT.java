@@ -6,7 +6,9 @@
 package co.edu.uniandes.csw.appmarketplace.functionalTest;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.appmarketplace.services.AppService;
 import java.io.File;
@@ -17,6 +19,7 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -34,9 +37,7 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.After;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -57,10 +58,10 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
-@Ignore public class AppFunctionalIT {
+public class AppFunctionalIT {
     public static String URLRESOURCES = "src/main/webapp";
     public static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";
-    public static String PATHBOOK = "/apps";
+    public static String PATH = "/apps";
     private static WebDriver driver;
     public static int Ok = 200;
     public static int Created = 201;
@@ -73,22 +74,23 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
     
     @Deployment
     public static Archive<?> createDeployment() {
-
         MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
+
         WebArchive war = ShrinkWrap
-                // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
+                // Nombre del Proyecto "BookBasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "AppMarketPlace.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.appmarketplace:AppMarketPlace.logic:1.0")
                         .resolveAsFiles())
-                // Se agregan los compilados de los paquetes de servicios
+                // Se agregan los compilados de los paquetes que se van a probar
                 .addPackage(AppService.class.getPackage())
+                // Se agrega contenido estatico: html y modulos de javascript. 
                 .addAsWebResource(new File(URLRESOURCES, "index.html"))
                 .merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class).importDirectory(URLRESOURCES + "/src/").as(GenericArchive.class), "/src/", Filters.includeAll())
                 // El archivo que contiene la configuracion a la base de datos. 
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                // El archivo beans.xml es necesario para injeccion de dependencias. 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
+                // El archivo beans.xml es necesario para injeccion de dependencias. 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
                 
                 // El archivo web.xml es necesario para el despliegue de los servlets
@@ -117,50 +119,81 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
         driver.quit();
     }
     
-    private void insertData() {
-        for (int i = 0; i < 3; i++) {            
-            PodamFactory factory = new PodamFactoryImpl();
-            AppDTO app = factory.manufacturePojo(AppDTO.class);
-            //book.setImage(URLIMAGE);
-            Client cliente = ClientBuilder.newClient();
-            Response response = cliente.target(URLBASE + PATHBOOK)
-                .request()
-                .post(Entity.entity(app, MediaType.APPLICATION_JSON));
-            if (response.getStatus()== Ok)
-                data.add(app);
+    private static Cookie login(String username, String password) {
+        Client cliente = ClientBuilder.newClient();
+
+        UserDTO user = new UserDTO();
+        user.setUserName(username);
+        user.setPassword(password);
+
+        Response response = cliente.target(URLBASE).path("/users/login").request().
+                post(Entity.entity(user, MediaType.APPLICATION_JSON));
+
+        UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
+
+        if (foundUser != null && response.getStatus() == Ok) {
+            return response.getCookies().get("JSESSIONID");
+        } else {
+            return null;
         }
+    }
+    
+    private void insertData() {
+        Cookie cookie_session_id = login(
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+        if (cookie_session_id != null) {
+            Client cliente = ClientBuilder.newClient();
+            PodamFactory factory = new PodamFactoryImpl();
+            DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
+            developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
+            Response response2 = cliente.target(URLBASE + "/developers")
+                    .request().cookie(cookie_session_id)
+                    .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
+        for (int i = 0; i < 3; i++) {                       
+            AppDTO app = factory.manufacturePojo(AppDTO.class);
+            app.setPicture(URLIMAGE);            
+            Response response = cliente.target(URLBASE + PATH)
+                .request().cookie(cookie_session_id)
+                .post(Entity.entity(app, MediaType.APPLICATION_JSON));
+            if (response.getStatus()== Created)
+                data.add(app);
+        }    
+        }
+        
     }
     
     @After
     public void clearData() {
-        for (int i = 0; i < data.size(); i++) {            
+        Cookie cookie_session_id = login(
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+        if (cookie_session_id != null) {
+          for (int i = 0; i < data.size(); i++) {            
             PodamFactory factory = new PodamFactoryImpl();
             AppDTO app = factory.manufacturePojo(AppDTO.class);
             Client cliente = ClientBuilder.newClient();
-            Response response = cliente.target(URLBASE + PATHBOOK + '/' + data.get(i).getId())
-                .request()
+            Response response = cliente.target(URLBASE + PATH + '/' + data.get(i).getId())
+                .request().cookie(cookie_session_id)
                 .delete();
             if (response.getStatus()== OkWithoutContent)
                 data.remove(app);
+          }  
         }
+        
     }
    @Test
     @RunAsClient
-    public void t1createBook() throws InterruptedException {
+    public void t01GetAppsByKeyWords() throws InterruptedException {
         boolean success = false;
         Thread.sleep(3000);
         driver.findElement(By.id("txtBuscarApp")).clear();
         driver.findElement(By.id("txtBuscarApp")).sendKeys(data.get(0).getName());
-        driver.findElement(By.id("btnBuscar")).click();
+        driver.findElement(By.id("btnBuscar")).click();        
         Thread.sleep(2000);
         List<WebElement> apps = driver.findElements(By.xpath("//div[contains(@ng-repeat,'record in records')]"));
         for (WebElement app : apps) {
-            List<WebElement> captions = app.findElements(By.xpath("div[contains(@class, 'col-md-4')]/div[contains(@class, 'caption')]/p"));
-            System.out.println("AQUIIIIIIIIIIIIIIIIII11111111111111"+captions.get(0).getText());
-            System.out.println("AQUIIIIIIIIIIIIIIIIII22222222222222"+captions.get(1).getText());
-            System.out.println("AQUIIIIIIIIIIIIIIIIII33333333333333"+captions.get(2).getText());
-            if (captions.get(0).getText().contains("Cien anos de Soledad") && captions.get(1).getText().contains("Realismo magico")
-                    && captions.get(2).getText().contains("1025789845-13")) {
+            if (app.getText().contains(data.get(0).getName())) {
                 success = true;
             }
         }
