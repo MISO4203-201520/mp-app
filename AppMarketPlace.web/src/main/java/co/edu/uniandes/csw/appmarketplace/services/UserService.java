@@ -142,6 +142,9 @@ public class UserService {
                     ClientDTO client = new ClientDTO();
                     client.setName(user.getUserName());
                     client.setUserId(account.getHref());
+                    client.setFirstName(user.getName());
+                    client.setLastName(user.getLastName());
+                    client.setEmail(user.getEmail());
                     clientLogic.createClient(client);
                     break;
 

@@ -5,9 +5,11 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
+import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IPaymentCardLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.PaymentCardDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -36,11 +38,13 @@ public class PaymentCardService {
 
     @Inject
     private IPaymentCardLogic paymentCardLogic;
+    @Inject
+    private IClientLogic clientLogic;
     @QueryParam("page")
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
-    private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+    private UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
 
     @POST
     @StatusCreated
@@ -50,6 +54,7 @@ public class PaymentCardService {
 
     @GET
     public List<PaymentCardDTO> getPaymentMethods() {
+        ClientDTO client = clientLogic.getClientByUsername(loggedUser.getUserName());
         return paymentCardLogic.getPaymentCards(Integer.parseInt(client.getId().toString()),page, maxRecords);
     }
 

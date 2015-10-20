@@ -1,0 +1,66 @@
+<style>
+    a, a:active, a:hover, a:visited, h4, .col-md-3 {
+        color: white;
+    }
+</style>
+<div class="list">
+    <div class="row" ng-model="client">
+        <div class="col-md-12">
+            <div class="col-md-12 text-center" 
+                 style="background: gray no-repeat; 
+                 background-size: cover;">
+                <div class="col-md-3"></div>                
+                <div class="col-md-3">
+                    <h4>{{client.firstName}} {{client.lastName}}</h4>
+                    <a href="mailto:{{client.email}}">{{client.email}}</a>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Purchased Applications</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-show="!transaction.length" class="alert alert-warning" role="alert">
+                        You don´t have purchased applications yet!
+                    </div>
+                    <div ng-repeat="transactio in transaction[0]" class="col-sm-4 well text-center">
+                        <div class="col-md-12">
+                            <div class="img-thumbnail text-center" id="cover">
+                                <img class="img-responsive" style="height: 64px" 
+                                     title="{{transactio.appId.description}}"
+                                     ng-src="{{transactio.appId.picture}}">
+                            </div>
+                            <div class="caption">
+                                <span title="{{transactio.appId.description}}"> {{transactio.appId.name}}</span><br />
+                                <strong>{{transactio.appId.price| currency}}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Transaction Records</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div ng-show="!transaction.length" class="alert alert-warning" role="alert">
+                            You do not have purchased applications records yet!
+                        </div>
+                        <div ng-repeat="transactio in transaction[0]" class="col-sm-4 well text-center">                        
+                            <div class="caption">
+                                <strong>{{transactio.appId.name}}</strong><br />
+                                <span>Date: {{transactio.date}}</span><br />
+                                <span>Status: {{transactio.status}}</span><br />
+                                <span>Value: {{transactio.total| currency}}</span><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>

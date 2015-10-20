@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -17,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import org.apache.shiro.SecurityUtils;
 
 /**
  * @generated
@@ -26,10 +28,14 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 public class ClientService {
 
-    @Inject private IClientLogic clientLogic;
-    @Context private HttpServletResponse response;
-    @QueryParam("page") private Integer page;
-    @QueryParam("maxRecords") private Integer maxRecords;
+    @Inject
+    private IClientLogic clientLogic;
+    @Context
+    private HttpServletResponse response;
+    @QueryParam("page")
+    private Integer page;
+    @QueryParam("maxRecords")
+    private Integer maxRecords;
 
     /**
      * @generated
@@ -56,7 +62,14 @@ public class ClientService {
      */
     @GET
     @Path("{id: \\d+}")
-    public ClientDTO getClient(@PathParam("id") Long id) {
+    public ClientDTO getClient(@PathParam("id") Long id) {        
+        return clientLogic.getClient(id);
+    }
+    
+    @GET
+    @Path("{userName}")
+    public ClientDTO getClientByUserName(@PathParam("userName") String userName) {
+        Long id = clientLogic.getClientByUsername(userName).getId();
         return clientLogic.getClient(id);
     }
 

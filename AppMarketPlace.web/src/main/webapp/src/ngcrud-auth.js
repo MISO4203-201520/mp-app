@@ -165,7 +165,7 @@
                     $scope.menuitems = [{id:'devProfile', label:'My profile', icon:'user', url:'#/devprofile'}];
                 } else {
                     if (user.role === 'user') {
-                        $scope.menuitems = [{id:'clientProfile', label:'My profile', icon:'user', url:'#/userprofile'}, 
+                        $scope.menuitems = [{id:'clientProfile', label:'My profile', icon:'user', url:'#/clientprofile'}, 
                                             {id:'clientCart', label:'My shopping cart', icon:'shopping-cart', url:'#/shoppingCart'}];
                     }
                 }

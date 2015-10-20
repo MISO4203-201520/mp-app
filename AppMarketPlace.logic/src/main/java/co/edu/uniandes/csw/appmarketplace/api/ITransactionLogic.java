@@ -17,6 +17,8 @@ public interface ITransactionLogic {
     public List<TransactionDTO> getTransactions(Integer page, Integer maxRecords);
 
     public TransactionDTO getTransaction(Long id);
+    
+    public List<TransactionDTO> getTransactionByPayer(Long id);
 
     public TransactionDTO createTransaction(TransactionDTO dto);
 

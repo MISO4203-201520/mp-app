@@ -73,6 +73,14 @@ public class TransactionLogic implements ITransactionLogic {
      * @generated
      */
     @Override
+    public List<TransactionDTO> getTransactionByPayer(Long id) {
+        return TransactionConverter.listEntity2DTO(persistence.findByPayer(id));
+    }
+
+    /**
+     * @generated
+     */
+    @Override
     public List<TransactionDTO> findByName(String name) {
         return TransactionConverter.listEntity2DTO(persistence.findByName(name));
     }

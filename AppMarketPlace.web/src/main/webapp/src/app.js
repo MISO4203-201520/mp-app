@@ -75,6 +75,10 @@
                 templateUrl: 'src/modules/developer/profile.tpl.html',
                 controller: 'devProfileCtrl',
                 controllerAs: alias
+            }).when('/clientprofile', {
+                templateUrl: 'src/modules/client/clientProfile.tpl.html',
+                controller: 'clientProfileCtrl',
+                controllerAs: alias
             }).otherwise('/catalog');
         }]);
 

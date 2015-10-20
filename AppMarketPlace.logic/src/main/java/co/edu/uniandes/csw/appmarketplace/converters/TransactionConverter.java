@@ -63,6 +63,8 @@ public abstract class TransactionConverter {
             dto.setTotal(entity.getTotal());
             dto.setStatus(entity.getStatus());
             dto.setPaymentCard(PaymentCardConverter.refEntity2DTO(entity.getPaymentCard()));
+            dto.setDate(entity.getDate());
+            dto.setAppId(AppConverter.fullEntity2DTO(entity.getAppId()));
 
             return dto;
         } else {
@@ -82,6 +84,8 @@ public abstract class TransactionConverter {
             entity.setTotal(dto.getTotal());
             entity.setStatus(dto.getStatus());
             entity.setPaymentCard(PaymentCardConverter.refDTO2Entity(dto.getPaymentCard()));
+            entity.setDate(dto.getDate());
+            entity.setAppId(AppConverter.fullDTO2Entity(dto.getAppId()));
 
             return entity;
         } else {

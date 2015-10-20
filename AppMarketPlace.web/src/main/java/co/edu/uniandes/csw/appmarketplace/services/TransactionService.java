@@ -13,8 +13,12 @@ import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.CartItemDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -59,22 +63,25 @@ public class TransactionService {
     private Integer page;
     @QueryParam("maxRecords")
     private Integer maxRecords;
-    private final ClientDTO client = (ClientDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
+    private UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Client");
 
     @POST
     @StatusCreated
-    public void createPayment(TransactionDTO dto) {
+    public void createPayment(TransactionDTO dto) throws ParseException {
         Subject currentUser = SecurityUtils.getSubject();
-        if (client == null) {
+        if (loggedUser == null) {
             Logger.getLogger(QuestionService.class.getName()).log(Level.SEVERE, null, new Exception("User is not a registered client"));
             return;
         }
         Map<String, String> userAttributes = (Map<String, String>) currentUser.getPrincipals().oneByType(java.util.Map.class);
-
+        ClientDTO client = clientLogic.getClientByUsername(loggedUser.getUserName());
         dto.setPayer(client);
         dto.setPaymentCard(paymentCardLogic.getPaymentCards(dto.getId()));
         dto.setId(null);
         dto.setStatus("Aprobado");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        dto.setDate(dateFormat.parse(dateFormat.format(date)));
         int total = 0;
         int number = 0;
         for (CartItemDTO cartItem : clientLogic.getClient(client.getId()).getCartItems()) {
@@ -86,7 +93,7 @@ public class TransactionService {
             }else{
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString())));
             }
-            
+            dto.setAppId(appLogic.getApp(cartItem.getApp().getId()));
             TransactionLogic.createTransaction(dto);
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
@@ -109,6 +116,12 @@ public class TransactionService {
     @Path("{id: \\d+}")
     public TransactionDTO getPaymentMethod(@PathParam("id") Long id) {
         return TransactionLogic.getTransaction(id);
+    }
+    
+    @GET
+    @Path("user/{userid}")
+    public List<TransactionDTO> getTxByUserId(@PathParam("userid") Long userid) {
+        return TransactionLogic.getTransactionByPayer(userid);
     }
 
     @PUT

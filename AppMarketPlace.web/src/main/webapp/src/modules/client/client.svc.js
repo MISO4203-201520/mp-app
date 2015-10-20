@@ -3,5 +3,9 @@
 
     mod.service('clientService', ['CrudCreator', 'clientContext', function (CrudCreator, context) {
             CrudCreator.extendService(this, context);
+            
+            this.getClientProfile = function (username) {
+                return this.api.get(username);
+            };
         }]);
 })(window.angular);

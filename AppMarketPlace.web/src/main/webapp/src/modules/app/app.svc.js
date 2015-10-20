@@ -31,6 +31,6 @@
 
             this.getAppById = function (id) {
                 return ra.one(context, id).get();
-            };
+            };            
         }]);
 })(window.angular);
