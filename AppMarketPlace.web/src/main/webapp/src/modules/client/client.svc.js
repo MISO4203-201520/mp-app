@@ -5,7 +5,7 @@
             CrudCreator.extendService(this, context);
             
             this.getClientProfile = function (username) {
-                return this.api.get(username);
+                return this.api.customGET("client/"+username,'');
             };
         }]);
 })(window.angular);

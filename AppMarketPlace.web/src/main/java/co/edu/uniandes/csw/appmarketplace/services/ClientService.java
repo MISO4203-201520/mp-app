@@ -67,7 +67,7 @@ public class ClientService {
     }
     
     @GET
-    @Path("{userName}")
+    @Path("client/{userName}")
     public ClientDTO getClientByUserName(@PathParam("userName") String userName) {
         Long id = clientLogic.getClientByUsername(userName).getId();
         return clientLogic.getClient(id);
