@@ -15,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.Principal;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -46,15 +47,12 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class AppService {
 
-    static final Logger logger = LoggerFactory
-            .getLogger(AppService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppService.class);
 
     @Inject
     private IAppLogic appLogic;
     @Inject
     ITransactionLogic transactionLogic;
-    @Context
-    private HttpServletResponse response;
     @Context
     private HttpServletRequest req;
     @Inject
@@ -93,7 +91,7 @@ public class AppService {
             }
         } else {
             logger.warn("App cannot be created because there's no developer associated (no session initialized).");
-            return null;
+            throw new WebApplicationException(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
@@ -101,7 +99,7 @@ public class AppService {
      * @generated
      */
     @GET
-    public List<AppDTO> getApps() {
+    public List<AppDTO> getApps(@Context HttpServletResponse resp) {
 
         if (appName != null) {
             return appLogic.findByName(appName);
@@ -113,11 +111,11 @@ public class AppService {
             return appLogic.getAppsByKeyWords(keyword);
         }
         if (page != null && maxRecords != null) {
-            this.response.setIntHeader("X-Total-Count", appLogic.countApps());
+            resp.setIntHeader("X-Total-Count", appLogic.countApps());
         }
         return appLogic.getApps(page, maxRecords);
     }
-    
+
     @POST
     @Path("/{id: \\d+}/disable")
     public void disableApp(@PathParam("id") Long id) {
@@ -188,7 +186,7 @@ public class AppService {
                 // Rating the app
                 logger.info("Rating app with {} points by {}", dto.getRate(), client.getFullName());
                 appLogic.rateApp(id, client.getId(), dto.getRate());
-                
+
             } else {
                 logger.warn("App cannot be rated because there's no client associated.");
                 throw new WebApplicationException(401);

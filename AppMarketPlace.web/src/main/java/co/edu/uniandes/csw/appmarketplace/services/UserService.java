@@ -61,6 +61,9 @@ public class UserService {
 
     @Context
     private HttpServletRequest req;
+    
+    private final String clientCD = "appoteca_client_id";
+    private final String developerCD = "appoteca_developer_id";
 
     private UserDTO subjectToUserDTO() {
         String href = req.getRemoteUser();
@@ -143,7 +146,9 @@ public class UserService {
                     client.setFirstName(user.getName());
                     client.setLastName(user.getLastName());
                     client.setEmail(user.getEmail());
-                    clientLogic.createClient(client);
+                    client = clientLogic.createClient(client);
+                    account.getCustomData().put(clientCD, client.getId());
+                    account.getCustomData().save();
                     break;
 
                 case "developer":
@@ -153,7 +158,9 @@ public class UserService {
                     developer.setFirstName(user.getName());
                     developer.setLastName(user.getLastName());
                     developer.setEmail(user.getEmail());
-                    developerLogic.createDeveloper(developer);
+                    developer = developerLogic.createDeveloper(developer);
+                    account.getCustomData().put(developerCD, developer.getId());
+                    account.getCustomData().save();
                     break;
                 default:
                     break;
