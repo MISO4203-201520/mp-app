@@ -21,7 +21,6 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -146,7 +145,7 @@ public class AppServiceTest {
     @RunAsClient
     public void t2GetAppsByKeyWords() throws IOException {
         Client cliente = ClientBuilder.newClient();
-        Response response = cliente.target(URLBASE + PATH + "?keyword=" + oraculo.get(0).getName()).register(LoggingFilter.class)
+        Response response = cliente.target(URLBASE + PATH + "?keyword=" + oraculo.get(0).getName())
                 .request().get();
         String listApps = response.readEntity(String.class);
         List<AppDTO> listAppsTest = new ObjectMapper().readValue(listApps, List.class);

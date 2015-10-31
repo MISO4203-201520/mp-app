@@ -15,7 +15,6 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -90,7 +89,6 @@ public class ClientServiceTest {
         
         Response response
                 = clienteWS.target(URLBASE)
-                .register(LoggingFilter.class)
                 .path("users")
                 .path("login")
                 .request(MediaType.APPLICATION_JSON)
@@ -109,8 +107,8 @@ public class ClientServiceTest {
     @RunAsClient
     public void t00CreateClient() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
         
         if (cookieSessionId != null) {
             ClientDTO client = oraculo.get(0);
@@ -133,8 +131,8 @@ public class ClientServiceTest {
     @RunAsClient
     public void t02CreateClient2() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
         
         if (cookieSessionId != null) {
             ClientDTO client = oraculo.get(1);
@@ -157,8 +155,8 @@ public class ClientServiceTest {
     @RunAsClient
     public void t04GetClients() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
         
         if (cookieSessionId != null) {
             
@@ -245,8 +243,8 @@ public class ClientServiceTest {
     @RunAsClient
     public void t12GetClients() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
         
         if (cookieSessionId != null) {
             

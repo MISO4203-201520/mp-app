@@ -159,8 +159,8 @@ public class AdminServiceTest {
     @RunAsClient
     public void t04CreateClient() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"), 
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"), 
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
 
         if (cookieSessionId != null) {
             ClientDTO client = clientsOraculo.get(0);
@@ -272,8 +272,8 @@ public class AdminServiceTest {
     @RunAsClient
     public void t12CreateClientToDisable() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"), 
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+                System.getenv("APPOTECA_CLIENT_USERNAME"), 
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
 
         if (cookieSessionId != null) {
             ClientDTO client = clientsOraculo.get(1);
