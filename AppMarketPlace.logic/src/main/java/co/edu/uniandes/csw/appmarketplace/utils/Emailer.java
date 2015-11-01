@@ -104,4 +104,19 @@ public abstract class Emailer {
             }
         }.start();
     }
+    
+    public static void sendAppVersionEmail(final String user, final String userEmail,
+            final String app) {
+        final String message
+                = "Hi <b>" + user + "</b>"
+                + "<br>"
+                + "</b>" + "</b> the application <b>" + app + " have a new version" + "</b>."
+                + "<br>" + "We hope you enjoy your application.";
+        new Thread() {
+            @Override
+            public void run() {
+                send(userEmail, message, "The application " + app + " has been updated");
+            }
+        }.start();
+    }
 }

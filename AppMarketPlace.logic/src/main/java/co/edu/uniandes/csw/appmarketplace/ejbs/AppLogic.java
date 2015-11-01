@@ -2,12 +2,15 @@ package co.edu.uniandes.csw.appmarketplace.ejbs;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.TransactionConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppImagePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppVideoPersistence;
@@ -214,5 +217,10 @@ public class AppLogic implements IAppLogic {
         AppEntity entity = persistence.find(appId);
         entity.setEnabled(!entity.isEnabled());
         persistence.update(entity);
+    }
+    
+    @Override
+    public List<TransactionDTO> findByApp(Long appId) {
+        return TransactionConverter.listEntity2DTO(transactionPersistence.findByApp(appId));
     }
 }
