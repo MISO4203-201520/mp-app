@@ -8,8 +8,13 @@ import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
+import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
+import com.stormpath.sdk.account.Account;
+import com.stormpath.sdk.client.Client;
+import com.stormpath.shiro.realm.ApplicationRealm;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,6 +38,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -142,7 +148,25 @@ public class AppService {
     @Path("{id: \\d+}")
     public AppDTO updateApp(@PathParam("id") Long id, AppDTO dto) {
         dto.setId(id);
+        AppDTO app = appLogic.getApp(id);
+        if (!app.getVersion().equals(dto.getVersion())){
+            List<TransactionDTO> list=appLogic.findByApp(id);
+            if (list!=null){
+                for (TransactionDTO trans : list) {
+                    ClientDTO client=clientLogic.getClientByUsername(trans.getPayer().getName());
+                    Account account = getClient().getResource(client.getUserId(), Account.class);
+                    Emailer.sendAppVersionEmail(client.getFullName(), account.getEmail(), app.getName());
+                }
+            }
+        }
         return appLogic.updateApp(dto);
+    }
+    private ApplicationRealm getRealm() {
+        return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
+    }
+
+    private Client getClient() {
+        return getRealm().getClient();
     }
 
     /**

@@ -58,6 +58,17 @@ public class TransactionPersistence extends CrudPersistence<TransactionEntity> {
         List<TransactionEntity> list = q.getResultList();
         return q.getResultList();
     }
+    
+    public List<TransactionEntity> findByApp(Long appId) {
+        try {
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("app_id", appId);
+            return this.executeListNamedQuery("TransactionEntity.findByApp", params);
+        } catch (NoResultException e) {
+            logger.warn("Transaction cannot be found by appId {}", appId, e);
+        }
+        return null;
+    }
 
     public List<TransactionEntity> getAllTransactionsByClientId(Long clientId){
         try {

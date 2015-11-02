@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.api;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import java.util.List;
 
 public interface IAppLogic {
@@ -32,4 +33,5 @@ public interface IAppLogic {
     public void addVideo(Long appId, String url, String mimetype);
     
     public void disableApp(Long appId);
+    public List<TransactionDTO> findByApp(Long appId);
 }

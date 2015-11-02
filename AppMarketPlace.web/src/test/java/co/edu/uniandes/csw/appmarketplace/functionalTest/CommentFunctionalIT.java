@@ -6,13 +6,11 @@
 package co.edu.uniandes.csw.appmarketplace.functionalTest;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
-import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.appmarketplace.services.AppService;
-import co.edu.uniandes.csw.appmarketplace.services.CommentService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -60,7 +58,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
-public class CommentFunctionalIT {
+ public class CommentFunctionalIT {
     public static String URLRESOURCES = "src/main/webapp";
     public static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";
     public static String PATH = "/apps";
@@ -85,7 +83,7 @@ public class CommentFunctionalIT {
                 .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.appmarketplace:AppMarketPlace.logic:1.0")
                         .resolveAsFiles())
                 // Se agregan los compilados de los paquetes que se van a probar
-                .addPackage(CommentService.class.getPackage())
+                .addPackage(AppService.class.getPackage())
                 // Se agrega contenido estatico: html y modulos de javascript. 
                 .addAsWebResource(new File(URLRESOURCES, "index.html"))
                 .merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class).importDirectory(URLRESOURCES + "/src/").as(GenericArchive.class), "/src/", Filters.includeAll())
@@ -158,7 +156,6 @@ public class CommentFunctionalIT {
             Response response = cliente.target(URLBASE + PATH)
                 .request().cookie(cookie_session_id)
                 .post(Entity.entity(app, MediaType.APPLICATION_JSON));
-            //AppDTO appTest = (AppDTO) response.readEntity(AppDTO.class);
             if (response.getStatus()== Created)
                 data.add(app);
         }    
@@ -187,41 +184,20 @@ public class CommentFunctionalIT {
     }
    @Test
     @RunAsClient
-    public void t01CreateComment() throws InterruptedException {
-        
-        
+    public void t01GetAppsByKeyWords() throws InterruptedException {
         boolean success = false;
-        PodamFactory factory = new PodamFactoryImpl();
-        CommentDTO cl = factory.manufacturePojo(CommentDTO.class);
-        
-        Thread.sleep(5000);
-        driver.findElement(By.id("btnLogin")).click();
         Thread.sleep(3000);
-        driver.findElement(By.id("txtUsername")).clear();
-        driver.findElement(By.id("txtUsername")).sendKeys(System.getenv("APPOTECA_CLIENT_USERNAME"));
-        driver.findElement(By.id("txtPassword")).clear();
-        driver.findElement(By.id("txtPassword")).sendKeys(System.getenv("APPOTECA_CLIENT_PASSWORD"));
-        Thread.sleep(1000);
-        driver.findElement(By.id("login")).click();  
-        
-        Thread.sleep(3000);
-        driver.findElement(By.id("0-comment-btn")).click();        
+        driver.findElement(By.id("txtBuscarApp")).clear();
+        driver.findElement(By.id("txtBuscarApp")).sendKeys(data.get(0).getName());
+        driver.findElement(By.id("btnBuscar")).click();        
         Thread.sleep(2000);
-        driver.findElement(By.id("txtComment")).clear();
-        driver.findElement(By.id("txtComment")).sendKeys(cl.getComment());
-        Thread.sleep(1000);
-        driver.findElement(By.id("btnAddComent")).click();         
-        Thread.sleep(2000);
-        driver.findElement(By.id("0-details-btn")).click();
-        Thread.sleep(3000);
-        List<WebElement> apps = driver.findElements(By.xpath("//li[contains(@ng-repeat,'comment in app.comments')]"));
-        //System.out.println("AQUIIIIIIIIIIIIIIII   "+apps.toString());
+        List<WebElement> apps = driver.findElements(By.xpath("//div[contains(@ng-repeat,'record in records')]"));
         for (WebElement app : apps) {
-            if (app.getText().contains(cl.getComment())) {
+            if (app.getText().contains(data.get(0).getName())) {
                 success = true;
             }
         }
-        assertTrue(true);
+        assertTrue(success);
         Thread.sleep(1000);
     }    
 }

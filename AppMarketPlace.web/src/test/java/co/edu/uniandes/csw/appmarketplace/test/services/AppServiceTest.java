@@ -32,6 +32,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -52,10 +53,10 @@ public class AppServiceTest {
     public final static int Ok = 200;
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
-    public final static List<AppDTO> oraculo = new ArrayList<AppDTO>();
+    public final static List<AppDTO> oraculo = new ArrayList<>();
 
     @Deployment
-    public static Archive<?> createDeployment() {
+   @Ignore public static Archive<?> createDeployment() {
         MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
         WebArchive war = ShrinkWrap
                 // Nombre del Proyecto "AppMarketPlace.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
@@ -111,7 +112,7 @@ public class AppServiceTest {
      */
     @Test
     @RunAsClient
-    public void t01CreateApp() {
+    public void t1CreateApp() {
         Cookie cookie_session_id = login(
                 System.getenv("APPOTECA_DEVELOPER_USERNAME"),
                 System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
@@ -122,7 +123,7 @@ public class AppServiceTest {
             PodamFactory factory = new PodamFactoryImpl();
             DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
             developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
-            Response response2 = cliente.target(URLBASE + "/developers")
+            Response response2 = cliente.target(URLBASE).path("/developers")
                     .request().cookie(cookie_session_id)
                     .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
 
@@ -142,7 +143,7 @@ public class AppServiceTest {
 
     @Test
     @RunAsClient
-    public void t02GetAppsByKeyWords() throws IOException {
+    public void t2GetAppsByKeyWords() throws IOException {
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATH + "?keyword=" + oraculo.get(0).getName())
                 .request().get();
@@ -154,7 +155,7 @@ public class AppServiceTest {
 
     @Test
     @RunAsClient
-    public void t04GetAppsByCategory() throws IOException {
+    public void t3GetAppsByCategory() throws IOException {
         String category = oraculo.get(0).getCategory();
 
         Client cliente = ClientBuilder.newClient();
@@ -166,6 +167,84 @@ public class AppServiceTest {
         List<AppDTO> appsByCategory = new ObjectMapper().readValue(stringApps, List.class);
         Assert.assertEquals(Ok, response.getStatus());
         Assert.assertEquals(1, appsByCategory.size());
+    }
+    
+    public void t4GetAppById() {
+        Client cliente = ClientBuilder.newClient();
+        AppDTO appTest = cliente.target(URLBASE + PATH).path("/" + oraculo.get(0).getId())
+                .request().get(AppDTO.class);
+        Assert.assertEquals(appTest.getId(), oraculo.get(0).getId());
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    @RunAsClient
+    public void t5GetApps() throws IOException {
+        Client cliente = ClientBuilder.newClient();
+        Response response = cliente.target(URLBASE + PATH)
+                .request().get();
+        String listApp = response.readEntity(String.class);
+        List<AppDTO> listAppTest = new ObjectMapper().readValue(listApp, List.class);
+        Assert.assertEquals(Ok, response.getStatus());
+        Assert.assertEquals(1, listAppTest.size());
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    @RunAsClient
+    public void t6UpdateApp() throws IOException {
+        
+        Client cliente = ClientBuilder.newClient();
+        AppDTO app = cliente.target(URLBASE + PATH).path("/" + oraculo.get(0).getId())
+                .request().get(AppDTO.class);
+        PodamFactory factory = new PodamFactoryImpl();
+        AppDTO appChanged = factory.manufacturePojo(AppDTO.class);
+        app.setId(appChanged.getId());
+        app.setName(appChanged.getName());
+        app.setDescription(appChanged.getDescription());
+        app.setVersion(appChanged.getVersion());
+        app.setPicture(appChanged.getPicture());
+        app.setPrice(appChanged.getPrice());
+        app.setSize(appChanged.getSize());
+        
+        Cookie cookie_session_id = login(
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+        
+                
+        
+        Response response = cliente.target(URLBASE + PATH).path("/" + app.getId())
+                .request().cookie(cookie_session_id).put(Entity.entity(app, MediaType.APPLICATION_JSON));
+        AppDTO appTest = (AppDTO) response.readEntity(AppDTO.class);
+        Assert.assertEquals(Ok, response.getStatus());
+        Assert.assertEquals(app.getId(), appTest.getId());
+        Assert.assertEquals(app.getName(), appTest.getName());
+        Assert.assertEquals(app.getDescription(), appTest.getDescription());
+        Assert.assertEquals(app.getVersion(), appTest.getVersion());
+        Assert.assertEquals(app.getPicture(), appTest.getPicture());
+        Assert.assertEquals(app.getPrice(), appTest.getPrice());
+        Assert.assertEquals(app.getSize(), appTest.getSize());
+
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    @RunAsClient
+    public void t7DeleteApp() {
+        Cookie cookie_session_id = login(
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+        Client cliente = ClientBuilder.newClient();
+        AppDTO app = oraculo.get(0);
+        Response response = cliente.target(URLBASE + PATH).path("/" + app.getId())
+                .request().cookie(cookie_session_id).delete();
+        Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
 
 }
