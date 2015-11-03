@@ -138,9 +138,9 @@ public class AppLogic implements IAppLogic {
         String words[] = keyword.split(" ");
         if (words.length > 1) {
             for (String word : words) {
-                if (verifyWord(word) == false) {
+                if (!verifyWord(word)) {
                     for (AppEntity newApp : persistence.getAppsByKeyWords(word)) {
-                        if (verifyExistingApp(lista, newApp) == false) {
+                        if (!verifyExistingApp(lista, newApp)) {
                             lista.add(newApp);
                         }
                     }

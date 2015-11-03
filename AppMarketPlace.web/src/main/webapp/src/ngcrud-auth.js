@@ -200,10 +200,6 @@
             authSvc.logout();
         };
 
-        $scope.log = function(obj){
-            console.log(obj);
-        };
-
         this.close = function () {
             this.errorctrl = defaultStatus;
         };
@@ -217,7 +213,7 @@
             if (newUser.password !== newUser.confirmPassword) {
                 this.errorctrl = {status: true, type: "warning", msg: ": Passwords must be equals"};
             } else {
-                authSvc.register(newUser).then(function (data) {
+                authSvc.register(newUser).then(function () {
                     self.errorctrl = {status: true, type: "success", msg: ":" + " User registered successfully"};
                 }, function (data) {
                     self.errorctrl = {status: true, type: "danger", msg: ":" + data.data};
