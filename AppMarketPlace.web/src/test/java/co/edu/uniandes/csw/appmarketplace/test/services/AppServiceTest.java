@@ -203,7 +203,6 @@ public class AppServiceTest {
                 .request().get(AppDTO.class);
         PodamFactory factory = new PodamFactoryImpl();
         AppDTO appChanged = factory.manufacturePojo(AppDTO.class);
-        app.setId(appChanged.getId());
         app.setName(appChanged.getName());
         app.setDescription(appChanged.getDescription());
         app.setVersion(appChanged.getVersion());
