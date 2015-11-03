@@ -11,7 +11,7 @@
             this.loadRefOptions();
         }]);
 
-    mod.controller('clientProfileCtrl', ['CrudCreator', '$scope', '$cookies', '$location', 'clientService', 'clientModel', 'appService', 'transaction', function (CrudCreator, $scope, $cookies, $location, svc, model, appSvc, trnSvc) {
+    mod.controller('clientProfileCtrl', ['CrudCreator', '$scope', '$cookies', '$location', 'clientService', 'clientModel', 'transaction', function (CrudCreator, $scope, $cookies, $location, svc, model, trnSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'client', 'Client');
 
             svc.getClientProfile($cookies.getObject('userCookie').userName).then(function (client) {

@@ -58,7 +58,7 @@ public class UserService {
 
     @Context
     private HttpServletRequest req;
-    
+
     private final String clientCD = "appoteca_client_id";
     private final String developerCD = "appoteca_developer_id";
 
@@ -135,33 +135,28 @@ public class UserService {
     public Response setUser(UserDTO user) {
         try {
             Account account = createUser(user);
-            switch (user.getRole()) {
-                case "user":
-                    ClientDTO client = new ClientDTO();
-                    client.setName(user.getUserName());
-                    client.setUserId(account.getHref());
-                    client.setFirstName(user.getName());
-                    client.setLastName(user.getLastName());
-                    client.setEmail(user.getEmail());
-                    client = clientLogic.createClient(client);
-                    account.getCustomData().put(clientCD, client.getId());
-                    account.getCustomData().save();
-                    break;
-
-                case "developer":
-                    DeveloperDTO developer = new DeveloperDTO();
-                    developer.setName(user.getUserName());
-                    developer.setUserId(account.getHref());
-                    developer.setFirstName(user.getName());
-                    developer.setLastName(user.getLastName());
-                    developer.setEmail(user.getEmail());
-                    developer = developerLogic.createDeveloper(developer);
-                    account.getCustomData().put(developerCD, developer.getId());
-                    account.getCustomData().save();
-                    break;
-                default:
-                    break;
+            if (user.getRole().equals("user")) {
+                ClientDTO client = new ClientDTO();
+                client.setName(user.getUserName());
+                client.setUserId(account.getHref());
+                client.setFirstName(user.getName());
+                client.setLastName(user.getLastName());
+                client.setEmail(user.getEmail());
+                client = clientLogic.createClient(client);
+                account.getCustomData().put(clientCD, client.getId());
+                account.getCustomData().save();
+            } else if (user.getRole().equals("developer")) {
+                DeveloperDTO developer = new DeveloperDTO();
+                developer.setName(user.getUserName());
+                developer.setUserId(account.getHref());
+                developer.setFirstName(user.getName());
+                developer.setLastName(user.getLastName());
+                developer.setEmail(user.getEmail());
+                developer = developerLogic.createDeveloper(developer);
+                account.getCustomData().put(developerCD, developer.getId());
+                account.getCustomData().save();
             }
+
             return Response.ok().build();
         } catch (ResourceException e) {
             logger.warn("User {} cannot be registered as new user", user, e);
