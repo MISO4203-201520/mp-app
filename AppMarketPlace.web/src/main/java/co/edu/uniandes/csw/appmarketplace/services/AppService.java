@@ -20,8 +20,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.Principal;
 import java.util.List;
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,6 +82,9 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
+        if (!SecurityUtils.getSubject().isPermitted("app:create")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
 
         if (loggedUser != null) {
@@ -147,6 +150,9 @@ public class AppService {
     @PUT
     @Path("{id: \\d+}")
     public AppDTO updateApp(@PathParam("id") Long id, AppDTO dto) {
+        if (!SecurityUtils.getSubject().isPermitted("app:update")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         dto.setId(id);
         AppDTO app = appLogic.getApp(id);
         if (!app.getVersion().equals(dto.getVersion())){
@@ -175,6 +181,9 @@ public class AppService {
     @DELETE
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
+        if (!SecurityUtils.getSubject().isPermitted("app:delete")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         appLogic.deleteApp(id);
     }
 
