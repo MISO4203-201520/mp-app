@@ -22,7 +22,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -132,7 +131,7 @@ public class QuestionServiceTest {
             developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
             developer.setUserId(System.getenv("APPOTECA_DEVELOPER_TODISABLE_USERID"));
             cliente.target(URLBASE)
-                    .path("developers").register(LoggingFilter.class)
+                    .path("developers")
                     .request()
                     .cookie(adminCookie)
                     .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
@@ -142,7 +141,7 @@ public class QuestionServiceTest {
                     System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
             AppDTO app1 = factory.manufacturePojo(AppDTO.class);
             Response response4 = cliente.target(URLBASE)
-                    .path("apps").register(LoggingFilter.class)
+                    .path("apps")
                     .request().cookie(devCookie)
                     .post(Entity.entity(app1, MediaType.APPLICATION_JSON));
             AppDTO app = (AppDTO) response4.readEntity(AppDTO.class);
@@ -154,7 +153,7 @@ public class QuestionServiceTest {
                     System.getenv("APPOTECA_CLIENT_USERNAME"),
                     System.getenv("APPOTECA_CLIENT_PASSWORD"));
             Response response = cliente.target(URLBASE)
-                    .path("question").register(LoggingFilter.class)
+                    .path("question")
                     .request().cookie(clientCookie)
                     .post(Entity.entity(question, MediaType.APPLICATION_JSON));
             QuestionDTO appTest = (QuestionDTO) response.readEntity(QuestionDTO.class);
