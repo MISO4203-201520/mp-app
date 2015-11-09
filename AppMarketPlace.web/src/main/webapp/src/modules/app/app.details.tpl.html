@@ -68,6 +68,14 @@
             </li>
         </ul>
     </div>
+    <div ng-if="app.sources.length" class="col-md-12 well">
+        <h2>Available sources</h2>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="source in app.sources">
+                <a ng-href="{{source.url}}">version {{source.version}}</a>
+            </li>
+        </ul>
+    </div>
 </div>
 <div ng-if="!app" class="container">
     <h1>Requested application does not exist</h1>

@@ -69,6 +69,9 @@ public class AppEntity implements Serializable {
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppVideoEntity> videos;
 
+    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppSourceEntity> sources;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
     private List<Comment> comments;
 
@@ -278,4 +281,11 @@ public class AppEntity implements Serializable {
         this.videos = videos;
     }
 
+    public List<AppSourceEntity> getSources() {
+        return sources;
+    }
+
+    public void setSources(List<AppSourceEntity> sources) {
+        this.sources = sources;
+    }
 }

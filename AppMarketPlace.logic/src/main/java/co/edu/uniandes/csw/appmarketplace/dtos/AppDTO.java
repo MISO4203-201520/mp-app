@@ -37,6 +37,8 @@ public class AppDTO {
     private List<MediaDTO> images;
     @PodamExclude
     private List<MediaDTO> videos;
+    @PodamExclude
+    private List<SourceDTO> sources;
 
     public boolean isEnabled() {
         return enabled;
@@ -244,4 +246,11 @@ public class AppDTO {
         this.videos = videos;
     }
 
+    public List<SourceDTO> getSources() {
+        return sources;
+    }
+
+    public void setSources(List<SourceDTO> sources) {
+        this.sources = sources;
+    }
 }

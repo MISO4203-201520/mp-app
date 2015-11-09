@@ -124,6 +124,7 @@ public abstract class AppConverter {
             dto.setComments(CommentConverter.listEntity2DTO(entity.getComments()));
             dto.setImages(AppImageConverter.listEntity2DTO(entity.getImages()));
             dto.setVideos(AppVideoConverter.listEntity2DTO(entity.getVideos()));
+            dto.setSources(AppSourceConverter.listEntity2DTO(entity.getSources()));
             return dto;
         } else {
             return null;

@@ -51,6 +51,9 @@
             }).when('/app/:appId/upload', {
                 templateUrl: 'src/modules/app/media.tpl.html',
                 controller: 'mediaCtrl'
+            }).when('/app/:appId/uploadSource', {
+                templateUrl: 'src/modules/app/source.tpl.html',
+                controller: 'sourceCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',

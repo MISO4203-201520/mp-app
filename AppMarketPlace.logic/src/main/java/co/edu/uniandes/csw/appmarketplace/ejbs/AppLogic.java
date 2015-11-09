@@ -7,11 +7,13 @@ import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.AppSourceEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppImagePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
+import co.edu.uniandes.csw.appmarketplace.persistence.AppSourcePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppVideoPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.RatePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.TransactionPersistence;
@@ -41,6 +43,9 @@ public class AppLogic implements IAppLogic {
 
     @Inject
     private AppVideoPersistence vidPersistence;
+
+    @Inject
+    private AppSourcePersistence sourcePersistence;
 
     String[] excludeWords = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
 
@@ -209,6 +214,16 @@ public class AppLogic implements IAppLogic {
         vid.setUrl(url);
         vid.setMimetype(mimetype);
         vidPersistence.create(vid);
+    }
+
+    @Override
+    public void addSource(Long appId, String url, String version) {
+        AppEntity app = persistence.find(appId);
+        AppSourceEntity source = new AppSourceEntity();
+        source.setApp(app);
+        source.setUrl(url);
+        source.setVersion(version);
+        sourcePersistence.create(source);
     }
 
     @Override

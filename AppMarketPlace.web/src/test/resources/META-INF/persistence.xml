@@ -6,6 +6,7 @@
     <class>co.edu.uniandes.csw.appmarketplace.entities.AppEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.AppSourceEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.CartItemEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.ClientEntity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.Comment</class>

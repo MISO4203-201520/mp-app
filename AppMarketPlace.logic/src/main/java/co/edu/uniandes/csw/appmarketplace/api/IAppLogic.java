@@ -31,6 +31,8 @@ public interface IAppLogic {
     public void addImage(Long appId, String url, String mimetype);
 
     public void addVideo(Long appId, String url, String mimetype);
+
+    public void addSource(Long appId, String url, String version);
     
     public void disableApp(Long appId);
     public List<TransactionDTO> findByApp(Long appId);

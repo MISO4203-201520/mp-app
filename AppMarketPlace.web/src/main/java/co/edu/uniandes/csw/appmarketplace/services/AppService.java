@@ -239,17 +239,39 @@ public class AppService {
         try {
             String mimetype = bodyPart.getMediaType().toString();
             if (mimetype.contains("image")) {
-                writeToFile(fileInputStream, fileName, location, false, id);
+                writeToFile(fileInputStream, fileName, location, "images/", id);
                 appLogic.addImage(
                         id, S3Util.IMAGE_PATH + id + "/" + fileName, mimetype);
 
             }
 
             if (mimetype.contains("video")) {
-                writeToFile(fileInputStream, fileName, location, true, id);
+                writeToFile(fileInputStream, fileName, location, "videos/", id);
                 appLogic.addVideo(
                         id, S3Util.VIDEO_PATH + id + "/" + fileName, mimetype);
             }
+        } catch (IOException e) {
+            logger.error("Error saving file", e);
+            throw new WebApplicationException(e, 500);
+        }
+    }
+
+    @POST
+    @Path("{id: \\d+}/source")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void addSource (
+            @PathParam("id") Long id,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail,
+            @FormDataParam("file") FormDataBodyPart bodyPart) {
+
+        String location = req.getServletContext().getRealPath("/");
+        String fileName = fileDetail.getFileName();
+        // save it
+        try {
+            writeToFile(fileInputStream, fileName, location, "sources/", id);
+            appLogic.addSource(id, S3Util.SOURCE_PATH + id + "/" + fileName, "1.0.0");
+            
         } catch (IOException e) {
             logger.error("Error saving file", e);
             throw new WebApplicationException(e, 500);
@@ -261,7 +283,7 @@ public class AppService {
             InputStream uploadedInputStream,
             String fileName,
             String parentFolder,
-            boolean isVideo,
+            String prefix,
             Long id) throws IOException {
 
         File file = new File(parentFolder, fileName);
@@ -278,6 +300,6 @@ public class AppService {
         out.close();
 
         // Uploading file to AWS S3
-        S3Util.uploadFile(isVideo ? "videos/" : "images/", file, id);
+        S3Util.uploadFile(prefix, file, id);
     }
 }
