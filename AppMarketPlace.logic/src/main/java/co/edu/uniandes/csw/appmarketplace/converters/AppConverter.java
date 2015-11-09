@@ -135,8 +135,7 @@ public abstract class AppConverter {
      */
     public static AppEntity fullDTO2Entity(AppDTO dto) {
         if (dto != null) {
-            AppEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }

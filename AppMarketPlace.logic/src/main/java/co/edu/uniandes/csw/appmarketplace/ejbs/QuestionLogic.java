@@ -8,7 +8,6 @@ package co.edu.uniandes.csw.appmarketplace.ejbs;
 import co.edu.uniandes.csw.appmarketplace.api.IQuestionLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.QuestionConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
-import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.QuestionEntity;
@@ -34,7 +33,6 @@ public class QuestionLogic implements IQuestionLogic {
     public QuestionDTO doQuestion(QuestionDTO question, DeveloperDTO dev, AppDTO app, String devEmail) {
         
         try {
-            //TODO email dev is missing
             QuestionEntity entity=QuestionConverter.basicDTO2Entity(question);
             persistence.createQuestion(entity);            
             String nombreCliente="";

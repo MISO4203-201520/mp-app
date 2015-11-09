@@ -6,9 +6,7 @@
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.NoResultException;
@@ -18,12 +16,13 @@ import org.slf4j.LoggerFactory;
 /**
  *
  * @author af.esguerra10
- * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
+ * @modified by d.jmenez13 Implementing logger. Shortening technical debt.
  */
 @Stateless
 public class RatePersistence extends CrudPersistence<RateEntity> {
-    static final Logger logger = LoggerFactory
-			.getLogger(RatePersistence.class);
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(RatePersistence.class);
 
     public RatePersistence() {
         this.entityClass = RateEntity.class;
@@ -40,8 +39,8 @@ public class RatePersistence extends CrudPersistence<RateEntity> {
         }
         return null;
     }
-    
-    public Double getAverageByApp(Long appId){
+
+    public Double getAverageByApp(Long appId) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("app_id", appId);

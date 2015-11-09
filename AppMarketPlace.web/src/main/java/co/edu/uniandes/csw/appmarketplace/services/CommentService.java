@@ -51,7 +51,7 @@ public class CommentService {
     private ICommentLogic commentLogic;
     
 
-    static final Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(CommentService.class);
 
     @POST
@@ -64,7 +64,7 @@ public class CommentService {
         } else {
             dto.setClient(client);
 
-            return commentLogic.InsertComment(dto);
+            return commentLogic.insertComment(dto);
         } 
     }
     
@@ -75,8 +75,7 @@ public class CommentService {
         if (page != null && maxRecords != null) {
             this.response.setIntHeader("X-Total-Count", commentLogic.countComments());
         }
-        List<CommentDTO> comments = commentLogic.getComments(page, maxRecords);
-        return comments;
+        return commentLogic.getComments(page, maxRecords);
     }
     
     @GET

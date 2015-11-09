@@ -11,13 +11,8 @@ import co.edu.uniandes.csw.appmarketplace.dtos.PaymentCardDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.PaymentCardPersistence;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.transaction.Transactional;
@@ -28,7 +23,7 @@ import javax.transaction.Transactional;
  */
 public class PaymentCardLogic implements IPaymentCardLogic{
     
-    static final Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(AppPersistence.class);
 
     @Inject

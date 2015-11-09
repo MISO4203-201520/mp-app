@@ -95,7 +95,7 @@ public class CommentLogicTest {
     public void testInsertComment() throws Exception {
         PodamFactory factory = new PodamFactoryImpl();
         CommentDTO dto = factory.manufacturePojo(CommentDTO.class);
-        CommentDTO result = commentLogic.InsertComment(dto);
+        CommentDTO result = commentLogic.insertComment(dto);
         Assert.assertNotNull(result);
         Comment entity = em.find(Comment.class, result.getId());
 

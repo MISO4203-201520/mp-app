@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
 
-    static final Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(UserService.class);
 
     @Inject
@@ -59,8 +59,8 @@ public class UserService {
     @Context
     private HttpServletRequest req;
 
-    private final String clientCD = "appoteca_client_id";
-    private final String developerCD = "appoteca_developer_id";
+    private static final String clientCD = "appoteca_client_id";
+    private static final String developerCD = "appoteca_developer_id";
 
     private UserDTO subjectToUserDTO() {
         String href = req.getRemoteUser();
@@ -135,7 +135,7 @@ public class UserService {
     public Response setUser(UserDTO user) {
         try {
             Account account = createUser(user);
-            if (user.getRole().equals("user")) {
+            if ("user".equals(user.getRole())) {
                 ClientDTO client = new ClientDTO();
                 client.setName(user.getUserName());
                 client.setUserId(account.getHref());
@@ -145,7 +145,7 @@ public class UserService {
                 client = clientLogic.createClient(client);
                 account.getCustomData().put(clientCD, client.getId());
                 account.getCustomData().save();
-            } else if (user.getRole().equals("developer")) {
+            } else if ("developer".equals(user.getRole())) {
                 DeveloperDTO developer = new DeveloperDTO();
                 developer.setName(user.getUserName());
                 developer.setUserId(account.getHref());

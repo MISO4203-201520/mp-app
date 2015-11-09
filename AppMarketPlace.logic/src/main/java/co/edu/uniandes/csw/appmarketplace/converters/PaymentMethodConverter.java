@@ -86,8 +86,7 @@ public abstract class PaymentMethodConverter {
      */
     public static PaymentMethodDTO fullEntity2DTO(PaymentMethodEntity entity) {
         if (entity != null) {
-            PaymentMethodDTO dto = basicEntity2DTO(entity);
-            return dto;
+            return basicEntity2DTO(entity);
         } else {
             return null;
         }
@@ -98,8 +97,7 @@ public abstract class PaymentMethodConverter {
      */
     public static PaymentMethodEntity fullDTO2Entity(PaymentMethodDTO dto) {
         if (dto != null) {
-            PaymentMethodEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }

@@ -87,8 +87,7 @@ public abstract class AdminConverter {
      */
     public static AdminDTO fullEntity2DTO(AdminEntity entity) {
         if (entity != null) {
-            AdminDTO dto = basicEntity2DTO(entity);
-            return dto;
+            return basicEntity2DTO(entity);
         } else {
             return null;
         }
@@ -99,8 +98,7 @@ public abstract class AdminConverter {
      */
     public static AdminEntity fullDTO2Entity(AdminDTO dto) {
         if (dto != null) {
-            AdminEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }

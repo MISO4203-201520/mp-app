@@ -9,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @generated
- * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
+ * @generated @modified by d.jmenez13 Implementing logger. Shortening technical
+ * debt.
  */
 @Stateless
 public class ClientPersistence extends CrudPersistence<ClientEntity> {
-    static final Logger logger = LoggerFactory
-			.getLogger(ClientPersistence.class);
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(ClientPersistence.class);
 
     /**
      * @generated
@@ -23,7 +24,7 @@ public class ClientPersistence extends CrudPersistence<ClientEntity> {
     public ClientPersistence() {
         this.entityClass = ClientEntity.class;
     }
-    
+
     public ClientEntity getClientByUserId(String userId) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
@@ -34,7 +35,7 @@ public class ClientPersistence extends CrudPersistence<ClientEntity> {
         }
         return null;
     }
-    
+
     public ClientEntity getClientByUsername(String username) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();

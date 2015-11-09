@@ -13,7 +13,6 @@ public class DeveloperDTO {
     private Long id;
     private String name;
     private String userId;
-    private String fullName;
     private String email;
     private String status;
     @PodamExclude
@@ -92,10 +91,6 @@ public class DeveloperDTO {
                 .append(" ")
                 .append(this.getLastName())
                 .toString();
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 
     public String getStatus() {

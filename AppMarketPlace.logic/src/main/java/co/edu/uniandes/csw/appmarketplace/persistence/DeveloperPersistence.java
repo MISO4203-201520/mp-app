@@ -9,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @generated
- * @modified by d.jmenez13  Implementing logger. Shortening technical debt.
+ * @generated @modified by d.jmenez13 Implementing logger. Shortening technical
+ * debt.
  */
 @Stateless
 public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
-    static final Logger logger = LoggerFactory
-			.getLogger(DeveloperPersistence.class);
+
+    private static final Logger logger = LoggerFactory
+            .getLogger(DeveloperPersistence.class);
 
     /**
      * @generated
@@ -23,7 +24,7 @@ public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
     public DeveloperPersistence() {
         this.entityClass = DeveloperEntity.class;
     }
-    
+
     public DeveloperEntity getDeveloperByUserId(String userId) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
@@ -34,8 +35,8 @@ public class DeveloperPersistence extends CrudPersistence<DeveloperEntity> {
         }
         return null;
     }
-    
-    public DeveloperEntity getDeveloperByUsername (String username) {
+
+    public DeveloperEntity getDeveloperByUsername(String username) {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("username", username);
