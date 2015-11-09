@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
+import co.edu.uniandes.csw.appmarketplace.aws.S3Util;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
@@ -81,9 +82,6 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
-        if (!SecurityUtils.getSubject().isPermitted("app:create")) {
-            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
-        }
         UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
 
         if (loggedUser != null) {
@@ -149,9 +147,6 @@ public class AppService {
     @PUT
     @Path("{id: \\d+}")
     public AppDTO updateApp(@PathParam("id") Long id, AppDTO dto) {
-        if (!SecurityUtils.getSubject().isPermitted("app:update")) {
-            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
-        }
         dto.setId(id);
         AppDTO app = appLogic.getApp(id);
         if (!app.getVersion().equals(dto.getVersion())) {
@@ -181,9 +176,6 @@ public class AppService {
     @DELETE
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
-        if (!SecurityUtils.getSubject().isPermitted("app:delete")) {
-            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
-        }
         appLogic.deleteApp(id);
     }
 
@@ -239,18 +231,22 @@ public class AppService {
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @FormDataParam("file") FormDataBodyPart bodyPart) {
 
-        String location = req.getServletContext().getRealPath("/media/" + id);
+        String location = req.getServletContext().getRealPath("/");
         String fileName = fileDetail.getFileName();
         // save it
         try {
             String mimetype = bodyPart.getMediaType().toString();
             if (mimetype.contains("image")) {
-                writeToFile(fileInputStream, fileName, location);
-                appLogic.addImage(id, "media/" + id + "/" + fileName, mimetype);
+                writeToFile(fileInputStream, fileName, location, false, id);
+                appLogic.addImage(
+                        id, S3Util.IMAGE_PATH + id + "/" + fileName, mimetype);
+
             }
+            
             if (mimetype.contains("video")) {
-                writeToFile(fileInputStream, fileName, location);
-                appLogic.addVideo(id, "media/" + id + "/" + fileName, mimetype);
+                writeToFile(fileInputStream, fileName, location, true, id);
+                appLogic.addVideo(
+                        id, S3Util.VIDEO_PATH + id + "/" + fileName, mimetype);
             }
         } catch (IOException e) {
             logger.error("Error saving file", e);
@@ -262,7 +258,9 @@ public class AppService {
     private void writeToFile(
             InputStream uploadedInputStream,
             String fileName,
-            String parentFolder) throws IOException {
+            String parentFolder,
+            boolean isVideo,
+            Long id) throws IOException {
 
         File file = new File(parentFolder, fileName);
         file.getParentFile().mkdirs();
@@ -276,5 +274,8 @@ public class AppService {
         }
         out.flush();
         out.close();
+        
+        // Uploading file to AWS S3
+        S3Util.uploadFile(isVideo ? "videos/" : "images/", file, id);
     }
 }
