@@ -39,6 +39,18 @@ public class AppDTO {
     private List<MediaDTO> videos;
     @PodamExclude
     private List<SourceDTO> sources;
+    
+    private List<IssueDTO> issues;
+
+    public List<IssueDTO> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<IssueDTO> issues) {
+        this.issues = issues;
+    }
+    
+    
 
     public boolean isEnabled() {
         return enabled;

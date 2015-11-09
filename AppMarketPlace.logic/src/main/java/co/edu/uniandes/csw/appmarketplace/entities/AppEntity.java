@@ -77,6 +77,9 @@ public class AppEntity implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
     private List<QuestionEntity> questions;
+    
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
+    private List<IssueEntity> issues;
 
     @ManyToOne
     private DeveloperEntity developer;
@@ -288,4 +291,14 @@ public class AppEntity implements Serializable {
     public void setSources(List<AppSourceEntity> sources) {
         this.sources = sources;
     }
+
+    public List<IssueEntity> getIssues() {
+        return issues;
+    }
+
+    public void setIssues(List<IssueEntity> issues) {
+        this.issues = issues;
+    }
+    
+    
 }

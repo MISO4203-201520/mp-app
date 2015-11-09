@@ -125,6 +125,7 @@ public abstract class AppConverter {
             dto.setImages(AppImageConverter.listEntity2DTO(entity.getImages()));
             dto.setVideos(AppVideoConverter.listEntity2DTO(entity.getVideos()));
             dto.setSources(AppSourceConverter.listEntity2DTO(entity.getSources()));
+            dto.setIssues(IssueConverter.listEntity2DTO(entity.getIssues()));
             return dto;
         } else {
             return null;
