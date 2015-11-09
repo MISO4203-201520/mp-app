@@ -17,7 +17,6 @@
             this.findCheapest = function (text) {
                 return this.api.one('cheapest/' + text).get();
             };
-
             this.getAppsByCategory = function (text) {
                 return this.api.getList({category: text});
             };
@@ -27,14 +26,11 @@
             this.getPurchasedAppsByUser = function () {
                 return this.api.getList({purchasedapps: true});
             };
-            
-
             this.rateApp = function (app, rate) {
                 return app.all('rate').post({rate: rate});
             };
-
             this.getAppById = function (id) {
                 return ra.one(context, id).get();
-            };            
+            };
         }]);
 })(window.angular);

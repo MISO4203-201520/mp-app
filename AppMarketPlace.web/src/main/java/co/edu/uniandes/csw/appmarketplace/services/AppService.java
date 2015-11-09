@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.Principal;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -82,6 +81,9 @@ public class AppService {
     @POST
     @StatusCreated
     public AppDTO createApp(AppDTO dto) {
+        if (!SecurityUtils.getSubject().isPermitted("app:create")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         UserDTO loggedUser = (UserDTO) SecurityUtils.getSubject().getSession().getAttribute("Developer");
 
         if (loggedUser != null) {
@@ -147,13 +149,16 @@ public class AppService {
     @PUT
     @Path("{id: \\d+}")
     public AppDTO updateApp(@PathParam("id") Long id, AppDTO dto) {
+        if (!SecurityUtils.getSubject().isPermitted("app:update")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         dto.setId(id);
         AppDTO app = appLogic.getApp(id);
-        if (!app.getVersion().equals(dto.getVersion())){
-            List<TransactionDTO> list=appLogic.findByApp(id);
-            if (list!=null){
+        if (!app.getVersion().equals(dto.getVersion())) {
+            List<TransactionDTO> list = appLogic.findByApp(id);
+            if (list != null) {
                 for (TransactionDTO trans : list) {
-                    ClientDTO client=clientLogic.getClientByUsername(trans.getPayer().getName());
+                    ClientDTO client = clientLogic.getClientByUsername(trans.getPayer().getName());
                     Account account = getClient().getResource(client.getUserId(), Account.class);
                     Emailer.sendAppVersionEmail(client.getFullName(), account.getEmail(), app.getName());
                 }
@@ -161,6 +166,7 @@ public class AppService {
         }
         return appLogic.updateApp(dto);
     }
+
     private ApplicationRealm getRealm() {
         return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
     }
@@ -175,6 +181,9 @@ public class AppService {
     @DELETE
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
+        if (!SecurityUtils.getSubject().isPermitted("app:delete")) {
+            throw new WebApplicationException(HttpServletResponse.SC_FORBIDDEN);
+        }
         appLogic.deleteApp(id);
     }
 

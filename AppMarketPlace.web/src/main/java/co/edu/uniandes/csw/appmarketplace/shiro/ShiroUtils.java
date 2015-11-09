@@ -8,6 +8,9 @@ import org.apache.shiro.mgt.RealmSecurityManager;
 
 public abstract class ShiroUtils {
 
+    private ShiroUtils() {
+    }
+
     public static ApplicationRealm getRealm() {
         return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
     }

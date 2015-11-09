@@ -10,7 +10,6 @@ import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
-import co.edu.uniandes.csw.appmarketplace.entities.TransactionEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppImagePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppVideoPersistence;
@@ -43,7 +42,7 @@ public class AppLogic implements IAppLogic {
     @Inject
     private AppVideoPersistence vidPersistence;
 
-    String excludeWords[] = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
+    String[] excludeWords = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
 
     /**
      * @generated
@@ -135,7 +134,7 @@ public class AppLogic implements IAppLogic {
         }
 
         lista.addAll(persistence.getAppsByKeyWords(keyword));
-        String words[] = keyword.split(" ");
+        String[] words = keyword.split(" ");
         if (words.length > 1) {
             for (String word : words) {
                 if (!verifyWord(word)) {

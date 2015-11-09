@@ -8,5 +8,5 @@ addons:
  - firefox: "38.0.1"
 
 script: "mvn verify"
-after_success:
+after_script:
  - mvn sonar:sonar

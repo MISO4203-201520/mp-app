@@ -98,8 +98,7 @@ public abstract class TransactionConverter {
      */
     public static TransactionDTO fullEntity2DTO(TransactionEntity entity) {
         if (entity != null) {
-            TransactionDTO dto = basicEntity2DTO(entity);
-            return dto;
+            return basicEntity2DTO(entity);
         } else {
             return null;
         }
@@ -110,8 +109,7 @@ public abstract class TransactionConverter {
      */
     public static TransactionEntity fullDTO2Entity(TransactionDTO dto) {
         if (dto != null) {
-            TransactionEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }

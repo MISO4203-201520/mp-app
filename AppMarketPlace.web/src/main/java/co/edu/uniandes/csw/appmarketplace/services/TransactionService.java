@@ -17,7 +17,6 @@ import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
 import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,7 +25,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -36,7 +34,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -51,7 +48,7 @@ import org.apache.shiro.subject.Subject;
 public class TransactionService {
 
     @Inject
-    private ITransactionLogic TransactionLogic;
+    private ITransactionLogic transactionLogic;
     @Inject
     private IClientLogic clientLogic;
     @Inject
@@ -95,7 +92,7 @@ public class TransactionService {
                 dto.setTotal((int) ((appLogic.getApp(cartItem.getApp().getId()).getPrice()) * Long.parseLong(cartItem.getQuantity().toString())));
             }
             dto.setAppId(appLogic.getApp(cartItem.getApp().getId()));
-            TransactionLogic.createTransaction(dto);
+            transactionLogic.createTransaction(dto);
             cartItemLogic.deleteCartItemByClient(client.getId(), cartItem.getId());
             number++;
             // Verifica si esta en el rango de fechas para aplicar el descuento.
@@ -109,37 +106,37 @@ public class TransactionService {
 
     @GET
     public List<TransactionDTO> getPaymentMethods() {
-        return TransactionLogic.getTransactions(page, maxRecords);
+        return transactionLogic.getTransactions(page, maxRecords);
     }
 
     @GET
     @Path("{id: \\d+}")
     public TransactionDTO getPaymentMethod(@PathParam("id") Long id) {
-        return TransactionLogic.getTransaction(id);
+        return transactionLogic.getTransaction(id);
     }
     
     @GET
     @Path("user/{userid}")
     public List<TransactionDTO> getTxByUserId(@PathParam("userid") Long userid) {
-        return TransactionLogic.getTransactionByPayer(userid);
+        return transactionLogic.getTransactionByPayer(userid);
     }
 
     @PUT
     @Path("{id: \\d+}")
     public TransactionDTO updateApp(@PathParam("id") Long id, TransactionDTO dto) {
         dto.setId(id);
-        return TransactionLogic.updateTransaction(dto);
+        return transactionLogic.updateTransaction(dto);
     }
 
     @DELETE
     @Path("{id: \\d+}")
     public void deleteApp(@PathParam("id") Long id) {
-        TransactionLogic.deleteTransaction(id);
+        transactionLogic.deleteTransaction(id);
     }
     
     @GET
     @Path("client/{id: \\d+}")
     public List<TransactionDTO> getByClientId(@PathParam("id") Long id) {
-        return TransactionLogic.findByClientId(id);
+        return transactionLogic.findByClientId(id);
     }
 }

@@ -107,8 +107,7 @@ public abstract class PaymentCardConverter {
      */
     public static PaymentCardDTO fullEntity2DTO(PaymentCardEntity entity) {
         if (entity != null) {
-            PaymentCardDTO dto = basicEntity2DTO(entity);
-            return dto;
+            return basicEntity2DTO(entity);
         } else {
             return null;
         }
@@ -119,8 +118,7 @@ public abstract class PaymentCardConverter {
      */
     public static PaymentCardEntity fullDTO2Entity(PaymentCardDTO dto) {
         if (dto != null) {
-            PaymentCardEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }

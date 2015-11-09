@@ -15,9 +15,9 @@
             this.placePayment = function (record) {
                 return this.api.customPOST(record, '', {}, {});
             };
-            
+
             this.getTxByPayer = function (userid) {
-                return this.api.customGET("user/"+userid,'');
+                return this.api.customGET("user/" + userid, '');
             };
         }]);
 

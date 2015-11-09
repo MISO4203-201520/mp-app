@@ -19,8 +19,8 @@
                     $scope.client = client;
                     trnSvc.getTxByPayer($scope.client.id).then(function (transaction) {
                         $scope.transaction = [];
-                        if (transaction) {                            
-                            $scope.transaction.push(transaction);                            
+                        if (transaction) {
+                            $scope.transaction.push(transaction);
                         }
                     });
                 } else {

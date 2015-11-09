@@ -5,7 +5,6 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
-import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
 
 /**

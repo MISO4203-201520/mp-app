@@ -1,28 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.appmarketplace.converters;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.Comment;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author if.garcia11
- */
 public abstract class CommentConverter {
 
     private CommentConverter() {
     }
-
-    
 
     public static CommentDTO refEntity2DTO(Comment entity) {
         if (entity != null) {
