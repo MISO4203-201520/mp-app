@@ -92,12 +92,14 @@ public class AppService {
                 dto.setDeveloper(developer);
                 return appLogic.createApp(dto);
             } else {
-                logger.warn("App cannot be created because there's no developer associated.");
-                return null;
+                String msg = "App cannot be created because there's no developer associated";
+                logger.error(msg);
+                throw new WebApplicationException(msg, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } else {
-            logger.warn("App cannot be created because there's no developer associated (no session initialized).");
-            throw new WebApplicationException(HttpServletResponse.SC_UNAUTHORIZED);
+            String msg = "App cannot be created because there's no developer associated (no session initialized)";
+            logger.warn(msg);
+            throw new WebApplicationException(msg, HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
@@ -242,7 +244,7 @@ public class AppService {
                         id, S3Util.IMAGE_PATH + id + "/" + fileName, mimetype);
 
             }
-            
+
             if (mimetype.contains("video")) {
                 writeToFile(fileInputStream, fileName, location, true, id);
                 appLogic.addVideo(
@@ -274,7 +276,7 @@ public class AppService {
         }
         out.flush();
         out.close();
-        
+
         // Uploading file to AWS S3
         S3Util.uploadFile(isVideo ? "videos/" : "images/", file, id);
     }

@@ -4,7 +4,6 @@ import co.edu.uniandes.csw.appmarketplace.dtos.*;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.appmarketplace.services.CartItemService;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
-import uk.co.jemos.podam.api.PodamFactoryImpl;  
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -49,8 +48,8 @@ public class CartItemServiceTest {
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
     public final static List<CartItemDTO> data = new ArrayList<>();
-    public static  Cookie cookie_session_id=null;
-    
+    public static Cookie cookie_session_id = null;
+
     /**
      * @generated
      */
@@ -76,7 +75,7 @@ public class CartItemServiceTest {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
         return war;
     }
-    
+
     /**
      * @generated
      */
@@ -87,11 +86,8 @@ public class CartItemServiceTest {
             CartItemDTO dto = factory.manufacturePojo(CartItemDTO.class);
             data.add(dto);
         }
-        
-        
-
     }
-    
+
     //Metodo para autenticarse de ser necesario, recuerde que esto depende de los permisos que se encuentran en el archivo shiro.ini
     private static Cookie login(String username, String password) {
         Client cliente = ClientBuilder.newClient();
@@ -111,7 +107,7 @@ public class CartItemServiceTest {
             return null;
         }
     }
-    
+
     /**
      * @generated
      */
@@ -125,13 +121,13 @@ public class CartItemServiceTest {
         Client cliente = ClientBuilder.newClient();
         PodamFactory factory = new PodamFactoryImpl();
         Response response;
-        
+
         DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
         developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
         Response response2 = cliente.target(URLBASE + "/developers")
                 .request().cookie(cookie_session_id)
                 .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
-        
+
         AppDTO app = factory.manufacturePojo(AppDTO.class);
         response = cliente.target(URLBASE).path("/apps")
                 .request().cookie(cookie_session_id)
@@ -149,7 +145,7 @@ public class CartItemServiceTest {
                 .post(Entity.entity(client, MediaType.APPLICATION_JSON));
         client = (ClientDTO) response.readEntity(ClientDTO.class);
         dto.setClient(client);
-cookie_session_id = login(
+        cookie_session_id = login(
                 System.getenv("APPOTECA_CLIENT_USERNAME"),
                 System.getenv("APPOTECA_CLIENT_PASSWORD"));
 
@@ -159,8 +155,8 @@ cookie_session_id = login(
         CartItemDTO result = (CartItemDTO) response.readEntity(CartItemDTO.class);
         Assert.assertEquals(dto.getId(), result.getId());
         Assert.assertEquals(Created, response.getStatus());
-    }    
-    
+    }
+
     /**
      * @generated
      */
@@ -176,7 +172,7 @@ cookie_session_id = login(
                 .request().cookie(cookie_session_id).get(CartItemDTO.class);
         Assert.assertEquals(cartitemTest.getId(), data.get(0).getId());
     }
-    
+
     /**
      * @generated
      */
@@ -194,7 +190,7 @@ cookie_session_id = login(
         Assert.assertEquals(Ok, response.getStatus());
         Assert.assertEquals(1, listCartItemTest.size());
     }
-    
+
     /**
      * @generated
      */
@@ -213,11 +209,7 @@ cookie_session_id = login(
         cartitem.setId(cartitemChanged.getId());
         cartitem.setName(cartitemChanged.getName());
         cartitem.setQuantity(cartitemChanged.getQuantity());
-        
-        
-        
-                
-        
+
         Response response = cliente.target(URLBASE + PATH).path("/" + cartitem.getId())
                 .request().cookie(cookie_session_id).put(Entity.entity(cartitem, MediaType.APPLICATION_JSON));
         CartItemDTO cartitemTest = (CartItemDTO) response.readEntity(CartItemDTO.class);
@@ -227,7 +219,7 @@ cookie_session_id = login(
         Assert.assertEquals(cartitem.getQuantity(), cartitemTest.getQuantity());
 
     }
-    
+
     /**
      * @generated
      */
