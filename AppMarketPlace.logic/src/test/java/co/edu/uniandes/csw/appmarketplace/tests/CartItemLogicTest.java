@@ -169,6 +169,12 @@ public class CartItemLogicTest {
         }
     }
 
+    @Test
+    public void countCartItemsByClientTest() {
+        int list = cartItemLogic.countCartItemsByClient(client.getId());
+        Assert.assertEquals(data.size(), list);
+    }
+
     /**
      * @generated
      */
