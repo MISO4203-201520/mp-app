@@ -3,12 +3,15 @@ package co.edu.uniandes.csw.appmarketplace.tests;
 import co.edu.uniandes.csw.appmarketplace.ejbs.AppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.ClientConverter;
 import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.SourceDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
@@ -53,6 +56,8 @@ public class AppLogicTest {
                 .addPackage(AppPersistence.class.getPackage())
                 .addPackage(DeveloperEntity.class.getPackage())
                 .addPackage(DeveloperDTO.class.getPackage())
+                .addPackage(ClientEntity.class.getPackage())
+                .addPackage(ClientDTO.class.getPackage())
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("META-INF/beans.xml", "beans.xml");
     }
@@ -101,6 +106,7 @@ public class AppLogicTest {
     private void clearData() {
         em.createQuery("delete from AppImageEntity").executeUpdate();
         em.createQuery("delete from AppVideoEntity").executeUpdate();
+        em.createQuery("delete from AppSourceEntity").executeUpdate();
         em.createQuery("delete from AppEntity").executeUpdate();
     }
 
@@ -108,6 +114,7 @@ public class AppLogicTest {
      * @generated
      */
     private List<AppEntity> data = new ArrayList<AppEntity>();
+    private List<ClientEntity> clientOraculo = new ArrayList<ClientEntity>();
 
     /**
      * @generated
@@ -131,6 +138,12 @@ public class AppLogicTest {
             data.add(entity);
         }
         
+        // Loading randoms clients
+        for (int i = 0; i < 3; i++) {
+            ClientEntity client = ClientConverter.basicDTO2Entity(factory.manufacturePojo(ClientDTO.class));
+            em.persist(client);
+            clientOraculo.add(client);
+        }
     }
 
     /**
