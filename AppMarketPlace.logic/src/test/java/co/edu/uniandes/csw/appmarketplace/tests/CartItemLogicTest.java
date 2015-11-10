@@ -5,6 +5,7 @@ import co.edu.uniandes.csw.appmarketplace.api.ICartItemLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.CartItemConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.CartItemDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.CartItemEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.CartItemPersistence;
 import static co.edu.uniandes.csw.appmarketplace.tests._TestUtil.*;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Arquillian.class)
 public class CartItemLogicTest {
+
     public static final String DEPLOY = "Prueba";
 
     /**
@@ -63,6 +65,8 @@ public class CartItemLogicTest {
      */
     @Inject
     UserTransaction utx;
+
+    private ClientEntity client;
 
     /**
      * @generated
@@ -100,10 +104,14 @@ public class CartItemLogicTest {
      * @generated
      */
     private void insertData() {
+        client = new ClientEntity();
+        client.setName(generateRandom(String.class));
+        em.persist(client);
         for (int i = 0; i < 3; i++) {
             CartItemEntity entity = new CartItemEntity();
-        	entity.setName(generateRandom(String.class));
-        	entity.setQuantity(generateRandom(Integer.class));
+            entity.setName(generateRandom(String.class));
+            entity.setQuantity(generateRandom(Integer.class));
+            entity.setClient(client);
             em.persist(entity);
             data.add(entity);
         }
@@ -144,6 +152,27 @@ public class CartItemLogicTest {
             }
             Assert.assertTrue(found);
         }
+    }
+
+    @Test
+    public void getCartItemsByClientTest() {
+        List<CartItemDTO> list = cartItemLogic.getCartItemsByClient(null, null, client.getId());
+        Assert.assertEquals(data.size(), list.size());
+        for (CartItemDTO dto : list) {
+            boolean found = false;
+            for (CartItemEntity entity : data) {
+                if (dto.getId().equals(entity.getId())) {
+                    found = true;
+                }
+            }
+            Assert.assertTrue(found);
+        }
+    }
+
+    @Test
+    public void countCartItemsByClientTest() {
+        int list = cartItemLogic.countCartItemsByClient(client.getId());
+        Assert.assertEquals(data.size(), list);
     }
 
     /**
