@@ -40,7 +40,7 @@ public abstract class CommentConverter {
         }
     }
 
-    public List<CommentDTO> childListDTO2Entity(List<Comment> entities) {
+    public static List<CommentDTO> childListDTO2Entity(List<Comment> entities) {
         List<CommentDTO> dtos = new ArrayList<CommentDTO>();
         if (entities != null) {
             for (Comment entity : entities) {
@@ -51,7 +51,7 @@ public abstract class CommentConverter {
         return dtos;
     }
 
-    public List<Comment> childListEntity2DTO(List<CommentDTO> dtos) throws ParseException {
+    public static List<Comment> childListEntity2DTO(List<CommentDTO> dtos) throws ParseException {
         List<Comment> entities = new ArrayList<Comment>();
 
         if (dtos != null) {
