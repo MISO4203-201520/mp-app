@@ -7,7 +7,7 @@ import uk.co.jemos.podam.common.PodamExclude;
 /**
  * @generated
  */
-@XmlRootElement 
+@XmlRootElement
 public class ClientDTO {
 
     private Long id;
@@ -22,6 +22,7 @@ public class ClientDTO {
     private List<CartItemDTO> cartItems;
     @PodamExclude
     private List<PaymentCardDTO> cards;
+
     /**
      * @generated
      */

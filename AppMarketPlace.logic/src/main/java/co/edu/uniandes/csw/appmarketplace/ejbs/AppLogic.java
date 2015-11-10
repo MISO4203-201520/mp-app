@@ -218,12 +218,18 @@ public class AppLogic implements IAppLogic {
 
     @Override
     public void addSource(Long appId, String url, String version) {
+        // Getting app by id to add a source
         AppEntity app = persistence.find(appId);
         AppSourceEntity source = new AppSourceEntity();
         source.setApp(app);
         source.setUrl(url);
         source.setVersion(version);
+        
+        // Saving source entity
         sourcePersistence.create(source);
+        // Adding source to found app and update it
+        app.addSource(source);
+        persistence.update(app);
     }
 
     @Override

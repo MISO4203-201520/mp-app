@@ -4,15 +4,14 @@
             <div ng-show="uploader.isHTML5" class="well my-drop-zone" nv-file-over uploader="uploader">
                 Drop sources here
             </div>
-            <input type="file" nv-file-select uploader="uploader"/>
+            <input type="file" nv-file-select uploader="uploader" multiple/>
         </div>
-        {{version | json}}
         <div class="col-md-8">
             <table class="table">
                 <thead>
                     <tr>
-                        <th width="50%">Name</th>
-                        <th>Version</th>
+                        <th width="35%">Name</th>
+                        <th width="20%">Version</th>
                         <th ng-show="uploader.isHTML5">Size</th>
                         <th ng-show="uploader.isHTML5">Progress</th>
                         <th>Status</th>

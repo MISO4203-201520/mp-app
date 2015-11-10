@@ -289,7 +289,10 @@ public class AppEntity implements Serializable {
 
     public void setSources(List<AppSourceEntity> sources) {
         this.sources = sources;
+    }
     
+    public void addSource(AppSourceEntity source) {
+        this.getSources().add(source);
     }
     
     public String getIssueUrl() {
