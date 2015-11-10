@@ -29,6 +29,7 @@ public class AppDTO {
     private Double rate;
     private Long downloads;
     private boolean enabled;
+    private String issueUrl;
     @XmlJavaTypeAdapter(DateAdapter.class)
     private Date startDiscountDate;
     @XmlJavaTypeAdapter(DateAdapter.class)
@@ -39,15 +40,13 @@ public class AppDTO {
     private List<MediaDTO> videos;
     @PodamExclude
     private List<SourceDTO> sources;
-    
-    private List<IssueDTO> issues;
 
-    public List<IssueDTO> getIssues() {
-        return issues;
+    public String getIssueUrl() {
+        return issueUrl;
     }
 
-    public void setIssues(List<IssueDTO> issues) {
-        this.issues = issues;
+    public void setIssueUrl(String issueUrl) {
+        this.issueUrl = issueUrl;
     }
     
     

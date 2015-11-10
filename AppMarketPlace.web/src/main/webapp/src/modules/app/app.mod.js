@@ -76,6 +76,12 @@
                 displayName: 'Category',
                 type: 'String',
                 required: true
+            },
+            {
+                name: 'issueUrl',
+                displayName: 'Issue Reporter URL',
+                type: 'String',
+                required: true
             }
         ]});
 })(window.angular);
