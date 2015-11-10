@@ -256,12 +256,6 @@ public class AppServiceTest {
         if (cookie_session_id != null) {
             
             Client cliente = ClientBuilder.newClient();
-            PodamFactory factory = new PodamFactoryImpl();
-            DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
-            developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
-            Response response2 = cliente.target(URLBASE).path("/developers")
-                    .request().cookie(cookie_session_id)
-                    .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
             List<AppDTO> lessPriceApps = new ArrayList<AppDTO>();
             Integer lessPrice = oraculo.get(0).getPrice();
             for(AppDTO app: oraculo){
@@ -277,7 +271,7 @@ public class AppServiceTest {
                     .request().cookie(cookie_session_id)
                     .post(Entity.entity(app, MediaType.APPLICATION_JSON));
             }
-            Response response = cliente.target(URLBASE + PATH + "/cheapest/"+developer.getName())
+            Response response = cliente.target(URLBASE + PATH + "/cheapest/"+System.getenv("APPOTECA_DEVELOPER_USERNAME"))
                     .request(MediaType.APPLICATION_JSON).cookie(cookie_session_id)
                     .get();
             List<AppDTO> res = response.readEntity(new GenericType<ArrayList<AppDTO>>() {});
