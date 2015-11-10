@@ -18,6 +18,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -244,6 +245,43 @@ public class AppServiceTest {
         Response response = cliente.target(URLBASE + PATH).path("/" + app.getId())
                 .request().cookie(cookie_session_id).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
+    }
+    
+    @Test
+    @RunAsClient
+    public void t8GetCheapestApp(){
+        Cookie cookie_session_id = login(
+                System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+        if (cookie_session_id != null) {
+            
+            Client cliente = ClientBuilder.newClient();
+            List<AppDTO> lessPriceApps = new ArrayList<AppDTO>();
+            Integer lessPrice = oraculo.get(0).getPrice();
+            for(AppDTO app: oraculo){
+                if(app.getPrice()<lessPrice){
+                    lessPrice = app.getPrice();
+                    lessPriceApps.clear();
+                    lessPriceApps.add(app);
+                }else if(app.getPrice().equals(lessPrice)){
+                    lessPriceApps.add(app);
+                }
+                //Se agrega cada app
+                Response response = cliente.target(URLBASE + PATH)
+                    .request().cookie(cookie_session_id)
+                    .post(Entity.entity(app, MediaType.APPLICATION_JSON));
+            }
+            Response response = cliente.target(URLBASE + PATH + "/cheapest/"+System.getenv("APPOTECA_DEVELOPER_USERNAME"))
+                    .request(MediaType.APPLICATION_JSON).cookie(cookie_session_id)
+                    .get();
+            List<AppDTO> res = response.readEntity(new GenericType<ArrayList<AppDTO>>() {});
+            Assert.assertEquals(lessPriceApps.size(), res.size() );
+            for(AppDTO app: res){
+                Assert.assertEquals(lessPrice, app.getPrice());
+            }
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
     }
 
 }

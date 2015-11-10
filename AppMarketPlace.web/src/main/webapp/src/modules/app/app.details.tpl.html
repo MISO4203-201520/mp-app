@@ -58,6 +58,10 @@
             <h1>Platform</h1>
             <p>{{app.platform}}</p>
         </div>
+        <div class="col-md-3 text-center">
+            <h3>Issue Reporter URL</h3>
+            <p><a target="_blank" ng-href="{{app.issueUrl}}">{{app.issueUrl}}</a></p>
+        </div>
     </div>
     <div ng-if="app.comments.length" class="col-md-12 well">
         <h2>Comments</h2>

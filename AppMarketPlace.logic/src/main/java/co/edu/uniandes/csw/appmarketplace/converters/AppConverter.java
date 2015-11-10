@@ -38,6 +38,7 @@ public abstract class AppConverter {
             dto.setStartDiscountDate(entity.getStartDiscountDate());
             dto.setFinishDiscountDate(entity.getFinishDiscountDate());
             dto.setEnabled(entity.isEnabled());
+            dto.setIssueUrl(entity.getIssueUrl());
 
             return dto;
         } else {
@@ -81,6 +82,7 @@ public abstract class AppConverter {
             dto.setStartDiscountDate(entity.getStartDiscountDate());
             dto.setFinishDiscountDate(entity.getFinishDiscountDate());
             dto.setEnabled(entity.isEnabled());
+            dto.setIssueUrl(entity.getIssueUrl());
 
             return dto;
         } else {
@@ -107,6 +109,7 @@ public abstract class AppConverter {
             entity.setCategory(dto.getCategory());
             entity.setStartDiscountDate(dto.getStartDiscountDate());
             entity.setFinishDiscountDate(dto.getFinishDiscountDate());
+            entity.setIssueUrl(dto.getIssueUrl());
             dto.setEnabled(entity.isEnabled());
 
             return entity;

@@ -10,6 +10,7 @@
     <class>co.edu.uniandes.csw.appmarketplace.entities.Cliententity_1</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.Purchasedrecordentity</class>
     <class>co.edu.uniandes.csw.appmarketplace.entities.Appentity_1</class>
+    <class>co.edu.uniandes.csw.appmarketplace.entities.IssueEntity</class>
     <properties>
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
