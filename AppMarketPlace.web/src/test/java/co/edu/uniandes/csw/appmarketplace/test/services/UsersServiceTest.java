@@ -13,7 +13,11 @@ import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.appmarketplace.services.QuestionService;
 import co.edu.uniandes.csw.appmarketplace.services.UserService;
+import static co.edu.uniandes.csw.appmarketplace.test.services.AdminServiceTest.Created;
 import static co.edu.uniandes.csw.appmarketplace.test.services.AdminServiceTest.OkWithoutContent;
+import static co.edu.uniandes.csw.appmarketplace.test.services.AdminServiceTest.PATHDEVELOPER;
+import static co.edu.uniandes.csw.appmarketplace.test.services.AdminServiceTest.URLBASE;
+import static co.edu.uniandes.csw.appmarketplace.test.services.AdminServiceTest.developersOraculo;
 import static co.edu.uniandes.csw.appmarketplace.test.services._TestUtil.generateRandom;
 import java.io.File;
 import java.io.IOException;
@@ -153,5 +157,55 @@ public class UsersServiceTest {
         }catch(Exception e){
             
         }
+    }
+    
+    @Test
+    @RunAsClient
+    public void t2Logout(){
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"),
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+
+        if (cookieSessionId != null) {
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATH).path("/logout")
+                    .request().cookie(cookieSessionId)
+                    .get();
+            Assert.assertEquals(Ok, response.getStatus());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+    
+    @Test
+    @RunAsClient
+    public void t3CurrentUser(){
+        Cookie cookieSessionId = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"),
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+
+        if (cookieSessionId != null) {
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATH).path("/currentUser")
+                    .request().cookie(cookieSessionId)
+                    .get();
+            UserDTO dto = (UserDTO) response.readEntity(UserDTO.class);
+            Assert.assertEquals(Ok, response.getStatus());
+            Assert.assertEquals(System.getenv("APPOTECA_ADMIN_USERNAME"), dto.getUserName());
+        } else {
+            Assert.fail("Access denied or Invalid credentials!");
+        }
+    }
+    
+    @Test
+    @RunAsClient
+    public void t4forgotPassword(){
+        UserDTO user = new UserDTO();
+        user.setEmail("af.decastro879@uniandes.edu.co");
+        Client cliente = ClientBuilder.newClient();
+        Response response = cliente.target(URLBASE + PATH).path("/forgot")
+                .request()
+                .post(Entity.entity(user, MediaType.APPLICATION_JSON));
+        Assert.assertEquals(Ok, response.getStatus());
     }
 }
