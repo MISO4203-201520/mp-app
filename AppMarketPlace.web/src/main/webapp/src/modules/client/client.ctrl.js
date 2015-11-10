@@ -1,4 +1,5 @@
 (function (ng) {
+    
     var mod = ng.module('clientModule');
 
     mod.controller('clientCtrl', ['CrudCreator', '$scope', 'clientService', 'clientModel', function (CrudCreator, $scope, svc, model) {
@@ -37,4 +38,5 @@
     mod.controller('transactionCtrl', ['CrudCreator', '$scope', 'transactionModel', function (CrudCreator, $scope, model) {
             CrudCreator.extendCompChildCtrl(this, $scope, model, 'transaction', 'client');
         }]);
+    
 })(window.angular);

@@ -2,6 +2,10 @@
     a, a:active, a:hover, a:visited, h4, .col-md-3 {
         color: white;
     }
+
+    a.bluelink  {
+        color: activeborder;
+    }
 </style>
 <div class="list">
     <div class="row" ng-model="client">
@@ -38,30 +42,35 @@
                                 <span title="{{transactio.appId.description}}"> {{transactio.appId.name}}</span><br />
                                 <strong>{{transactio.appId.price| currency}}</strong>
                             </div>
+                            <div class="caption">
+                                <span class="glyphicon glyphicon-download"></span><br />
+                                <span ng-repeat="link in transactio.appId.sources" title="V.{{link.version}}"><a ng-href="{{link.url}}" style="color: cadetblue">Download App V.{{link.version}}<br /></a></span>                                
+                                <strong ng-if="transactio.appId.sources == 0">App not available</strong>                                
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>            
         </div>
         <div class="col-md-12">
-                <div class="panel panel-primary">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Transaction Records</h3>
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Transaction Records</h3>
+                </div>
+                <div class="panel-body">
+                    <div ng-show="!transaction.length" class="alert alert-warning" role="alert">
+                        You do not have purchased applications records yet!
                     </div>
-                    <div class="panel-body">
-                        <div ng-show="!transaction.length" class="alert alert-warning" role="alert">
-                            You do not have purchased applications records yet!
-                        </div>
-                        <div ng-repeat="transactio in transaction[0]" class="col-sm-4 well text-center">                        
-                            <div class="caption">
-                                <strong>{{transactio.appId.name}}</strong><br />
-                                <span>Date: {{transactio.date}}</span><br />
-                                <span>Status: {{transactio.status}}</span><br />
-                                <span>Value: {{transactio.total| currency}}</span><br />
-                            </div>
+                    <div ng-repeat="transactio in transaction[0]" class="col-sm-4 well text-center">                        
+                        <div class="caption">
+                            <strong>{{transactio.appId.name}}</strong><br />
+                            <span>Date: {{transactio.date}}</span><br />
+                            <span>Status: {{transactio.status}}</span><br />
+                            <span>Value: {{transactio.total| currency}}</span><br />
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 </div>

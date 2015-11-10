@@ -60,17 +60,17 @@ public class ClientService {
      */
     @GET
     @Path("{id: \\d+}")
-    public ClientDTO getClient(@PathParam("id") Long id) {        
+    public ClientDTO getClient(@PathParam("id") Long id) {
         return clientLogic.getClient(id);
     }
-    
+
     @GET
     @Path("client/{userName}")
     public ClientDTO getClientByUserName(@PathParam("userName") String userName) {
         Long id = clientLogic.getClientByUsername(userName).getId();
         return clientLogic.getClient(id);
     }
-    
+
     @GET
     @Path("{username}")
     public ClientDTO getDeveloperByUsername(@PathParam("username") String username) {
