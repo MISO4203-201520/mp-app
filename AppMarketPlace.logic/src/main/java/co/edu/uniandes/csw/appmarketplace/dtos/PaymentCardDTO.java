@@ -5,6 +5,10 @@
  */
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import java.util.Date;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import uk.co.jemos.podam.common.PodamExclude;
+
 /**
  *
  * @author ac.rojas13
@@ -15,8 +19,11 @@ public class PaymentCardDTO {
     private String fullname;
     private int cardnumber;
     private short securityCode;
-    private String dueDate;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date dueDate;
+    @PodamExclude
     private PaymentMethodDTO paymentType;
+    @PodamExclude
     private ClientDTO ownerId;
     
     
@@ -93,14 +100,14 @@ public class PaymentCardDTO {
     /**
      * @return the dueDate
      */
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
     /**
      * @param dueDate the dueDate to set
      */
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 

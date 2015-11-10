@@ -23,6 +23,7 @@ public interface IPaymentMethodLogic {
     public PaymentMethodDTO updatePaymentMethod(PaymentMethodDTO dto);
 
     public void deletePaymentMethod(Long id);
-
+    
     public List<PaymentMethodDTO> findByName(String name);
+
 }

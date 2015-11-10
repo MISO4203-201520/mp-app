@@ -24,5 +24,5 @@ public interface IPaymentCardLogic {
 
     public void deletePaymentCards(Long id);
 
-    public List<PaymentCardDTO> findByName(String name);
+    
 }
