@@ -7,6 +7,7 @@ import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.MediaDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.SourceDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
@@ -381,5 +382,16 @@ public class AppLogicTest {
         appLogic.addVideo(entity.getId(), media.getUrl(), media.getMimetype());
         AppEntity app = em.find(AppEntity.class, entity.getId());
         Assert.assertTrue(app.getVideos().size()> 0);
+    }
+    
+    @Test
+    public void addSourceToApp() {
+        System.out.println(data.size());
+        AppEntity entity = data.get(0);
+        PodamFactory factory = new PodamFactoryImpl();
+        SourceDTO source = factory.manufacturePojo(SourceDTO.class);
+        appLogic.addSource(entity.getId(), source.getUrl(), source.getVersion());
+        AppEntity app = em.find(AppEntity.class, entity.getId());
+        Assert.assertTrue(app.getSources().size()> 0);
     }
 }
