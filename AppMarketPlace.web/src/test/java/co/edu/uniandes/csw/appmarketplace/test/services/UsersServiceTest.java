@@ -8,6 +8,7 @@ package co.edu.uniandes.csw.appmarketplace.test.services;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
@@ -61,6 +62,7 @@ public class UsersServiceTest {
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
     public final static int badRequest = 400;
+    public final static int notFound = 404;
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -207,5 +209,35 @@ public class UsersServiceTest {
                 .request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         Assert.assertEquals(Ok, response.getStatus());
+        user = new UserDTO();
+        user.setEmail(generateRandom(String.class));
+        response = cliente.target(URLBASE + PATH).path("/forgot")
+                .request()
+                .post(Entity.entity(user, MediaType.APPLICATION_JSON));
+        Assert.assertEquals(badRequest, response.getStatus());
+    }
+    
+    @Test
+    @RunAsClient
+    public void t5VerifyToken(){
+        Client cliente = ClientBuilder.newClient();
+        Response response = cliente.target(URLBASE + PATH).path("/verify")
+                .queryParam("sptoken", generateRandom(String.class))
+                .request()
+                .get();
+        Assert.assertEquals(notFound, response.getStatus());
+    }
+    
+    @Test
+    @RunAsClient
+    public void t6Change(){
+        ForgotPasswordDTO dto = new ForgotPasswordDTO();
+        dto.setToken(generateRandom(String.class));
+        dto.setNewPassword(generateRandom(String.class));
+        Client cliente = ClientBuilder.newClient();
+        Response response = cliente.target(URLBASE + PATH).path("/change")
+                .request()
+                .post(Entity.entity(dto, MediaType.APPLICATION_JSON));
+        Assert.assertEquals(notFound, response.getStatus());
     }
 }
