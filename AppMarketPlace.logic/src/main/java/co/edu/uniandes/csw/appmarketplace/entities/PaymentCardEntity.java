@@ -21,6 +21,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
@@ -62,9 +63,11 @@ public class PaymentCardEntity implements Serializable {
     @Column(name = "due_date")
     @Temporal(TemporalType.DATE)
     private Date dueDate;
+    @PodamExclude
     @JoinColumn(name = "payment_type", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private PaymentMethodEntity paymentType;
+    @PodamExclude
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private ClientEntity ownerId;

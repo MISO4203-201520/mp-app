@@ -66,7 +66,7 @@ public abstract class PaymentCardConverter {
             PaymentCardDTO dto = new PaymentCardDTO();
             dto.setId(entity.getId());
             dto.setCardnumber(entity.getCardnumber());
-            dto.setDueDate(entity.getDueDate().toString());
+            dto.setDueDate(entity.getDueDate());
             dto.setFullname(entity.getFullname());
             dto.setPaymentType(PaymentMethodConverter.refEntity2DTO(entity.getPaymentType()));
             dto.setSecurityCode(entity.getSecurityCode());
@@ -86,11 +86,7 @@ public abstract class PaymentCardConverter {
             PaymentCardEntity entity = new PaymentCardEntity();
             entity.setId(dto.getId());
             entity.setCardnumber(dto.getCardnumber());
-            try {
-                entity.setDueDate(format.parse(dto.getDueDate()));
-            } catch (ParseException ex) {
-                Logger.getLogger(PaymentCardConverter.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            entity.setDueDate(dto.getDueDate());            
             entity.setFullname(dto.getFullname());
             entity.setId(dto.getId());
             entity.setPaymentType(PaymentMethodConverter.refDTO2Entity(dto.getPaymentType()));
