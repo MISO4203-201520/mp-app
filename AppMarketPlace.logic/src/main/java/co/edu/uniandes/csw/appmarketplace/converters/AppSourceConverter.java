@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.appmarketplace.converters;
 
 import co.edu.uniandes.csw.appmarketplace.dtos.SourceDTO;
+import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppSourceEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,20 @@ public abstract class AppSourceConverter {
         return null;
     }
     
+    public static AppSourceEntity basicDTO2Entity(SourceDTO dto) {
+        if (dto != null) {
+            AppSourceEntity entity = new AppSourceEntity();
+            entity.setId(dto.getId());
+            entity.setUrl(dto.getUrl());
+            entity.setVersion(dto.getVersion());
+            entity.setApp(AppConverter.refDTO2Entity(dto.getApp()));
+            
+            return entity;
+        } else {
+            return null;
+        }
+    }
+    
     public static List<SourceDTO> listEntity2DTO(List<AppSourceEntity> entities) {
         List<SourceDTO> dtos = new ArrayList<SourceDTO>();
         if (entities != null) {
@@ -34,5 +49,23 @@ public abstract class AppSourceConverter {
             }
         }
         return dtos;
+    }
+    
+    public static AppSourceEntity childDTO2Entity(SourceDTO dto, AppEntity parent) {
+        AppSourceEntity entity = basicDTO2Entity(dto);
+        entity.setApp(parent);
+        
+        return entity;
+    }
+    
+    public static List<AppSourceEntity> childListDTO2Entity(List<SourceDTO> dtos, AppEntity parent) {
+        List<AppSourceEntity> entities = new ArrayList<AppSourceEntity>();
+        
+        if (dtos != null) {
+            for (SourceDTO dto : dtos) {
+                entities.add(childDTO2Entity(dto, parent));
+            }
+        }
+        return entities;
     }
 }

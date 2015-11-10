@@ -263,14 +263,21 @@ public class AppService {
             @PathParam("id") Long id,
             @FormDataParam("file") InputStream fileInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("file") FormDataBodyPart bodyPart) {
+            @FormDataParam("file") FormDataBodyPart bodyPart,
+            @FormDataParam("version") String version) {
 
         String location = req.getServletContext().getRealPath("/");
         String fileName = fileDetail.getFileName();
         // save it
         try {
             writeToFile(fileInputStream, fileName, location, "sources/", id);
-            appLogic.addSource(id, S3Util.SOURCE_PATH + id + "/" + fileName, "1.0.0");
+            appLogic.addSource(id, S3Util.SOURCE_PATH + id + "/" + fileName, version);
+            
+            // Getting app to update version and send email triggered
+            AppDTO dto = appLogic.getApp(id);
+            dto.setVersion(version);
+            
+            this.updateApp(id, dto);
             
         } catch (IOException e) {
             logger.error("Error saving file", e);

@@ -139,7 +139,13 @@ public abstract class AppConverter {
      */
     public static AppEntity fullDTO2Entity(AppDTO dto) {
         if (dto != null) {
-            return basicDTO2Entity(dto);
+            AppEntity entity = basicDTO2Entity(dto);
+            entity.setSources(AppSourceConverter.childListDTO2Entity(dto.getSources(), entity));
+            
+//            VehicleEntity entity = basicDTO2Entity(dto);
+//            entity.setReviews(ReviewConverter.childListDTO2Entity(dto.getReviews(), entity));
+            
+            return entity;
         } else {
             return null;
         }
