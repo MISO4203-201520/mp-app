@@ -1,4 +1,5 @@
 (function (ng) {
+    
     var mod = ng.module('clientModule');
 
     mod.controller('clientCtrl', ['CrudCreator', '$scope', 'clientService', 'clientModel', function (CrudCreator, $scope, svc, model) {
@@ -11,7 +12,7 @@
             this.loadRefOptions();
         }]);
 
-    mod.controller('clientProfileCtrl', ['CrudCreator', '$scope', '$cookies', '$location', 'clientService', 'clientModel', 'appService', 'transaction', function (CrudCreator, $scope, $cookies, $location, svc, model, appSvc, trnSvc) {
+    mod.controller('clientProfileCtrl', ['CrudCreator', '$scope', '$cookies', '$location', 'clientService', 'clientModel', 'transaction', function (CrudCreator, $scope, $cookies, $location, svc, model, trnSvc) {
             CrudCreator.extendController(this, svc, $scope, model, 'client', 'Client');
 
             svc.getClientProfile($cookies.getObject('userCookie').userName).then(function (client) {
@@ -19,8 +20,8 @@
                     $scope.client = client;
                     trnSvc.getTxByPayer($scope.client.id).then(function (transaction) {
                         $scope.transaction = [];
-                        if (transaction) {                            
-                            $scope.transaction.push(transaction);                            
+                        if (transaction) {
+                            $scope.transaction.push(transaction);
                         }
                     });
                 } else {
@@ -37,4 +38,5 @@
     mod.controller('transactionCtrl', ['CrudCreator', '$scope', 'transactionModel', function (CrudCreator, $scope, model) {
             CrudCreator.extendCompChildCtrl(this, $scope, model, 'transaction', 'client');
         }]);
+    
 })(window.angular);

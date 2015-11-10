@@ -49,8 +49,9 @@ public class CommentService {
 
     @Inject
     private ICommentLogic commentLogic;
+    
 
-    static final Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(CommentService.class);
 
     @POST
@@ -63,17 +64,31 @@ public class CommentService {
         } else {
             dto.setClient(client);
 
-            return commentLogic.InsertComment(dto);
+            return commentLogic.insertComment(dto);
         } 
     }
+    
+    
 
     @GET
     public List<CommentDTO> getComments() {
         if (page != null && maxRecords != null) {
             this.response.setIntHeader("X-Total-Count", commentLogic.countComments());
         }
-        List<CommentDTO> comments = commentLogic.getComments(page, maxRecords);
-        return comments;
+        return commentLogic.getComments(page, maxRecords);
+    }
+    
+    @GET
+    @Path("/countbyappclient/{appid}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String countByAppClient(@PathParam("appid") Long appid) {
+        ClientDTO client = clientLogic.getClientByUsername(cliente.getUserName());
+        if (client == null) {
+            return null;
+        } else {
+
+            return commentLogic.countByAppClient(client.getId(), appid).toString();
+        } 
     }
 
     @DELETE

@@ -26,7 +26,7 @@ public class CommentPersistence extends CrudPersistence<Comment> {
         this.entityClass = Comment.class;
     }
 
-    public void InsertComment(Comment comment) {
+    public void insertComment(Comment comment) {
         this.create(comment);
     }
 

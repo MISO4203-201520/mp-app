@@ -27,7 +27,7 @@ public abstract class DeveloperConverter {
             dto.setId(entity.getId());
             dto.setName(entity.getName());
             dto.setUserId(entity.getUserId());
-            
+
             dto.setFirstName(entity.getFirstName());
             dto.setLastName(entity.getLastName());
             dto.setEmail(entity.getEmail());
@@ -62,9 +62,7 @@ public abstract class DeveloperConverter {
      */
     public static DeveloperDTO basicEntity2DTO(DeveloperEntity entity) {
         if (entity != null) {
-            DeveloperDTO dto = refEntity2DTO(entity);
-
-            return dto;
+            return refEntity2DTO(entity);
         } else {
             return null;
         }
@@ -79,7 +77,7 @@ public abstract class DeveloperConverter {
             entity.setId(dto.getId());
             entity.setName(dto.getName());
             entity.setUserId(dto.getUserId());
-            
+
             entity.setFirstName(dto.getFirstName());
             entity.setLastName(dto.getLastName());
             entity.setEmail(dto.getEmail());

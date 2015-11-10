@@ -92,8 +92,7 @@ public abstract class CartItemConverter {
      */
     public static CartItemDTO fullEntity2DTO(CartItemEntity entity) {
         if (entity != null) {
-            CartItemDTO dto = basicEntity2DTO(entity);
-            return dto;
+            return basicEntity2DTO(entity);
         } else {
             return null;
         }
@@ -104,8 +103,7 @@ public abstract class CartItemConverter {
      */
     public static CartItemEntity fullDTO2Entity(CartItemDTO dto) {
         if (dto != null) {
-            CartItemEntity entity = basicDTO2Entity(dto);
-            return entity;
+            return basicDTO2Entity(dto);
         } else {
             return null;
         }
@@ -114,7 +112,6 @@ public abstract class CartItemConverter {
     /**
      * @generated
      */
-
     public static List<CartItemDTO> listEntity2DTO(List<CartItemEntity> entities) {
         List<CartItemDTO> dtos = new ArrayList<CartItemDTO>();
         if (entities != null) {
@@ -141,7 +138,7 @@ public abstract class CartItemConverter {
     /**
      * @generated
      */
-    public static CartItemEntity childDTO2Entity(CartItemDTO dto, ClientEntity parent){
+    public static CartItemEntity childDTO2Entity(CartItemDTO dto, ClientEntity parent) {
         CartItemEntity entity = basicDTO2Entity(dto);
         entity.setClient(parent);
         return entity;

@@ -17,7 +17,14 @@
         'transactionModule'
     ]);
 
-    mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
+    mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', '$sceDelegateProvider', function ($routeProvider, tplUrl, alias, $sceDelegateProvider) {
+            $sceDelegateProvider.resourceUrlWhitelist([
+                // Allow same origin resource loads.
+                'self',
+                // Allow loading from our assets domain.  Notice the difference between * and **.
+                'https://s3-us-west-2.amazonaws.com/appoteca/**'
+            ]);
+            
             $routeProvider.when('/client', {
                 templateUrl: tplUrl,
                 controller: 'clientCtrl',
@@ -44,6 +51,9 @@
             }).when('/app/:appId/upload', {
                 templateUrl: 'src/modules/app/media.tpl.html',
                 controller: 'mediaCtrl'
+            }).when('/app/:appId/uploadSource', {
+                templateUrl: 'src/modules/app/source.tpl.html',
+                controller: 'sourceCtrl'
             }).when('/comment', {
                 templateUrl: tplUrl,
                 controller: 'commentCtrl',

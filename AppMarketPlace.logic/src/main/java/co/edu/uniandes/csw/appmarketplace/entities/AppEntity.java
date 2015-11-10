@@ -51,17 +51,9 @@ public class AppEntity implements Serializable {
     private Integer discount;
 
     private String category;
-    
+
     @Column(name = "IS_ACTIVE", columnDefinition = "boolean default true", nullable = false)
     private boolean enabled = true;
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 
     @Column(name = "startDiscountDate")
     @Temporal(TemporalType.DATE)
@@ -76,6 +68,28 @@ public class AppEntity implements Serializable {
 
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppVideoEntity> videos;
+
+    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AppSourceEntity> sources;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
+    private List<Comment> comments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
+    private List<QuestionEntity> questions;
+    
+    private String issueUrl;
+
+    @ManyToOne
+    private DeveloperEntity developer;
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public Date getStartDiscountDate() {
         return startDiscountDate;
@@ -92,15 +106,6 @@ public class AppEntity implements Serializable {
     public void setFinishDiscountDate(Date finishDiscountDate) {
         this.finishDiscountDate = finishDiscountDate;
     }
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
-    private List<Comment> comments;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "app")
-    private List<QuestionEntity> questions;
-
-    @ManyToOne
-    private DeveloperEntity developer;
 
     /**
      * @generated
@@ -278,4 +283,23 @@ public class AppEntity implements Serializable {
         this.videos = videos;
     }
 
+    public List<AppSourceEntity> getSources() {
+        return sources;
+    }
+
+    public void setSources(List<AppSourceEntity> sources) {
+        this.sources = sources;
+    }
+    
+    public void addSource(AppSourceEntity source) {
+        this.getSources().add(source);
+    }
+    
+    public String getIssueUrl() {
+        return issueUrl;
+    }
+
+    public void setIssueUrl(String issueUrl) {
+        this.issueUrl = issueUrl;
+    }
 }

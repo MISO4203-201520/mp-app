@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.appmarketplace.entities;
 
 import java.io.Serializable;
@@ -13,17 +8,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- *
- * @author ca.forero10
- */
 @Entity
 @NamedQueries({
     @NamedQuery(name = "Admin.getByUserId", query = "select u from AdminEntity u WHERE u.userId = :user_id")
 })
 @XmlRootElement
-public class AdminEntity implements Serializable{
-    
+public class AdminEntity implements Serializable {
+
     @Id
     @GeneratedValue(generator = "Admin")
     private Long id;
@@ -55,5 +46,5 @@ public class AdminEntity implements Serializable{
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    
+
 }

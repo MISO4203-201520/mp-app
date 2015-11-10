@@ -19,6 +19,20 @@
                             }
                             return false;
                         }
+                    },
+                    uploadSource: {
+                        displayName: 'Upload source',
+                        icon: 'upload',
+                        fn: function () {
+                            $location.path('/app/' + appId + '/uploadSource');
+                        },
+                        show: function () {
+                            var user = authService.getCurrentUser();
+                            if (user) {
+                                return user.role === 'developer' && user.email === app.developer.email;
+                            }
+                            return false;
+                        }
                     }
                 };
             }, function () {

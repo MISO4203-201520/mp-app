@@ -17,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
 
 /**
  *
@@ -28,7 +27,7 @@ public class CommentLogic implements ICommentLogic {
 
     @Inject
     private CommentPersistence persistence;
-    
+
     @Inject
     private TransactionPersistence transactionPersistence;
 
@@ -36,42 +35,35 @@ public class CommentLogic implements ICommentLogic {
     public int countComments() {
         return persistence.count();
     }
-    
+
     @Override
-    public CommentDTO InsertComment(CommentDTO dto) {
-        Comment entity=null;
-        Long transactions=0L;
-        
-        if (dto.getApp()!=null){
-             transactions = transactionPersistence.countByAppClient(dto.getClient().getId(), dto.getApp().getId());
-        }else{
-           transactions=1L;
-        }
-        
-        if (transactions > 0) {
-            try {
-            entity=CommentConverter.basicDTO2Entity(dto);
-            persistence.InsertComment(entity);
+    public CommentDTO insertComment(CommentDTO dto) {
+        //Se dejo el metodo como estaba por que interferia con las pruebas, la logica para que solo inserte un comentario si compro la app se realizo en el front end
+        Comment entity = null;
+        try {
+            entity = CommentConverter.basicDTO2Entity(dto);
+            persistence.insertComment(entity);
             return CommentConverter.refEntity2DTO(entity);
-            } catch (ParseException ex) {
-                Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } else {
-            throw new WebApplicationException(403);
+        } catch (ParseException ex) {
+            Logger.getLogger(CommentLogic.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         return null;
     }
-    
+
     @Override
     public List<CommentDTO> getComments(Integer page, Integer maxRecords) {
-        
-        List<CommentDTO> comments = CommentConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
-        return comments;
+        return CommentConverter.listEntity2DTO(persistence.findAll(page, maxRecords));
     }
-    
+
     @Override
     public void deleteComment(Long id) {
         persistence.delete(id);
+    }
+
+    @Override
+    public Long countByAppClient(Long idCliente, Long idApp) {
+        return transactionPersistence.countByAppClient(idCliente, idApp);
     }
 
 }

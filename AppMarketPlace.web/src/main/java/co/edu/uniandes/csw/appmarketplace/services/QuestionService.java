@@ -5,9 +5,7 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
-import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IQuestionLogic;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;

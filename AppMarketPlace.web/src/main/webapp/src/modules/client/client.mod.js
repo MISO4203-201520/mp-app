@@ -46,7 +46,7 @@
                 //template: '', //override generic template
                 ctrl: 'transactionCtrl'
             }]});
-    
+
     mod.constant('transactionModel', {
         fields: [{
                 name: 'id',

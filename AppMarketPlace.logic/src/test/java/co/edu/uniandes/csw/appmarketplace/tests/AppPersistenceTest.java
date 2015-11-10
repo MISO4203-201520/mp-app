@@ -1,10 +1,14 @@
 package co.edu.uniandes.csw.appmarketplace.tests;
 
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.DeveloperEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -95,10 +99,13 @@ public class AppPersistenceTest {
      * @generated
      */
     private void insertData() {
+        PodamFactory factory = new PodamFactoryImpl();
+        DeveloperEntity dev = DeveloperConverter.basicDTO2Entity(factory.manufacturePojo(DeveloperDTO.class));
+        em.persist(dev);
         for (int i = 0; i < 3; i++) {
-            PodamFactory factory = new PodamFactoryImpl();
             AppEntity entity = AppConverter.basicDTO2Entity(
                     factory.manufacturePojo(AppDTO.class));
+            entity.setDeveloper(dev);
             em.persist(entity);
             data.add(entity);
         }
@@ -286,6 +293,25 @@ public class AppPersistenceTest {
             if (!found) {
                 Assert.fail();
             }
+        }
+    }
+    
+    @Test
+    public void getCheapest() {
+        String developerName = data.get(0).getDeveloper().getName();
+        AppEntity less = data.get(0);
+        for (int i = 1; i < data.size(); i++) {
+            AppEntity current = data.get(i);
+            if (current.getPrice() < less.getPrice() && current.getDeveloper().getName().equals(developerName)) {
+                less = data.get(i);
+            }
+        }
+        List<AppEntity> entity = appPersistence.getCheapestApp(developerName);
+        Iterator<AppEntity> iterator = entity.iterator();
+        
+        while(iterator.hasNext()){
+            AppEntity current = iterator.next();
+            Assert.assertEquals(current.getPrice(), less.getPrice());
         }
     }
 }

@@ -5,22 +5,20 @@
  */
 package co.edu.uniandes.csw.appmarketplace.services;
 
-import co.edu.uniandes.csw.appmarketplace.api.IAdminLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
-import co.edu.uniandes.csw.appmarketplace.dtos.AdminDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
+import static co.edu.uniandes.csw.appmarketplace.shiro.ShiroUtils.getApplication;
+import static co.edu.uniandes.csw.appmarketplace.shiro.ShiroUtils.getClient;
 import com.stormpath.sdk.account.Account;
 import com.stormpath.sdk.account.AccountStatus;
 import com.stormpath.sdk.application.Application;
-import com.stormpath.sdk.client.Client;
 import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
 import com.stormpath.sdk.resource.ResourceException;
-import com.stormpath.shiro.realm.ApplicationRealm;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -35,7 +33,6 @@ import javax.ws.rs.core.Response;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.RealmSecurityManager;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +47,7 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserService {
 
-    static final Logger logger = LoggerFactory
+    private static final Logger logger = LoggerFactory
             .getLogger(UserService.class);
 
     @Inject
@@ -61,6 +58,9 @@ public class UserService {
 
     @Context
     private HttpServletRequest req;
+
+    private static final String clientCD = "appoteca_client_id";
+    private static final String developerCD = "appoteca_developer_id";
 
     private UserDTO subjectToUserDTO() {
         String href = req.getRemoteUser();
@@ -135,29 +135,28 @@ public class UserService {
     public Response setUser(UserDTO user) {
         try {
             Account account = createUser(user);
-            switch (user.getRole()) {
-                case "user":
-                    ClientDTO client = new ClientDTO();
-                    client.setName(user.getUserName());
-                    client.setUserId(account.getHref());
-                    client.setFirstName(user.getName());
-                    client.setLastName(user.getLastName());
-                    client.setEmail(user.getEmail());
-                    clientLogic.createClient(client);
-                    break;
-
-                case "developer":
-                    DeveloperDTO developer = new DeveloperDTO();
-                    developer.setName(user.getUserName());
-                    developer.setUserId(account.getHref());
-                    developer.setFirstName(user.getName());
-                    developer.setLastName(user.getLastName());
-                    developer.setEmail(user.getEmail());
-                    developerLogic.createDeveloper(developer);
-                    break;
-                default:
-                    break;
+            if ("user".equals(user.getRole())) {
+                ClientDTO client = new ClientDTO();
+                client.setName(user.getUserName());
+                client.setUserId(account.getHref());
+                client.setFirstName(user.getName());
+                client.setLastName(user.getLastName());
+                client.setEmail(user.getEmail());
+                client = clientLogic.createClient(client);
+                account.getCustomData().put(clientCD, client.getId());
+                account.getCustomData().save();
+            } else if ("developer".equals(user.getRole())) {
+                DeveloperDTO developer = new DeveloperDTO();
+                developer.setName(user.getUserName());
+                developer.setUserId(account.getHref());
+                developer.setFirstName(user.getName());
+                developer.setLastName(user.getLastName());
+                developer.setEmail(user.getEmail());
+                developer = developerLogic.createDeveloper(developer);
+                account.getCustomData().put(developerCD, developer.getId());
+                account.getCustomData().save();
             }
+
             return Response.ok().build();
         } catch (ResourceException e) {
             logger.warn("User {} cannot be registered as new user", user, e);
@@ -168,20 +167,7 @@ public class UserService {
         }
     }
 
-    private ApplicationRealm getRealm() {
-        return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
-    }
-
-    private Client getClient() {
-        return getRealm().getClient();
-    }
-
-    private Application getApplication() {
-        return getClient().getResource(getRealm().getApplicationRestUrl(), Application.class);
-    }
-
     private Account createUser(UserDTO user) {
-        Application application = getApplication();
         Account acct = getClient().instantiate(Account.class);
         acct.setUsername(user.getUserName());
         acct.setPassword(user.getPassword());
@@ -189,6 +175,7 @@ public class UserService {
         acct.setGivenName(user.getName());
         acct.setSurname(user.getLastName());
         acct.setStatus(AccountStatus.ENABLED);
+        Application application = getApplication();
         GroupList groups = application.getGroups();
         for (Group grp : groups) {
             if (grp.getName().equals(user.getRole())) {

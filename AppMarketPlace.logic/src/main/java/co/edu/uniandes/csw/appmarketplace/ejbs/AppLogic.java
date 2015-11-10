@@ -2,14 +2,18 @@ package co.edu.uniandes.csw.appmarketplace.ejbs;
 
 import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.converters.AppConverter;
+import co.edu.uniandes.csw.appmarketplace.converters.TransactionConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.entities.AppEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppImageEntity;
+import co.edu.uniandes.csw.appmarketplace.entities.AppSourceEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.AppVideoEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.RateEntity;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppImagePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppPersistence;
+import co.edu.uniandes.csw.appmarketplace.persistence.AppSourcePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.AppVideoPersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.RatePersistence;
 import co.edu.uniandes.csw.appmarketplace.persistence.TransactionPersistence;
@@ -40,7 +44,10 @@ public class AppLogic implements IAppLogic {
     @Inject
     private AppVideoPersistence vidPersistence;
 
-    String excludeWords[] = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
+    @Inject
+    private AppSourcePersistence sourcePersistence;
+
+    String[] excludeWords = {"a", "e", "i", "o", "u", "el", "la", "las", "los", "al", "un", "en", "es", "del", "lo"};
 
     /**
      * @generated
@@ -132,12 +139,12 @@ public class AppLogic implements IAppLogic {
         }
 
         lista.addAll(persistence.getAppsByKeyWords(keyword));
-        String words[] = keyword.split(" ");
+        String[] words = keyword.split(" ");
         if (words.length > 1) {
             for (String word : words) {
-                if (verifyWord(word) == false) {
+                if (!verifyWord(word)) {
                     for (AppEntity newApp : persistence.getAppsByKeyWords(word)) {
-                        if (verifyExistingApp(lista, newApp) == false) {
+                        if (!verifyExistingApp(lista, newApp)) {
                             lista.add(newApp);
                         }
                     }
@@ -210,9 +217,30 @@ public class AppLogic implements IAppLogic {
     }
 
     @Override
+    public void addSource(Long appId, String url, String version) {
+        // Getting app by id to add a source
+        AppEntity app = persistence.find(appId);
+        AppSourceEntity source = new AppSourceEntity();
+        source.setApp(app);
+        source.setUrl(url);
+        source.setVersion(version);
+        
+        // Saving source entity
+        sourcePersistence.create(source);
+        // Adding source to found app and update it
+        app.addSource(source);
+        persistence.update(app);
+    }
+
+    @Override
     public void disableApp(Long appId) {
         AppEntity entity = persistence.find(appId);
         entity.setEnabled(!entity.isEnabled());
         persistence.update(entity);
+    }
+    
+    @Override
+    public List<TransactionDTO> findByApp(Long appId) {
+        return TransactionConverter.listEntity2DTO(transactionPersistence.findByApp(appId));
     }
 }

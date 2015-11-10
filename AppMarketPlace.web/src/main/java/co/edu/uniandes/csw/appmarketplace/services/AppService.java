@@ -4,12 +4,18 @@ import co.edu.uniandes.csw.appmarketplace.api.IAppLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.ITransactionLogic;
+import co.edu.uniandes.csw.appmarketplace.aws.S3Util;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.RateDTO;
+import co.edu.uniandes.csw.appmarketplace.dtos.TransactionDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
 import co.edu.uniandes.csw.appmarketplace.providers.StatusCreated;
+import co.edu.uniandes.csw.appmarketplace.utils.Emailer;
+import com.stormpath.sdk.account.Account;
+import com.stormpath.sdk.client.Client;
+import com.stormpath.shiro.realm.ApplicationRealm;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,6 +38,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -46,15 +53,12 @@ import org.slf4j.LoggerFactory;
 @Produces(MediaType.APPLICATION_JSON)
 public class AppService {
 
-    static final Logger logger = LoggerFactory
-            .getLogger(AppService.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppService.class);
 
     @Inject
     private IAppLogic appLogic;
     @Inject
     ITransactionLogic transactionLogic;
-    @Context
-    private HttpServletResponse response;
     @Context
     private HttpServletRequest req;
     @Inject
@@ -88,12 +92,14 @@ public class AppService {
                 dto.setDeveloper(developer);
                 return appLogic.createApp(dto);
             } else {
-                logger.warn("App cannot be created because there's no developer associated.");
-                return null;
+                String msg = "App cannot be created because there's no developer associated";
+                logger.error(msg);
+                throw new WebApplicationException(msg, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }
         } else {
-            logger.warn("App cannot be created because there's no developer associated (no session initialized).");
-            return null;
+            String msg = "App cannot be created because there's no developer associated (no session initialized)";
+            logger.warn(msg);
+            throw new WebApplicationException(msg, HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
@@ -101,7 +107,7 @@ public class AppService {
      * @generated
      */
     @GET
-    public List<AppDTO> getApps() {
+    public List<AppDTO> getApps(@Context HttpServletResponse resp) {
 
         if (appName != null) {
             return appLogic.findByName(appName);
@@ -113,11 +119,11 @@ public class AppService {
             return appLogic.getAppsByKeyWords(keyword);
         }
         if (page != null && maxRecords != null) {
-            this.response.setIntHeader("X-Total-Count", appLogic.countApps());
+            resp.setIntHeader("X-Total-Count", appLogic.countApps());
         }
         return appLogic.getApps(page, maxRecords);
     }
-    
+
     @POST
     @Path("/{id: \\d+}/disable")
     public void disableApp(@PathParam("id") Long id) {
@@ -144,7 +150,26 @@ public class AppService {
     @Path("{id: \\d+}")
     public AppDTO updateApp(@PathParam("id") Long id, AppDTO dto) {
         dto.setId(id);
+        AppDTO app = appLogic.getApp(id);
+        if (!app.getVersion().equals(dto.getVersion())) {
+            List<TransactionDTO> list = appLogic.findByApp(id);
+            if (list != null) {
+                for (TransactionDTO trans : list) {
+                    ClientDTO client = clientLogic.getClientByUsername(trans.getPayer().getName());
+                    Account account = getClient().getResource(client.getUserId(), Account.class);
+                    Emailer.sendAppVersionEmail(client.getFullName(), account.getEmail(), app.getName());
+                }
+            }
+        }
         return appLogic.updateApp(dto);
+    }
+
+    private ApplicationRealm getRealm() {
+        return (ApplicationRealm) ((RealmSecurityManager) SecurityUtils.getSecurityManager()).getRealms().iterator().next();
+    }
+
+    private Client getClient() {
+        return getRealm().getClient();
     }
 
     /**
@@ -188,7 +213,7 @@ public class AppService {
                 // Rating the app
                 logger.info("Rating app with {} points by {}", dto.getRate(), client.getFullName());
                 appLogic.rateApp(id, client.getId(), dto.getRate());
-                
+
             } else {
                 logger.warn("App cannot be rated because there's no client associated.");
                 throw new WebApplicationException(401);
@@ -208,19 +233,52 @@ public class AppService {
             @FormDataParam("file") FormDataContentDisposition fileDetail,
             @FormDataParam("file") FormDataBodyPart bodyPart) {
 
-        String location = req.getServletContext().getRealPath("/media/" + id);
+        String location = req.getServletContext().getRealPath("/");
         String fileName = fileDetail.getFileName();
         // save it
         try {
             String mimetype = bodyPart.getMediaType().toString();
             if (mimetype.contains("image")) {
-                writeToFile(fileInputStream, fileName, location);
-                appLogic.addImage(id, "media/" + id + "/" + fileName, mimetype);
+                writeToFile(fileInputStream, fileName, location, "images/", id);
+                appLogic.addImage(
+                        id, S3Util.IMAGE_PATH + id + "/" + fileName, mimetype);
+
             }
+
             if (mimetype.contains("video")) {
-                writeToFile(fileInputStream, fileName, location);
-                appLogic.addVideo(id, "media/" + id + "/" + fileName, mimetype);
+                writeToFile(fileInputStream, fileName, location, "videos/", id);
+                appLogic.addVideo(
+                        id, S3Util.VIDEO_PATH + id + "/" + fileName, mimetype);
             }
+        } catch (IOException e) {
+            logger.error("Error saving file", e);
+            throw new WebApplicationException(e, 500);
+        }
+    }
+
+    @POST
+    @Path("{id: \\d+}/source")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void addSource (
+            @PathParam("id") Long id,
+            @FormDataParam("file") InputStream fileInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail,
+            @FormDataParam("file") FormDataBodyPart bodyPart,
+            @FormDataParam("version") String version) {
+
+        String location = req.getServletContext().getRealPath("/");
+        String fileName = fileDetail.getFileName();
+        // save it
+        try {
+            writeToFile(fileInputStream, fileName, location, "sources/", id);
+            appLogic.addSource(id, S3Util.SOURCE_PATH + id + "/" + fileName, version);
+            
+            // Getting app to update version and send email triggered
+            AppDTO dto = appLogic.getApp(id);
+            dto.setVersion(version);
+            
+            this.updateApp(id, dto);
+            
         } catch (IOException e) {
             logger.error("Error saving file", e);
             throw new WebApplicationException(e, 500);
@@ -231,7 +289,9 @@ public class AppService {
     private void writeToFile(
             InputStream uploadedInputStream,
             String fileName,
-            String parentFolder) throws IOException {
+            String parentFolder,
+            String prefix,
+            Long id) throws IOException {
 
         File file = new File(parentFolder, fileName);
         file.getParentFile().mkdirs();
@@ -245,5 +305,8 @@ public class AppService {
         }
         out.flush();
         out.close();
+
+        // Uploading file to AWS S3
+        S3Util.uploadFile(prefix, file, id);
     }
 }

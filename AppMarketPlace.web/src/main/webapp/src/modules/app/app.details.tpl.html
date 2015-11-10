@@ -58,6 +58,10 @@
             <h1>Platform</h1>
             <p>{{app.platform}}</p>
         </div>
+        <div class="col-md-3 text-center">
+            <h3>Issue Reporter URL</h3>
+            <p><a target="_blank" ng-href="{{app.issueUrl}}">{{app.issueUrl}}</a></p>
+        </div>
     </div>
     <div ng-if="app.comments.length" class="col-md-12 well">
         <h2>Comments</h2>
@@ -65,6 +69,14 @@
             <li class="list-group-item" ng-repeat="comment in app.comments">
                 <p>{{comment.comment}}</p>
                 <p>{{comment.date| date}}</p>
+            </li>
+        </ul>
+    </div>
+    <div ng-if="app.sources.length" class="col-md-12 well">
+        <h2>Available sources</h2>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="source in app.sources">
+                <a ng-href="{{source.url}}">version {{source.version}}</a>
             </li>
         </ul>
     </div>

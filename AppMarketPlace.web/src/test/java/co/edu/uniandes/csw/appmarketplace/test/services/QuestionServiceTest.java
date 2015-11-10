@@ -5,32 +5,23 @@
  */
 package co.edu.uniandes.csw.appmarketplace.test.services;
 
-import co.edu.uniandes.csw.appmarketplace.converters.DeveloperConverter;
 import co.edu.uniandes.csw.appmarketplace.dtos.AppDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
-import co.edu.uniandes.csw.appmarketplace.dtos.CommentDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.QuestionDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
-import co.edu.uniandes.csw.appmarketplace.persistence.DeveloperPersistence;
 import co.edu.uniandes.csw.appmarketplace.providers.EJBExceptionMapper;
-import co.edu.uniandes.csw.appmarketplace.services.AppService;
-import co.edu.uniandes.csw.appmarketplace.services.CommentService;
 import co.edu.uniandes.csw.appmarketplace.services.QuestionService;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -42,14 +33,11 @@ import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
-
-
 
 /**
  *
@@ -61,7 +49,6 @@ public class QuestionServiceTest {
 
     public final static String URLRESOURCES = "src/main/webapp";
     public final static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";
-    public final static String PATH = "/question";
     public final static int Ok = 200;
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
@@ -89,7 +76,7 @@ public class QuestionServiceTest {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
         return war;
     }
-    
+
     @BeforeClass
     public static void setUp() throws IOException {
         for (int i = 0; i < 5; i++) {
@@ -97,11 +84,9 @@ public class QuestionServiceTest {
             QuestionDTO question = factory.manufacturePojo(QuestionDTO.class);
             oraculo.add(question);
         }
-        
-           
+
     }
 
-    
     private static Cookie login(String username, String password) {
         Client cliente = ClientBuilder.newClient();
 
@@ -127,59 +112,58 @@ public class QuestionServiceTest {
     @Test
     @RunAsClient
     public void t1CreateQuestion() {
-        Cookie cookie_session_id = login(
-                System.getenv("APPOTECA_DEVELOPER_USERNAME"), 
-                System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
-        if (cookie_session_id != null) {
-           QuestionDTO question = oraculo.get(0);
-           Client cliente = ClientBuilder.newClient();
-           PodamFactory factory = new PodamFactoryImpl();
-           ClientDTO cl = factory.manufacturePojo(ClientDTO.class);
-           cl.setName(System.getenv("APPOTECA_CLIENT_USERNAME"));
-           Response response2 = cliente.target(URLBASE + "/clients")
-                    .request().cookie(cookie_session_id)
+        Cookie adminCookie = login(
+                System.getenv("APPOTECA_ADMIN_USERNAME"),
+                System.getenv("APPOTECA_ADMIN_PASSWORD"));
+        if (adminCookie != null) {
+            QuestionDTO question = oraculo.get(0);
+            Client cliente = ClientBuilder.newClient();
+            PodamFactory factory = new PodamFactoryImpl();
+            ClientDTO cl = factory.manufacturePojo(ClientDTO.class);
+            cl.setName(System.getenv("APPOTECA_CLIENT_USERNAME"));
+            cliente.target(URLBASE)
+                    .path("clients")
+                    .request()
+                    .cookie(adminCookie)
                     .post(Entity.entity(cl, MediaType.APPLICATION_JSON));
-           
-           
-           
-           DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
-           developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
-           developer.setUserId(System.getenv("APPOTECA_DEVELOPER_TODISABLE_USERID"));
-           Response response3 = cliente.target(URLBASE + "/developers")
-                    .request().cookie(cookie_session_id)
+
+            DeveloperDTO developer = factory.manufacturePojo(DeveloperDTO.class);
+            developer.setName(System.getenv("APPOTECA_DEVELOPER_USERNAME"));
+            developer.setUserId(System.getenv("APPOTECA_DEVELOPER_TODISABLE_USERID"));
+            cliente.target(URLBASE)
+                    .path("developers")
+                    .request()
+                    .cookie(adminCookie)
                     .post(Entity.entity(developer, MediaType.APPLICATION_JSON));
-           
-           //DeveloperDTO dev = (DeveloperDTO) response3.readEntity(DeveloperDTO.class);
-        
-        AppDTO app1 = factory.manufacturePojo(AppDTO.class);   
-        Response response4 = cliente.target(URLBASE + "/apps")
-                .request().cookie(cookie_session_id)
-                .post(Entity.entity(app1, MediaType.APPLICATION_JSON));
-        AppDTO app = (AppDTO) response4.readEntity(AppDTO.class);
-        
-        
-           
-        
-        app.setDeveloper(developer);
-           question.setApp(app);
-           
-           
-        cookie_session_id = login(
-                System.getenv("APPOTECA_CLIENT_USERNAME"), 
-                System.getenv("APPOTECA_CLIENT_PASSWORD"));
-        Response response = cliente.target(URLBASE + PATH) 
-                .request().cookie(cookie_session_id)
-                .post(Entity.entity(question, MediaType.APPLICATION_JSON));
-        QuestionDTO appTest = (QuestionDTO) response.readEntity(QuestionDTO.class);
-        Assert.assertEquals(question.getDescription(), appTest.getDescription());
-        Assert.assertEquals(question.getId(), appTest.getId());
-        Assert.assertEquals(Created, response.getStatus()); 
-        }else{
+
+            Cookie devCookie = login(
+                    System.getenv("APPOTECA_DEVELOPER_USERNAME"),
+                    System.getenv("APPOTECA_DEVELOPER_PASSWORD"));
+            AppDTO app1 = factory.manufacturePojo(AppDTO.class);
+            Response response4 = cliente.target(URLBASE)
+                    .path("apps")
+                    .request().cookie(devCookie)
+                    .post(Entity.entity(app1, MediaType.APPLICATION_JSON));
+            AppDTO app = (AppDTO) response4.readEntity(AppDTO.class);
+
+            app.setDeveloper(developer);
+            question.setApp(app);
+
+            Cookie clientCookie = login(
+                    System.getenv("APPOTECA_CLIENT_USERNAME"),
+                    System.getenv("APPOTECA_CLIENT_PASSWORD"));
+            Response response = cliente.target(URLBASE)
+                    .path("question")
+                    .request().cookie(clientCookie)
+                    .post(Entity.entity(question, MediaType.APPLICATION_JSON));
+            QuestionDTO appTest = (QuestionDTO) response.readEntity(QuestionDTO.class);
+            Assert.assertEquals(question.getDescription(), appTest.getDescription());
+            Assert.assertEquals(question.getId(), appTest.getId());
+            Assert.assertEquals(Created, response.getStatus());
+        } else {
             Assert.fail("Access denied or Invalid credentials!");
         }
-        
+
     }
-    
-    
-    
+
 }

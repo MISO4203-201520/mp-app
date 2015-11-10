@@ -15,7 +15,6 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -40,7 +39,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
 public class ClientServiceTest {
-    
+
     public final static String URLRESOURCES = "src/main/webapp";
     public final static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";
     public final static String PATH = "/clients";
@@ -48,7 +47,7 @@ public class ClientServiceTest {
     public final static int Created = 201;
     public final static int OkWithoutContent = 204;
     public final static List<ClientDTO> oraculo = new ArrayList<ClientDTO>();
-    
+
     @Deployment
     public static Archive<?> createDeployment() {
         MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
@@ -71,7 +70,7 @@ public class ClientServiceTest {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
         return war;
     }
-    
+
     @BeforeClass
     public static void setUp() {
         for (int i = 0; i < 5; i++) {
@@ -80,38 +79,37 @@ public class ClientServiceTest {
             oraculo.add(client);
         }
     }
-    
+
     private Cookie login(String username, String password) {
         Client clienteWS = ClientBuilder.newClient();
-        
+
         UserDTO user = new UserDTO();
         user.setUserName(username);
         user.setPassword(password);
-        
+
         Response response
                 = clienteWS.target(URLBASE)
-                .register(LoggingFilter.class)
                 .path("users")
                 .path("login")
                 .request(MediaType.APPLICATION_JSON)
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
-        
+
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
-        
+
         if (foundUser != null && response.getStatus() == Ok) {
             return response.getCookies().get("JSESSIONID");
         } else {
             return null;
         }
     }
-    
+
     @Test
     @RunAsClient
     public void t00CreateClient() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
-        
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
+
         if (cookieSessionId != null) {
             ClientDTO client = oraculo.get(0);
             Client clienteWS = ClientBuilder.newClient();
@@ -119,7 +117,7 @@ public class ClientServiceTest {
                     .request().cookie(cookieSessionId)
                     .post(Entity.entity(client, MediaType.APPLICATION_JSON));
             ClientDTO createdClient = (ClientDTO) response.readEntity(ClientDTO.class);
-            
+
             Assert.assertEquals(Created, response.getStatus());
             Assert.assertNotNull(createdClient);
             Assert.assertEquals(client.getId(), createdClient.getId());
@@ -128,14 +126,14 @@ public class ClientServiceTest {
             Assert.fail("Access denied or Invalid credentials!");
         }
     }
-    
+
     @Test
     @RunAsClient
     public void t02CreateClient2() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
-        
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
+
         if (cookieSessionId != null) {
             ClientDTO client = oraculo.get(1);
             Client clienteWS = ClientBuilder.newClient();
@@ -143,7 +141,7 @@ public class ClientServiceTest {
                     .request().cookie(cookieSessionId)
                     .post(Entity.entity(client, MediaType.APPLICATION_JSON));
             ClientDTO createdClient = (ClientDTO) response.readEntity(ClientDTO.class);
-            
+
             Assert.assertEquals(Created, response.getStatus());
             Assert.assertNotNull(createdClient);
             Assert.assertEquals(client.getId(), createdClient.getId());
@@ -152,16 +150,16 @@ public class ClientServiceTest {
             Assert.fail("Access denied or Invalid credentials!");
         }
     }
-    
+
     @Test
     @RunAsClient
     public void t04GetClients() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
-        
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
+
         if (cookieSessionId != null) {
-            
+
             Client clienteWS = ClientBuilder.newClient();
             Response response = clienteWS.target(URLBASE + PATH)
                     .request().cookie(cookieSessionId)
@@ -175,19 +173,19 @@ public class ClientServiceTest {
             Assert.fail("Access denied or Invalid credentials!");
         }
     }
-    
+
     @Test
     @RunAsClient
     public void t06GetClientById() throws IOException {
         Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_CLIENT_USERNAME"),
                 System.getenv("APPOTECA_CLIENT_PASSWORD"));
-        
+
         if (cookieSessionId != null) {
             Client clienteWS = ClientBuilder.newClient();
             ClientDTO foundClient = clienteWS.target(URLBASE + PATH).path("/" + oraculo.get(0).getId())
                     .request().cookie(cookieSessionId).get(ClientDTO.class);
-            
+
             Assert.assertNotNull(foundClient);
             Assert.assertEquals(foundClient.getName(), oraculo.get(0).getName());
         } else {
@@ -229,7 +227,7 @@ public class ClientServiceTest {
         Cookie cookieSessionId = login(
                 System.getenv("APPOTECA_ADMIN_USERNAME"),
                 System.getenv("APPOTECA_ADMIN_PASSWORD"));
-        
+
         if (cookieSessionId != null) {
             Client clienteWS = ClientBuilder.newClient();
             ClientDTO client = oraculo.get(0);
@@ -240,18 +238,18 @@ public class ClientServiceTest {
             Assert.fail("Access denied or Invalid credentials!");
         }
     }
-    
+
     @Test
     @RunAsClient
     public void t12GetClients() throws IOException {
         Cookie cookieSessionId = login(
-                System.getenv("APPOTECA_ADMIN_USERNAME"),
-                System.getenv("APPOTECA_ADMIN_PASSWORD"));
-        
+                System.getenv("APPOTECA_CLIENT_USERNAME"),
+                System.getenv("APPOTECA_CLIENT_PASSWORD"));
+
         if (cookieSessionId != null) {
-            
+
             Client clienteWS = ClientBuilder.newClient();
-            
+
             Response response = clienteWS.target(URLBASE + PATH)
                     .request().cookie(cookieSessionId)
                     .get();

@@ -22,9 +22,6 @@ import javax.mail.internet.MimeMessage;
  */
 public abstract class Emailer {
 
-    private Emailer() {
-    }
-
     static Properties mailServerProperties;
     static Session getMailSession;
     static MimeMessage generateMailMessage;
@@ -34,6 +31,9 @@ public abstract class Emailer {
     private static final String FROM = System.getenv("EMAIL_HOST_USER");
     private static final String USE_TLS = System.getenv("EMAIL_USE_TLS");
     private static final String HOST = System.getenv("EMAIL_HOST");
+
+    private Emailer() {
+    }
 
     private static void send(String to, String text, String subject) {
         try {
@@ -101,6 +101,21 @@ public abstract class Emailer {
             @Override
             public void run() {
                 send(userEmail, message, "Thanks for your payment");
+            }
+        }.start();
+    }
+
+    public static void sendAppVersionEmail(final String user, final String userEmail,
+            final String app) {
+        final String message
+                = "Hi <b>" + user + "</b>"
+                + "<br>"
+                + "</b>" + "</b> the application <b>" + app + " have a new version" + "</b>."
+                + "<br>" + "We hope you enjoy your application.";
+        new Thread() {
+            @Override
+            public void run() {
+                send(userEmail, message, "The application " + app + " has been updated");
             }
         }.start();
     }

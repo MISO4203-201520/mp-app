@@ -5,12 +5,8 @@
  */
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
-import co.edu.uniandes.csw.appmarketplace.entities.ClientEntity;
 import co.edu.uniandes.csw.appmarketplace.entities.PaymentCardEntity;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
 /**

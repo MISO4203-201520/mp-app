@@ -8,22 +8,20 @@ package co.edu.uniandes.csw.appmarketplace.entities;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  *
@@ -36,9 +34,10 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = "PaymentCardEntity.findById", query = "SELECT p FROM PaymentCardEntity p WHERE p.id = :id"),
     @NamedQuery(name = "PaymentCardEntity.findByFullname", query = "SELECT p FROM PaymentCardEntity p WHERE p.fullname = :fullname"),
     @NamedQuery(name = "PaymentCardEntity.findByOwnerId", query = "SELECT p FROM PaymentCardEntity p WHERE p.ownerId.id = :ownerId"),
-    @NamedQuery(name = "PaymentCardEntity.findByCardnumber", query = "SELECT p FROM PaymentCardEntity p WHERE p.cardnumber = :cardnumber")    
-    })
+    @NamedQuery(name = "PaymentCardEntity.findByCardnumber", query = "SELECT p FROM PaymentCardEntity p WHERE p.cardnumber = :cardnumber")
+})
 public class PaymentCardEntity implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -64,13 +63,15 @@ public class PaymentCardEntity implements Serializable {
     @Column(name = "due_date")
     @Temporal(TemporalType.DATE)
     private Date dueDate;
+    @PodamExclude
     @JoinColumn(name = "payment_type", referencedColumnName = "id")
     @ManyToOne(optional = false)
-    private PaymentMethodEntity paymentType;        
-    @JoinColumn(name="owner_id", referencedColumnName = "id")
+    private PaymentMethodEntity paymentType;
+    @PodamExclude
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private ClientEntity ownerId;
-    
+
     public PaymentCardEntity() {
     }
 
@@ -124,7 +125,7 @@ public class PaymentCardEntity implements Serializable {
 
     public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
-    }    
+    }
 
     public PaymentMethodEntity getPaymentType() {
         return paymentType;
@@ -143,7 +144,6 @@ public class PaymentCardEntity implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof PaymentCardEntity)) {
             return false;
         }
@@ -172,5 +172,5 @@ public class PaymentCardEntity implements Serializable {
     public void setOwnerId(ClientEntity ownerId) {
         this.ownerId = ownerId;
     }
-    
+
 }

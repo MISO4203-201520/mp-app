@@ -12,9 +12,8 @@
                     var date2 = new Date($scope.records[i].app.finishDiscountDate);
                     date2.setDate(date2.getDate() + 1);
                     var actualDate = new Date();
-                    if (actualDate >= date1 && actualDate <= date2) {
-                        
-                    } else {
+                    var flag = actualDate >= date1 && actualDate <= date2;
+                    if (!flag) {
                         $scope.records[i].app.discount = 0;
                     }
                 }
@@ -55,9 +54,10 @@
                 }
             };
 
+            //guarda la cantidad anterior
             $scope.verify = function (quantity) {
                 $scope.lastQuantity = quantity;
-            };//guarda la cantidad anterior
+            };
 
             $scope.postVerify = function (record) {
                 var patron = /^\d+$/;

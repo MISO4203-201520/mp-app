@@ -58,7 +58,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
-public class AppFunctionalIT {
+ public class AppFunctionalIT {
     public static String URLRESOURCES = "src/main/webapp";
     public static String URLBASE = "http://localhost:8181/AppMarketPlace.web/webresources";
     public static String PATH = "/apps";

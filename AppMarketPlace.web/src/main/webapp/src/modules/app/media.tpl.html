@@ -27,9 +27,9 @@
                             </div>
                         </td>
                         <td class="text-center">
-                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                            <span ng-show="item.isSuccess"><em class="glyphicon glyphicon-ok"></em></span>
+                            <span ng-show="item.isCancel"><em class="glyphicon glyphicon-ban-circle"></em></span>
+                            <span ng-show="item.isError"><em class="glyphicon glyphicon-remove"></em></span>
                         </td>
                         <td nowrap>
                             <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
