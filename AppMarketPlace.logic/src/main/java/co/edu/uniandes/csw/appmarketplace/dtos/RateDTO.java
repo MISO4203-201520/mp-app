@@ -5,6 +5,8 @@
  */
 package co.edu.uniandes.csw.appmarketplace.dtos;
 
+import uk.co.jemos.podam.common.PodamExclude;
+
 /**
  *
  * @author af.esguerra10
@@ -13,6 +15,7 @@ public class RateDTO {
 
     private Long id;
     private Long rate;
+    @PodamExclude
     private AppDTO app;
 
     public Long getId() {

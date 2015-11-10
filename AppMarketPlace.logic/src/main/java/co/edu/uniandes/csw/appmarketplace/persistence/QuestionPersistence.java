@@ -6,11 +6,13 @@
 package co.edu.uniandes.csw.appmarketplace.persistence;
 
 import co.edu.uniandes.csw.appmarketplace.entities.QuestionEntity;
+import javax.ejb.Stateless;
 
 /**
  *
  * @author ca.forero10
  */
+@Stateless
 public class QuestionPersistence extends CrudPersistence<QuestionEntity>{
     
     public QuestionPersistence(){
