@@ -89,7 +89,7 @@
             roles = newRoles;
         };
 
-        this.$get = ['Restangular', '$cookies', '$location', '$rootScope', function (RestAngular, $cookies, $location, $rootScope) {
+        this.$get = ['Restangular', '$cookies', '$location', '$rootScope','$localStorage', function (RestAngular, $cookies, $location, $rootScope,storage) {
                 var self = this;
                 this.api = RestAngular.all(values.apiUrl);
                 return {
@@ -107,6 +107,7 @@
                         return values;
                     },
                     logout: function () {
+                        delete storage.token;
                         return self.api.customGET(values.logoutURL).then(function () {
                             $cookies.remove(values.nameCookie);
                             $rootScope.$broadcast('logged-out');

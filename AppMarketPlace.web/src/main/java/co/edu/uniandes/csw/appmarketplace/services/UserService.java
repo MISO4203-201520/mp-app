@@ -7,10 +7,12 @@ package co.edu.uniandes.csw.appmarketplace.services;
 
 import co.edu.uniandes.csw.appmarketplace.api.IDeveloperLogic;
 import co.edu.uniandes.csw.appmarketplace.api.IClientLogic;
+import co.edu.uniandes.csw.appmarketplace.api.IJWTBeanLocal;
 import co.edu.uniandes.csw.appmarketplace.dtos.DeveloperDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ClientDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.ForgotPasswordDTO;
 import co.edu.uniandes.csw.appmarketplace.dtos.UserDTO;
+import co.edu.uniandes.csw.appmarketplace.shiro.JWT;
 import static co.edu.uniandes.csw.appmarketplace.shiro.ShiroUtils.getApplication;
 import static co.edu.uniandes.csw.appmarketplace.shiro.ShiroUtils.getClient;
 import com.stormpath.sdk.account.Account;
@@ -19,6 +21,8 @@ import com.stormpath.sdk.application.Application;
 import com.stormpath.sdk.group.Group;
 import com.stormpath.sdk.group.GroupList;
 import com.stormpath.sdk.resource.ResourceException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
@@ -34,6 +38,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.jose4j.lang.JoseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +54,9 @@ public class UserService {
 
     private static final Logger logger = LoggerFactory
             .getLogger(UserService.class);
+    
+    @Inject
+    private IJWTBeanLocal bean;
 
     @Inject
     private IClientLogic clientLogic;
@@ -80,7 +88,7 @@ public class UserService {
 
     @Path("/login")
     @POST
-    public Response login(UserDTO user) {
+    public Response login(UserDTO user)   {
         try {
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword(), user.isRememberMe());
             Subject currentUser = SecurityUtils.getSubject();
@@ -93,7 +101,14 @@ public class UserService {
             } else if ("user".equalsIgnoreCase(loggedUser.getRole())) {
                 currentUser.getSession().setAttribute("Client", loggedUser);
             }
-            return Response.ok(loggedUser).build();
+            UserDTO userAux=loggedUser;
+            userAux.setPassword(user.getPassword());
+            JWT jwt=new JWT();
+            String tk=jwt.generateJWT(userAux);
+            ;
+           loggedUser.setJwtToken(tk);
+            
+            return Response.ok(loggedUser).header("Authorization", tk).build();
 
         } catch (AuthenticationException e) {
             logger.warn("User {} cannot be logged in", user, e);

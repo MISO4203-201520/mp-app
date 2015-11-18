@@ -14,16 +14,39 @@
         'paymentCardsModule',
         'adminModule',
         'forgotModule',
-        'transactionModule'
+        'transactionModule',
+        'ngStorage'
     ]);
+    
+    mainApp.factory('authInterceptor', ['$localStorage', function (storage) {
+        return {
+            // automatically attach Authorization header
+            request: function(config) {
+                var token = storage.token;
+                if(token) {
+                   config.headers.Authorization = 'Bearer ' + token;
+                }
+                return config;
+            },
 
-    mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', '$sceDelegateProvider', function ($routeProvider, tplUrl, alias, $sceDelegateProvider) {
+            // If a token was sent back, save it
+            response: function(res) {
+                if(res.headers('Authorization')) {                    
+                    storage.token = res.headers('Authorization');
+                }
+                return res;
+            }
+        }
+    }]);
+
+    mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', '$sceDelegateProvider','$httpProvider', function ($routeProvider, tplUrl, alias, $sceDelegateProvider,$httpProvider) {
             $sceDelegateProvider.resourceUrlWhitelist([
                 // Allow same origin resource loads.
                 'self',
                 // Allow loading from our assets domain.  Notice the difference between * and **.
                 'https://s3-us-west-2.amazonaws.com/appoteca/**'
             ]);
+            $httpProvider.interceptors.push('authInterceptor');
             
             $routeProvider.when('/client', {
                 templateUrl: tplUrl,
