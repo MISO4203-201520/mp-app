@@ -9,6 +9,7 @@ import co.edu.uniandes.csw.appmarketplace.entities.Comment;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.Stateless;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author if.garcia11
  * @modified by d.jmenez13 Implementing logger. Shortening technical debt.
  */
+@Stateless
 public class CommentPersistence extends CrudPersistence<Comment> {
 
     static final Logger logger = LoggerFactory
